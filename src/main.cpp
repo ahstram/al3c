@@ -99,7 +99,7 @@ int main (int argc, char *argv[] ) {
 	
 
 	if (NP_XML!=NP && NP==1) {
-		int returncode=execvp("/home/rcf-40/astram/al3c/bin/mpirun",args); 
+		int returncode=execvp("mpirun",args); 
 
 		if (returncode!=0) 
 			cerr<<"Warning: mpirun exited with code '"<<returncode<<"'"<<endl;
