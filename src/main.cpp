@@ -22,6 +22,8 @@
 #include <iomanip>
 #include <stdint.h>
 #include <dlfcn.h>
+#include <unistd.h>
+
 #include "rapidxml/rapidxml.hpp"
 
 #include "../include/al3c.hpp"
