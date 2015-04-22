@@ -126,7 +126,7 @@ int main (int argc, char *argv[] ) {
 	create_summary_t *user_summary_type;
 
 	destroy_t *destroy_user_type;
-	destroy_summary_t *destroy_user_summary_type;
+	//destroy_summary_t *destroy_user_summary_type;
 
 	framework_t<param_t> **last, **current, **proposed, *loan, **fptr_a;
 	param_t **last_params;
@@ -323,7 +323,10 @@ int main (int argc, char *argv[] ) {
 		exit(EXIT_FAILURE);
     	}
 
-	destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
+        // GKC: getting rid of compiler warning as destroy_summary_type variable
+        // was not needed.
+	(destroy_summary_t*)dlsym(handle,"destroy_summary");
+	//destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
 	dlsym_error = dlerror();
 	if (dlsym_error) {
 		cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
