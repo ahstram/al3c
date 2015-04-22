@@ -10,7 +10,7 @@ CC = g++
 
 # libraries.  For a local Boost installation
 # Example:
-LIB = -I /Users/garychen/software/boost_1_36_0
+LIB = -I /opt/boost/include
 # Default:
 #LIB = -I .
 
