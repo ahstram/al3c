@@ -11,7 +11,7 @@ all: lib/libmacs.so bin/al3c
 bin/al3c:  src/main.cpp src/generate.cpp src/progress.cpp  src/signal.cpp  src/u01.cpp  src/weight.cpp  include/al3c.hpp
 	$(MPI) $(MPIFLAGS) $(MPIINCLUDEFLAGS)  -o bin/al3c  $(MPILIBFLAGS) $<
 
-lib/libmacs.so:	macs-read-only/macs.cpp include/al3c.hpp
+lib/libmacs.so:	macs/macs.cpp include/al3c.hpp
 	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o lib/libmacs.so -fPIC $(CPPLIBFLAGS) $<
 
 clean: 
