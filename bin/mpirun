@@ -1,0 +1,767 @@
+#!/bin/sh
+#
+# Copyright (C) 2003-2014 Intel Corporation.  All Rights Reserved.
+# 
+# The source code contained or described herein and all documents
+# related to the source code ("Material") are owned by Intel Corporation
+# or its suppliers or licensors.  Title to the Material remains with
+# Intel Corporation or its suppliers and licensors.  The Material is
+# protected by worldwide copyright and trade secret laws and treaty
+# provisions.  No part of the Material may be used, copied, reproduced,
+# modified, published, uploaded, posted, transmitted, distributed, or
+# disclosed in any way without Intel's prior express written permission.
+# 
+# No license under any patent, copyright, trade secret or other
+# intellectual property right is granted to or conferred upon you by
+# disclosure or delivery of the Materials, either expressly, by
+# implication, inducement, estoppel or otherwise.  Any license under
+# such intellectual property rights must be express and approved by
+# Intel in writing.
+#
+
+Usage()
+{
+    echo "mpirun [mpdboot options] [mpiexec options] executable [prog-args] [: mpiexec optons exec]"
+    echo "Possible additional options are:"
+    echo "	-help	- prints this usage"
+    echo "	-version - version of library"
+    echo "	-np number - number of processes"
+    mpdboot -h
+    mpiexec -help
+    
+    exit 0 
+}
+
+print_version()
+{
+    echo "Intel(R) MPI Library for Linux Version 5.0 Update 2"
+    echo "Build 20141030 Platform Intel(R) 64 64-bit applications"
+    echo "Copyright (C) 2003-2014 Intel Corporation. All rights reserved"
+    exit 0
+}
+
+strip_eq()
+{
+    ret=`echo $1 | sed -e 's/.*\=//'`
+}
+
+checking_processes(){
+    np=`cat $hosts_file 2>/dev/null | wc -l`
+
+    echo " $np_opt" | grep " -np " > /dev/null
+    if [ $? -eq 0 ]; then
+        new_np=`echo $np_opt | sed "s/\-np //"`
+    else
+        new_np=`echo $np_opt | sed "s/\-n //"`
+    fi
+
+    if [ -n "$new_np" -a $np -ne 0 ]; then
+        if [ $new_np -gt $np ]; then
+            new_hosts_file="/tmp/${username}.$$.newhosts"
+	    
+            factor=$(( new_np / np ))
+            residual=$(( new_np - ( np * factor ) ))
+	    
+            while [ $factor -gt 0 ]; do
+
+                #cat $hosts_file >> $new_hosts_file
+                line=" "
+                while [ -n "$line" ]; do
+                    read line
+                    len=${#line}
+                    if [ "$len" -gt 0 ]; then
+                        echo $line >> $new_hosts_file
+                    fi
+                done < $hosts_file
+
+                factor=$(( factor - 1 ))
+            done
+            head -n $residual $hosts_file >> $new_hosts_file
+            if [ -n "$ENVIRONMENT" -a -n "$QSUB_REQID" -a -n "$QSUB_NODEINF" ] ; then
+                if [ -x /usr/bin/plesh ] ; then
+                    hosts_opt="-f $new_hosts_file -r plesh"
+                else
+                    hosts_opt="-f $new_hosts_file"
+                fi
+            else
+                hosts_opt="-f $new_hosts_file"
+            fi
+        fi
+    fi
+}
+
+
+check_envvars(){
+    if [ -z "$I_MPI_ROOT" -a -z "`uname -m | grep 1om`" ] ; then
+        . ${0%/*}/mpivars.sh
+    fi
+}
+
+
+remove_tmpfiles(){
+   if [ -n "$tmpfile" -a -f "$tmpfile" ]; then
+      rm -f $tmpfile
+   fi
+
+   if [ -n "$LSB_MCPU_HOSTS" -o -n "$NB_PARALLEL_JOB_HOSTS" -o -n "$SLURM_JOBID" -o -n "$PE_HOSTFILE" ]; then
+      if [ -n "$hosts_file" -a -f "$hosts_file" ]; then
+         rm -f $hosts_file
+      fi
+      if [ -n "$PE_HOSTFILE" ]; then
+         # If mpirun is started under SGE, then need also to remove the machinefile created
+         rm -f $sge_machinefile
+      fi
+   fi
+
+   rm -rf $new_hosts_file		# remove new hosts_file
+}
+
+old_hosts_file=""
+np_opt=
+np_boot=
+nolocal=""
+hosts_file="mpd.hosts"
+username=`whoami`
+tmpfile="/tmp/${username}.$$"
+other_mpdboot_opt=""
+mpdcleanup_opt=""
+rc=0
+
+
+check_envvars
+
+
+#######################################################################################
+#####################################    HYDRA    #####################################
+#######################################################################################
+if [ "x$I_MPI_PROCESS_MANAGER" != "xmpd" -a "x$I_MPI_PROCESS_MANAGER" != "xMPD" ]; then
+    #############################################
+    #######  Job Scheduler autodetection  #######
+    #############################################
+    # PBS
+    if [ -n "$PBS_ENVIRONMENT" -a -z "$I_MPI_HYDRA_RMK" ] ; then
+        export I_MPI_HYDRA_RMK=pbs
+    elif [ -n "$LSB_JOBID" -a -z "$I_MPI_HYDRA_RMK" ]; then
+        export I_MPI_HYDRA_RMK=lsf
+    fi
+    if [ -z "$I_MPI_HYDRA_BOOTSTRAP" -a -z "$I_MPI_HYDRA_BOOTSTRAP_EXEC" ]; then 
+        # SLURM
+        if [ -n "$SLURM_JOBID" ]; then
+            export I_MPI_HYDRA_BOOTSTRAP=slurm
+            if [ `uname -m ` = "x86_64" -a -z "$I_MPI_HYDRA_JMI_LIBRARY" ]; then
+                export I_MPI_HYDRA_JMI_LIBRARY=${I_MPI_ROOT}/intel64/lib/libjmi_slurm.so
+            fi
+        # LoadLeveler
+        elif [ -n "$LOADL_HOSTFILE" ]; then
+            export I_MPI_HYDRA_BOOTSTRAP=ll
+        # LSF
+        elif [ -n "$LSB_JOBID" ]; then
+            export I_MPI_HYDRA_BOOTSTRAP=lsf
+        # SGE
+        elif [ -n "$PE_HOSTFILE" ]; then
+            export I_MPI_HYDRA_BOOTSTRAP=sge
+        # Fujitsu NQS (Network Queuing System)
+        elif [ -n "$ENVIRONMENT" -a -n "$QSUB_REQID" -a -n "$QSUB_NODEINF" ] ; then
+            if [ -z "$I_MPI_HYDRA_HOST_FILE" ]; then
+                export I_MPI_HYDRA_HOST_FILE=$QSUB_NODEINF
+            fi
+            if [ -x /usr/bin/plesh ] ; then
+                export I_MPI_HYDRA_BOOTSTRAP=rsh
+                export I_MPI_HYDRA_BOOTSTRAP_EXEC=/usr/bin/plesh
+            fi
+        fi
+    fi
+    
+    if [ -z "$I_MPI_HYDRA_BOOTSTRAP" -a -z "$I_MPI_HYDRA_BOOTSTRAP_EXEC" -a -n "$I_MPI_MPD_RSH" ]; then        
+        export I_MPI_HYDRA_BOOTSTRAP_EXEC=$I_MPI_MPD_RSH
+    fi
+
+    # Slurm, LoadLeveler, LSF, SGE
+    if [ -n "$LOADL_HOSTFILE" -o \
+         -n "$PE_HOSTFILE" ]; then
+        # Create a host file
+        if [ -n "$LOADL_HOSTFILE" ]; then
+            if [ -z "$I_MPI_HYDRA_HOST_FILE" ]; then
+                export I_MPI_HYDRA_HOST_FILE=$LOADL_HOSTFILE
+            fi
+            mpiexec.hydra $@ <&0
+            rc=$?
+        elif [ -n "$PE_HOSTFILE" ]; then
+            machinefile="/tmp/sge_machinefile_$username_$$"
+            > $machinefile
+
+            while read line; do
+                if [ -n "$line" ]; then
+                    host_name=`echo $line | sed -e "s/ .*//"`
+                    num_of_processes=`expr match "$line" '.* \([0-9]\+\) .*'`
+                    echo "$host_name:$num_of_processes" >> $machinefile
+                    np_boot=$(( np_boot + 1 ))
+                fi
+            done < $PE_HOSTFILE
+            mpiexec.hydra -machinefile $machinefile $@ <&0
+            rc=$?
+            rm -rf $machinefile
+        fi
+    # Netbatch
+    elif [ -n "$NB_PARALLEL_JOB_HOSTS" ]; then
+        hosts_opt=`echo $NB_PARALLEL_JOB_HOSTS | tr ' ' ','`
+        hosts_opt="-hosts `hostname -s`,$hosts_opt"
+        mpiexec.hydra $hosts_opt $@ <&0
+        rc=$?
+    # PBS or ordinary job
+    else
+        if [ -f mpd.hosts -a -z "$I_MPI_HYDRA_HOST_FILE" -a -z "$PBS_NODEFILE" ]; then
+            export I_MPI_HYDRA_HOST_FILE=mpd.hosts
+        fi
+
+        mpiexec.hydra "$@" <&0
+
+        rc=$?
+    fi
+
+    #######################################
+    #######         Cleanup         #######
+    #######################################
+    cleanup=0
+    echo "$@" | grep "\-cleanup" >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        cleanup=1
+    else
+        if [ -n "$I_MPI_HYDRA_CLEANUP" ]; then
+            if [ "$I_MPI_HYDRA_CLEANUP" = "yes" -o "$I_MPI_HYDRA_CLEANUP" = "enable" -o "$I_MPI_HYDRA_CLEANUP" = "on" -o "$I_MPI_HYDRA_CLEANUP" = "1" ]; then
+                cleanup=1
+            fi
+        fi
+    fi
+    if [ $cleanup -eq 1 ]; then
+        mpicleanup -s
+    fi
+    exit $rc
+fi
+
+#######################################################################################
+#####################################     MPD     #####################################
+#######################################################################################
+
+trap 'kill -SIGINT $!;mpdallexit > /dev/null 2>&1;mpdcleanup -a $hosts_opt $mpdcleanup_opt; exit 1' SIGINT
+trap 'kill -SIGTERM $!;mpdallexit > /dev/null 2>&1;mpdcleanup -a $hosts_opt $mpdcleanup_opt; exit 1' SIGTERM
+
+
+
+mpirun_cleanup=0
+if [ -n "$I_MPI_MPIRUN_CLEANUP" ]; then
+    mrc=`echo $I_MPI_MPIRUN_CLEANUP | tr A-Z a-z`
+    if [ "$mrc" = "1" -o "$mrc" = "enable" -o "$mrc" = "yes" -o "$mrc" = "on" ]; then
+        mpirun_cleanup=1
+    fi
+fi
+
+
+# Parse arguments
+while [ $# -gt 0 ]; do
+    arg="$1"
+    if [ -n "$arg" ]; then
+        case "$arg" in
+            -help | -h )	Usage ;;
+            -version | -V )	print_version ;;
+            -np | -n )		np_opt="-n $2"; shift ;;
+            --totalnum=* )	strip_eq $1; np_boot=$ret ;;
+            --file=* )		strip_eq $1; hosts_file=$ret; hosts_opt=$1 ;;
+            -f )		hosts_file=$2; hosts_opt="-f $hosts_file"; shift ;;
+            -r )		other_mpdboot_opt="$other_mpdboot_opt --rsh=$2"; mpdcleanup_opt="$mpdcleanup_opt --rsh=$2"; shift ;;
+            -u )		other_mpdboot_opt="$other_mpdboot_opt --user=$2"; mpdcleanup_opt="$mpdcleanup_opt --user=$2"; shift ;;
+            -m )		other_mpdboot_opt="$other_mpdboot_opt --mpd=$2"; shift ;;
+
+            -b )		other_mpdboot_opt="$other_mpdboot_opt -b $2"; shift ;;
+
+
+            --chkuponly ) echo "Warning: the $1 mpdboot option is incompatible with mpirun. This option doesn't allow starting a ring and will be ignored." ;;
+            -o | --ordered | --chkup | --loccons | --remcons | --shell | --verbose | -1 | --ncpus=* | --debug | -d | -s | -v | --mpd=* | --ifhn=* | --maxbranch=* | -p | --parallel-startup )
+                        other_mpdboot_opt="$other_mpdboot_opt $1" ;;
+            --user=* | --rsh=* )
+                        other_mpdboot_opt="$other_mpdboot_opt $1"; mpdcleanup_opt="$mpdcleanup_opt $1" ;;
+
+            * )	# arguments to mpiexec and command-name followed by arguments
+                break;;
+        esac
+    fi
+    shift
+done
+
+# Now check that we possible called from PBS
+if [ -n "$PBS_ENVIRONMENT" ]; then
+    if [ "$PBS_ENVIRONMENT" = "PBS_BATCH" -o "$PBS_ENVIRONMENT" = "PBS_INTERACTIVE" ]; then
+        hosts_file=$PBS_NODEFILE
+    fi
+fi
+
+# Check that we possible called from LSF
+if [ -n "$LSB_MCPU_HOSTS" ]; then
+    # Accounting $np_boot
+    if [ -z "$np_boot" ]; then
+        np_boot=0
+        for HOST in $LSB_MCPU_HOSTS; do
+            echo $HOST|grep "[A-Za-z]" > /dev/null
+            if [ $? -eq 0 ]; then
+                np_boot=$(( np_boot+1 ))
+            fi
+        done
+        echo $LSB_MCPU_HOSTS|grep -i `hostname -s` > /dev/null
+        if [ $? -ne 0 ]; then                                                                                                                               
+            # Current host not in hosts_file, so increment np_boot and add -nolocal to mpiexec                                                              
+            np_boot=$(( np_boot+1 ))                                                                                                                           
+            nolocal="-nolocal "                                                                                                                             
+    	fi
+    fi
+    # Parsing $LSB_MCPU_HOSTS into $hosts_file
+    hosts_file="/tmp/lsf_$username.$$"
+    hosts=$LSB_MCPU_HOSTS
+    > $hosts_file
+    echo $hosts|grep "[A-Za-z]" > /dev/null
+    while [ $? -eq 0 ]; do
+        host=`echo "$hosts " | sed "s/ .*//"`
+        hosts=`echo "$hosts " | sed "s/$host //"`
+        count=`echo "$hosts " | sed "s/ .*//"`
+        echo $count | grep "[A-Za-z]" > /dev/null
+        if [ $? -eq 0 ]; then
+            echo $host >> $hosts_file
+        else
+            j=0
+            while [ $j -lt $count ]; do
+                echo $host >> $hosts_file
+                j=$(( j + 1 ))
+            done
+            hosts=`echo "$hosts " | sed "s/$count //"`
+        fi
+    echo $hosts|grep "[A-Za-z]" > /dev/null
+    done
+    hosts_opt="-f $hosts_file"
+    echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+    if [ $? -ne 0 ]; then
+        checking_processes $@
+    fi
+# Check that we possible called from Netbatch under parallel job (--parallel option for nbjob)
+elif [ -n "$NB_PARALLEL_JOB_HOSTS" ]; then
+    # Parsing $NB_PARALLEL_JOB_HOSTS into $hosts_file
+    hosts_file="/tmp/netbatch_$username.$$"
+    hosts=$NB_PARALLEL_JOB_HOSTS
+    > $hosts_file
+    echo `hostname -s` > $hosts_file
+    echo $hosts|grep "[A-Za-z]" > /dev/null
+    while [ $? -eq 0 ]; do
+        host=`echo "$hosts " | sed "s/ .*//"`
+        hosts=`echo "$hosts " | sed "s/$host //"`
+        echo $host >> $hosts_file
+        echo $hosts|grep "[A-Za-z]" > /dev/null
+    done
+    hosts_opt="-f $hosts_file"
+    echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+    if [ $? -ne 0 ]; then
+        checking_processes $@
+    fi
+
+    # Accounting $np_boot
+    if [ -z "$np_boot" ]; then
+        np_boot=`sort -u $hosts_file | grep -v "#" | wc -l`
+        np_boot=$(( np_boot ))
+    fi
+# Check that we possible under Fujitsu NQS (Network Queuing System)
+elif [ -n "$ENVIRONMENT" -a -n "$QSUB_REQID" -a -n "$QSUB_NODEINF" ] ; then
+    hosts_file=$QSUB_NODEINF
+    if [ -x /usr/bin/plesh ] ; then
+        hosts_opt="-f $hosts_file -r plesh"
+    else
+    hosts_opt="-f $hosts_file"
+    fi
+    if [ -z "$np_boot" ];then
+        np_boot=`sort -u $hosts_file | grep -v "#" | wc -l`
+        np_boot=$(( np_boot ))
+    fi
+    echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+    if [ $? -ne 0 ]; then
+        checking_processes $@
+    fi
+# Check that we possible under SLURM
+elif [ -n "$SLURM_JOBID" ]; then
+    # Creating processes list
+    list_tasks=`echo $SLURM_TASKS_PER_NODE | sed "s/,/ /g" | sed "s/(//g" | sed "s/)//g"`
+    all_tasks_list=""
+    for task in $list_tasks; do
+        echo $task | grep "x" > /dev/null
+        if [ $? -eq 0 ]; then
+            num_processes=`echo $task | sed "s/x.*//"`
+            num_nodes=`echo $task | sed "s/${num_processes}x//"`
+            while [ $num_nodes -ne 0 ]; do
+                all_tasks_list=${all_tasks_list}" "${num_processes}
+                num_nodes=$(( num_nodes-1 ))
+            done
+        else
+            all_tasks_list=${all_tasks_list}" "${task}
+        fi
+    done
+    # Creating nodes list
+    all_nodes_list=""
+    np_boot=$(( SLURM_NNODES + 1 ))
+    list_nodes=`echo $SLURM_NODELIST | sed "s/,/ /g"`
+    fl=0
+    for host in $list_nodes; do
+        echo $host | grep "\[" > /dev/null
+        if [ $? -eq 0 ]; then
+            fl=1
+            echo $host | grep "\]" > /dev/null
+            if [ $? -eq 0 ]; then
+                fl=0
+            fi
+            base_name=`echo $host | sed "s/\[.*//"`
+            num_nodes=`echo $host | sed "s/${base_name}\[//" | sed "s/\]//"`
+            first_node=`echo $num_nodes | sed "s/-.*//"`
+            last_node=`echo $num_nodes | sed "s/${first_node}-//"`
+
+            first_node_length=`expr length "${first_node}"`
+            first_node=`expr $first_node + 0`
+            last_node=`expr $last_node + 0`
+
+            while [ $first_node -le $last_node ]; do
+
+#                all_nodes_list=${all_nodes_list}" "${base_name}${first_node}
+                all_nodes_list=`printf "${all_nodes_list} ${base_name}%0${first_node_length}d" ${first_node}`
+
+                first_node=$(( first_node+1 ))
+            done
+        else
+            echo $host | grep "\]" > /dev/null
+            if [ $? -eq 0 ]; then
+                fl=0
+                host=`echo $host | sed "s/\]//"`
+                echo $host | grep "-" > /dev/null
+                if [ $? -eq 0 ]; then
+                    first_node=`echo $host | sed "s/-.*//"`
+                    last_node=`echo $host | sed "s/${first_node}-//"`
+
+                    first_node_length=`expr length "${first_node}"`
+                    first_node=`expr $first_node + 0`
+                    last_node=`expr $last_node + 0`
+
+                    while [ $first_node -le $last_node ]; do
+
+#                         all_nodes_list=${all_nodes_list}" "${base_name}${first_node}
+                         all_nodes_list=`printf "${all_nodes_list} ${base_name}%0${first_node_length}d" ${first_node}`
+
+                        first_node=$(( first_node + 1 ))
+                    done
+                else
+                    all_nodes_list=${all_nodes_list}" "${base_name}${host}
+                fi
+            else
+                if [ $fl -eq 1 ]; then
+                    echo $host | grep "-" > /dev/null
+                    if [ $? -eq 0 ]; then
+                        first_node=`echo $host | sed "s/-.*//"`
+                        last_node=`echo $host | sed "s/${first_node}-//"`
+
+                        first_node_length=`expr length "${first_node}"`
+                        first_node=`expr $first_node + 0`
+                        last_node=`expr $last_node + 0`
+
+                        while [ $first_node -le $last_node ]; do
+
+#                         all_nodes_list=${all_nodes_list}" "${base_name}${first_node}
+                         all_nodes_list=`printf "${all_nodes_list} ${base_name}%0${first_node_length}d" ${first_node}`
+
+                            first_node=$(( first_node+1 ))
+                        done
+                    else
+                        host=`expr $host + 0`
+
+#                        all_nodes_list=${all_nodes_list}" "${base_name}${host}
+                        all_nodes_list=`printf "${all_nodes_list} ${base_name}%0${first_node_length}d" ${host}`
+
+                    fi
+                else
+                    all_nodes_list=${all_nodes_list}" "${host}
+                fi
+            fi
+        fi
+    done
+    for host in $all_nodes_list; do
+    if [ "$host" == "`hostname -s`" -o "$host" == "`hostname -f`" ]; then
+        np_boot=$(( np_boot - 1 ))
+    fi
+    done
+    # Creating hosts file
+    hosts_file="/tmp/slurm_$username.$$"
+    > $hosts_file
+    hosts_opt="-f $hosts_file"
+    for node in $all_nodes_list; do
+        num=`echo $all_tasks_list | sed "s/ .*//"`
+        all_tasks_list=`echo $all_tasks_list | sed "s/${num} //"`
+        if [ -n "$SLURM_CPUS_PER_TASK" ]; then
+            num=$(( num / SLURM_CPUS_PER_TASK ))
+        fi
+        while [ $num -ne 0 ]; do
+            echo $node >> $hosts_file
+            num=$(( num - 1 ))
+        done
+    done
+    if [ $np_boot -ne $SLURM_NNODES ]; then
+        nolocal="-nolocal "
+    fi
+    echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+    if [ $? -ne 0 ]; then
+        checking_processes $@
+    fi
+# Check whether mpirun is started under SGE
+elif [ -n "$PE_HOSTFILE" ]; then
+#    echo "mpirun is started under SGE"
+
+    #--------------------------------------------
+    # Create appropriate hostfile and machinefile
+
+    if [ -z "$np_boot" ];then
+        np_boot=0
+    fi
+    sge_hostfile="/tmp/sge_hostfile_$username_$$"
+    > $sge_hostfile
+    sge_machinefile="/tmp/sge_machinefile_$username_$$"
+    > $sge_machinefile
+
+    while read line; do
+        if [ -n "$line" ]; then
+            #echo "i saw a line '$line'"
+            host_name=`echo $line | sed -e "s/ .*//"`
+            #echo "hostname=$host_name"
+            num_of_processes=`expr match "$line" '.* \([0-9]\+\) .*'`
+            #echo "num_of_processes=$num_of_processes"
+            # Add hostname to the hostfile
+            echo $host_name >> $sge_hostfile
+            # Add appropriate entry to the machine file
+            echo "$host_name:$num_of_processes" >> $sge_machinefile
+            np_boot=$(( np_boot + 1 ))
+        fi
+    done < $PE_HOSTFILE
+    #done < /users/azakharo/Temp/sge_hostfile.txt
+
+    #echo "HOSTFILE"
+    #cat $sge_hostfile
+
+    #echo "MACHINEFILE"
+    #cat $sge_machinefile
+
+    # Create appropriate hostfile and machinefile
+    #--------------------------------------------
+
+    #--------------------------------------------
+    # Update the internal script vars
+
+    # If the current host isn't in the hostfile, then 
+    # increment np_boot and add -nolocal option to 
+    # the mpiexec's cmd line
+    cat $sge_hostfile | grep -i `hostname -s` > /dev/null
+    if [ $? -ne 0 ]; then
+        #echo 'The current host is not in the hostfile'
+        np_boot=$(( np_boot + 1 ))
+        nolocal="-nolocal "
+    fi
+
+    hosts_file="$sge_hostfile"
+    hosts_opt="-f $hosts_file"
+
+    # Update the internal script vars
+    #--------------------------------------------
+
+    #rm -f $sge_hostfile
+    #rm -f $sge_machinefile
+
+# We are not under LSF not under NetBatch not under Fujitsu NQS not under SLURM not under SGE
+else
+    if [ -z "$np_boot" ]; then
+        if [ ! -r "$hosts_file" ]; then
+            mpdtrace > $tmpfile 2>/dev/null
+
+            if [ $? -eq 0 ]; then
+                np_boot=`sort -u $tmpfile | grep -v "#" | wc -l`
+            else
+                
+                # echo "WARNING: Can't read $hosts_file for list of hosts, start only on current"
+                echo "WARNING: Unable to read $hosts_file or list of hosts isn't provided. MPI job will be run on the current machine only."
+                
+                np_boot=1
+                hostname > $tmpfile 2>/dev/null
+            fi
+            hosts_opt="-f $tmpfile"
+            echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+            if [ $? -ne 0 ]; then
+                checking_processes $@
+            fi
+            np_boot=$(( np_boot ))
+        else
+            # Lasy way to get number nodes for mpdboot (need more complex way)
+            np_boot=`sort -u $hosts_file | grep -v "#" | wc -l`
+            np_boot=$(( $np_boot ))
+            if [ -z "$PBS_ENVIRONMENT" ]; then
+                grep -i `hostname -s` $hosts_file > /dev/null
+                if [ $? -ne 0 ]; then
+                    # Current host not in hosts_file, so increment np_boot and add -nolocal to mpiexec
+                    np_boot=$(( np_boot + 1 ))
+                    nolocal="-nolocal "
+                fi
+            fi
+            hosts_opt="-f $hosts_file"
+            echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+            if [ $? -ne 0 ]; then
+                checking_processes $@
+            fi
+        fi
+    else
+        if [ -z "$PBS_ENVIRONMENT" ]; then
+            grep -i `hostname -s` $hosts_file > /dev/null
+            if [ $? -ne 0 ]; then
+                # Current host not in hosts_file, so increment np_boot and add -nolocal to mpiexec
+                np_boot=$(( np_boot + 1 ))
+                nolocal="-nolocal "
+            fi
+        fi
+        hosts_opt="-f $hosts_file"
+        echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+        if [ $? -ne 0 ]; then
+            checking_processes $@
+        fi
+    fi
+fi
+
+# Start an exclusive MPD ring by setting an unique I_MPI_JOB_CONTEXT variable
+if [ -n "$PBS_ENVIRONMENT" ] ; then
+    export I_MPI_JOB_CONTEXT="${PBS_JOBID}_$$" # PBS Pro and Torque
+elif [ -n "$LSB_JOBID" ] ; then
+    export I_MPI_JOB_CONTEXT="${LSB_JOBID}_$$" # LSF
+elif [ -n "${__NB_JOBID}" ] ; then
+    export I_MPI_JOB_CONTEXT="${__NB_JOBID}_$$" # NetBatch
+elif [ -n "$SLURM_JOBID" ] ; then
+    export I_MPI_JOB_CONTEXT="${SLURM_JOBID}_$$" # SLURM
+
+elif [ -n "$JOB_ID" ] ; then
+    export I_MPI_JOB_CONTEXT="${JOB_ID}_$$" # SGE, obsolete below
+
+elif [ -n "$MP_JOBID" ] ; then
+    export I_MPI_JOB_CONTEXT="${MP_JOBID}_$$" # SGE
+elif [ -n "$ENVIRONMENT" -a -n "$QSUB_REQID" -a -n "$QSUB_NODEINF" ] ; then
+    export I_MPI_JOB_CONTEXT="${QSUB_REQID}_$$"	# Called under Fujitsu NQS
+else
+    export I_MPI_JOB_CONTEXT=`date +%y%m%d.%H%M%S`"_$$"
+fi
+#echo "mpdboot -n $np_boot $hosts_opt $other_mpdboot_opt"
+#echo "HOSTFILE:"
+#cat $hosts_file
+
+mpdboot -n $np_boot $hosts_opt $other_mpdboot_opt &
+wait $!
+
+rc=$?
+#mpdtrace
+
+# Alarm exit
+if [ $rc -ne 0 ]; then
+    # Removing created $hosts_file before alarm exit
+
+    remove_tmpfiles
+
+    exit $rc
+fi
+
+# echo mpiexec $nolocal$np_opt "$@"
+if [ -n "$LSB_MCPU_HOSTS" -o -n "$PBS_ENVIRONMENT" -o -n "$NB_PARALLEL_JOB_HOSTS" -o -n "$QSUB_NODEINF" -o -n "$SLURM_JOBID" -o -n "$PE_HOSTFILE" ]; then
+    echo $@ | grep "\-configfile " > /dev/null
+    if [ $? -eq 0 ]; then
+
+        mpiexec.py "$@" <&0 &
+        wait $!
+
+        rc=$?
+    else
+        echo $@ | egrep "\-perhost |\-ppn |\-rr " > /dev/null
+        if [ $? -eq 0 ]; then
+
+            mpiexec.py $nolocal$np_opt "$@" <&0 &						# -perhost, -ppn or -rr option is present
+            wait $!
+
+            rc=$?
+        else
+       	    new_machine_file="$hosts_file"
+
+            if [ -n "$new_np" ]; then
+            	if [ $new_np -gt $np ]; then
+                    new_machine_file="$new_hosts_file"
+            	fi
+            fi
+
+            if [ -n "$PE_HOSTFILE" ]; then
+                new_machine_file="$sge_machinefile"
+            fi
+
+            #echo "mpiexec -machinefile $new_machine_file $nolocal$np_opt $@"
+            #echo "MACHINEFILE:"
+            #cat $new_machine_file
+
+            mpiexec.py -machinefile $new_machine_file $nolocal$np_opt "$@" <&0 &
+            wait $!
+
+            rc=$?
+        fi
+    fi
+else
+    echo $@ | grep "\-configfile " > /dev/null
+    if [ $? -eq 0 ]; then
+
+        mpiexec.py "$@" <&0 &
+        wait $!
+
+        rc=$?
+    else
+
+        mpiexec.py $nolocal$np_opt "$@" <&0 &
+        wait $!
+
+        rc=$?
+    fi
+fi
+
+
+if [ $mpirun_cleanup -eq 1 -a -n "$hosts_file" -a -f "$hosts_file" ]; then
+    sort_hosts_file="/tmp/${username}.$$.sorthosts"
+    sort -u $hosts_file > $sort_hosts_file
+    hosts_opt="-f $sort_hosts_file"
+fi
+
+
+#Close ring
+if [ $rc -ne 0 ]; then
+
+    mpdallexit &
+    wait $!
+
+    if [ $mpirun_cleanup -eq 1 ]; then
+        mpdcleanup -a $hosts_opt $mpdcleanup_opt &
+        wait $!
+    fi
+
+
+
+    remove_tmpfiles
+    rm -rf $sort_hosts_file      # remove sorted hosts_file    
+
+    exit $rc
+fi
+
+mpdallexit &
+wait $!
+
+if [ $mpirun_cleanup -eq 1 ]; then
+    mpdcleanup -a $hosts_opt $mpdcleanup_opt &
+    wait $!
+fi
+
+
+
+remove_tmpfiles
+rm -rf $sort_hosts_file      # remove sorted hosts_file
+
