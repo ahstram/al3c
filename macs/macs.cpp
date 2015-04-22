@@ -103,7 +103,7 @@ void user_t::simulate() {
 	uint seed=u01()*UINT_MAX;
 
 
-	cmd<<"macs.sh 718 100000 -s "<<seed<<" -t .001 -I 3 176 170 372 0 -m 2 1 "<<param->MigrationRate_AfrToEur<<" -m 3 1 "<<param->MigrationRate_AfrToAsn<<" -m 3 2 "<<param->MigrationRate_EurToAsn<<" -n 1 "<<param->EffectivePopulationSize_Afr<<" -g 2 "<<param->GrowthRate_Eur<<" -g 3 "<<param->GrowthRate_Asn<<" -eg .0230000 2 0 -eg .0230001 3 0 -ej .0230002 3 2 -em .0230003 2 1 "<<param->PastEvent_AfrToEurProportion<<" -en .0230004 2 0.1861 -ej .051 2 1 -en .148 1 0.731 -r 0.0006"<<endl;
+	cmd<<"macs/macs.sh 718 100000 -s "<<seed<<" -t .001 -I 3 176 170 372 0 -m 2 1 "<<param->MigrationRate_AfrToEur<<" -m 3 1 "<<param->MigrationRate_AfrToAsn<<" -m 3 2 "<<param->MigrationRate_EurToAsn<<" -n 1 "<<param->EffectivePopulationSize_Afr<<" -g 2 "<<param->GrowthRate_Eur<<" -g 3 "<<param->GrowthRate_Asn<<" -eg .0230000 2 0 -eg .0230001 3 0 -ej .0230002 3 2 -em .0230003 2 1 "<<param->PastEvent_AfrToEurProportion<<" -en .0230004 2 0.1861 -ej .051 2 1 -en .148 1 0.731 -r 0.0006"<<endl;
 
 	exec_cmd(cmd.str().c_str());
 
