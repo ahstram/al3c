@@ -1,3 +1,16 @@
-main:
-	g++ -Wall -O2 -o allele_spectrum allele_spectrum.cpp
+include make.inc
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+        CPPFLAGS += -undefined dynamic_lookup
+endif
+
+all: macs.so allele_spectrum
+
+macs.so:    macs.so.cpp ../include/al3c.hpp
+	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o macs.so -fPIC $(CPPLIBFLAGS) $<
+
+allele_spectrum: allele_spectrum.cpp
+	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o allele_spectrum $<
+clean:
+	rm allele_spectrum macs.so

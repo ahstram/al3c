@@ -1,9 +1,4 @@
 MPI = mpic++
-MPIFLAGS = -Wall -O2 -rdynamic  -ldl
-MPIINCLUDEFLAGS = 
-MPILIBFLAGS = 
-
-CPP =  g++
-CPPFLAGS = -Wall -O2 -shared -fPIC 
-CPPINCLUDEFLAGS = 
-CPPLIBFLAGS = 
+MPIFLAGS += -Wall -O2 -rdynamic  -ldl
+MPIINCLUDEFLAGS += 
+MPILIBFLAGS += 

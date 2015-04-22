@@ -1,0 +1,4 @@
+CPP =  icc
+CPPFLAGS += -Wall -O2 -shared -fPIC 
+CPPINCLUDEFLAGS += 
+CPPLIBFLAGS += 

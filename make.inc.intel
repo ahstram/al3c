@@ -1,18 +1,4 @@
 MPI = mpiicpc
-MPIFLAGS = -Wall -O2 -rdynamic  -ldl
-MPIINCLUDEFLAGS = 
-MPILIBFLAGS = 
-
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-        MPI = mpic++
-endif
-
-ifeq ($(MPICPP),mpiicpc)
-        MPIFLAGS += -static_mpi 
-endif
-
-CPP =  icc
-CPPFLAGS = -Wall -O2 -shared -fPIC 
-CPPINCLUDEFLAGS = 
-CPPLIBFLAGS = 
+MPIFLAGS += -Wall -O2 -rdynamic  -ldl -static_mpi
+MPIINCLUDEFLAGS += 
+MPILIBFLAGS +=

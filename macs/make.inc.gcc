@@ -1,0 +1,4 @@
+CPP =  g++
+CPPFLAGS += -Wall -O2 -shared -fPIC 
+CPPINCLUDEFLAGS += 
+CPPLIBFLAGS += 
