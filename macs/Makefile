@@ -8,7 +8,7 @@ endif
 all: macs.so allele_spectrum
 
 macs.so:    macs.so.cpp ../include/al3c.hpp
-	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o macs.so -fPIC $(CPPLIBFLAGS) $<
+	$(CPP) -shared $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o macs.so -fPIC $(CPPLIBFLAGS) $<
 
 allele_spectrum: allele_spectrum.cpp
 	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o allele_spectrum $<
