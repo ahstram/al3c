@@ -119,27 +119,7 @@ and defines two templates:
 user_t, the users' parameters of interest
 user_summary_t, a summary statistic for user_t
 
-The user must then define the following:
-
-struct param_t, a structure containing each of the parameters of interest
-struct param_summary_t, a structure used to summarize multiple param_t's 
-
-void user_t::print(ofstream& output, bool header), prints param_t to an output file
-
-void user_t::prior(),  writes to param_t according to the desired prior distribution
-float user_t::prior_density(), gives the density of param_t according to the desired prior distribution
-
-void user_t::perturb(), perturbs param_t according to the desired perturbation kernel
-float user_t::perturb_density(param_t *old_param), gives the density of param_t according to the desired perturbation kernel
-
-void user_t::simulate(), simulates data using param_t
-float user_t::distance(), calculates the distance between simulated and observed data
-
-
-
-
-void user_summary_t::summarize();
-
+The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</span>.
 
 
 <h3>Compiling the shared library</h3>
@@ -162,7 +142,7 @@ void user_summary_t::summarize();
 	1.2 Functions
 		1.2.1 <a href="#u01">u01</a>
 		1.2.2 <a href="#exec_cmd">exec_cmd</a>
-2 C/C++ Requirements (<a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>)
+2 <span id="cpp_req">C/C++ Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>)
 	2.1 Parameter & Parameter Summary Statistic Data Types
 		2.1.1 <a href="#param_t">param_t</a> 
 		2.1.2 <a href="#param_summary_t">param_summary_t</a>
@@ -170,14 +150,14 @@ void user_summary_t::summarize();
 		2.2.1 <a href="#print">user_t::print</a>
 		2.2.2 <a href="#summarize">user_summary_t::summarize</a>
 	2.3 Generating the Prior Distribution
-		2.3.1 <a href="#prior">prior</a> 
-		2.3.2 <a href="#prior_density">prior_density</a>
+		2.3.1 <a href="#prior">user_t::prior</a> 
+		2.3.2 <a href="#prior_density">user_t::prior_density</a>
 	2.4 Perturbing Parameters
-		2.4.1 <a href="#perturb">perturb</a>
-		2.4.2 <a href="#perturb_density">perturb_density</a>
+		2.4.1 <a href="#perturb">user_t::perturb</a>
+		2.4.2 <a href="#perturb_density">user_t::perturb_density</a>
 	2.5 Simulating Data & Measuring Goodness of Fit
-		2.5.1 <a href="#simulate">simulate</a>
-		2.5.2 <a href="#distance">distance</a>
+		2.5.1 <a href="#simulate">user_t::simulate</a>
+		2.5.2 <a href="#distance">user_t::distance</a>
 3 XML Requirements (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
 	3.1 <a href="#lib">lib</a> - Shared library
 	3.2 MPI
