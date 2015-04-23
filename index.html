@@ -106,6 +106,13 @@ the XML file will then specify
 - basic ABC-SMC parameters
 <h3>Compiling the al3c binary</h3>
 
+The following commands will obtain the al3c source code and and compile the al3c binary
+
+<pre class='brush: bash; gutter: false; toolbar: false;'>git clone http://github.com/ahstram/al3c.git
+cd al3c
+make</pre>
+
+Note that this generally requires that MPI libraries be installed on the system. To avoid installing MPI libraries on Linux, you may obtain the al3c linux static binary from above. MPI libraries are required on OS X systems.
 
 <h3>Writing the shared library</h3>
 Shared libraries for use with al3c should be written in cpp, and include the "al3c.hpp" file which is packaged with the al3c binary.
@@ -132,7 +139,7 @@ The XML configuration file is loaded by al3c
 <h3>Running al3c</h3>
 al3c is run with the XML files to load as its sole argument, for example:
 
-al3c cfg/macs.xml
+bin/al3c cfg/macs.xml
 <hr>
 <h2>Reference Manual</h2>
 
