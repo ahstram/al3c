@@ -167,8 +167,8 @@ void user_summary_t::summarize();
 		2.1.1 <a href="#param_t">param_t</a> 
 		2.1.2 <a href="#param_summary_t">param_summary_t</a>
 	2.2 Printing Parameter Data Type & Summarizing Acceptances
-		2.2.1 <a href="#print">print</a>
-		2.2.2 <a href="#summarize">summarize</a>
+		2.2.1 <a href="#print">user_t::print</a>
+		2.2.2 <a href="#summarize">user_summary_t::summarize</a>
 	2.3 Generating the Prior Distribution
 		2.3.1 <a href="#prior">prior</a> 
 		2.3.2 <a href="#prior_density">prior_density</a>
@@ -178,21 +178,17 @@ void user_summary_t::summarize();
 	2.5 Simulating Data & Measuring Goodness of Fit
 		2.5.1 <a href="#simulate">simulate</a>
 		2.5.2 <a href="#distance">distance</a>
-3 C++ Shared Library compilation
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
-#	$CC -Wall -O2 -shared -fPIC -o lib/libmacs.so macs-read-only/macs.cpp
-</pre>
-4 XML Requirements (<a href="user.xml.txt">sample</a>)
-	4.1 <a href="#lib">lib</a> - Shared library
-	4.2 MPI
-		4.2.1 <a href="#NP">NP</a> - Number of Processors
-	4.3 ABC
-		4.3.1 <a href="#G">G</a> - Generations
-		4.3.5 <a href="#R">R</a> - Rank
-		4.3.4 <a href="#E">E</a> - Epsilon
-		4.3.3 <a href="#A">A</a> - Acceptances
-		4.3.2 <a href="#T">T</a> - Trials
-	4.4 <a href="#O">O</a> - Observed data
+3 XML Requirements (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
+	3.1 <a href="#lib">lib</a> - Shared library
+	3.2 MPI
+		3.2.1 <a href="#NP">NP</a> - Number of Processors
+	3.3 ABC
+		3.3.1 <a href="#G">G</a> - Generations
+		3.3.5 <a href="#R">R</a> - Rank
+		3.3.4 <a href="#E">E</a> - Epsilon
+		3.3.3 <a href="#A">A</a> - Acceptances
+		3.3.2 <a href="#T">T</a> - Trials
+	3.4 <a href="#O">O</a> - Observed data
 
 <IMG WIDTH=560 HEIGHT=3 SRC="/graphics/USCBar2.gif" ALT="=====================================================================">
 
@@ -325,7 +321,7 @@ framework_t::summarize(param_t **params,uint A);
 <b>Example</b>
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 
-user_t::summarize(param_t **params, uint A) {
+user_summary_t::summarize(param_t **params, uint A) {
 
 	float m1=0,m2=0;
 
