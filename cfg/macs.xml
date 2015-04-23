@@ -10,7 +10,7 @@
 	<cheat>0</cheat>
 </ABC>
 <output>
-	<prefix>output/macs.1x1.66.</prefix> <!-- output file prefix -->
+	<prefix>output/macs.</prefix> <!-- output file prefix -->
 </output>
 <O>259	108	103	147
 119 53 66 132
