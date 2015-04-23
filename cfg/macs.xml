@@ -1,5 +1,5 @@
 <MPI>
-	<NP>1</NP>
+	<NP>1</NP> <!-- number of processors to use-->
 </MPI>
 <ABC>
 	<G>0</G> <!-- set to 1 if we just want rejection sampling, 0 to go forever -->
@@ -14,5 +14,5 @@
 </output>
 <O>259	108	103	147
 119 53 66 132
-100 46 61 128</O>
-<lib>macs/macs.so</lib>
+100 46 61 128</O> <!-- our observed data-->
+<lib>macs/macs.so</lib> <!-- location of users' shared library -->
