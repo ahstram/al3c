@@ -2,7 +2,7 @@
 	<NP>1</NP> <!-- number of processors to use-->
 </MPI>
 <ABC>
-	<G>0</G> <!-- set to 1 if we just want rejection sampling, 0 to go forever -->
+	<G>0</G> <!-- number of generations of SMC to run, set to 1 if we just want rejection sampling, 0 to go forever -->
 	<T>1000</T> <!-- minimum # of trials per generation -->
 	<A>1000</A> <!-- minimum # of  acceptances per generation -->
 	<R>750</R> <!-- after each generation, the accepted distances will be sorted. this picks which distance to use as our new epsilon -->
