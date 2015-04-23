@@ -104,6 +104,8 @@ the XML file will then specify
 - the observed dataset
 - number of processors to use
 - basic ABC-SMC parameters
+<h3>Compiling the al3c binary</h3>
+
 
 <h3>Writing the shared library</h3>
 Shared libraries for use with al3c should be written in cpp, and include the "al3c.hpp" file which is packaged with the al3c binary.
@@ -119,13 +121,18 @@ and defines two templates:
 user_t, the users' parameters of interest
 user_summary_t, a summary statistic for user_t
 
-The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</span>.
+The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</a>.
 
+For a sample shared library's source code, please see this <a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>.
 
 <h3>Compiling the shared library</h3>
 <h3>XML configuration</h3>
+The XML configuration file is loaded by al3c 
 
 <h3>Running al3c</h3>
+al3c is run with the XML files to load as its sole argument, for example:
+
+al3c cfg/macs.xml
 <hr>
 <h2>Reference Manual</h2>
 
@@ -158,7 +165,7 @@ The user must then define all functions listed in <a href="#cpp_req">C/C++ Requi
 	2.5 Simulating Data & Measuring Goodness of Fit
 		2.5.1 <a href="#simulate">user_t::simulate</a>
 		2.5.2 <a href="#distance">user_t::distance</a>
-3 XML Requirements (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
+3 <span id="xml_req">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
 	3.1 <a href="#lib">lib</a> - Shared library
 	3.2 MPI
 		3.2.1 <a href="#NP">NP</a> - Number of Processors
