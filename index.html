@@ -108,14 +108,14 @@ the XML file will then specify
 
 The following commands will obtain the al3c source code and and compile the al3c binary
 
-<pre class='brush: sh; gutter: false; toolbar: false;'>git clone http://github.com/ahstram/al3c.git
+<pre class='brush: bash; gutter: false; toolbar: false;'>git clone http://github.com/ahstram/al3c.git
 cd al3c
 make</pre>
 
 Note that this generally requires that MPI libraries be installed on the system. To avoid installing MPI libraries on Linux, you may obtain the al3c linux static binary from above. MPI libraries are required on OS X systems.
 
 <h3>Writing the shared library</h3>
-Shared libraries for use with al3c should be written in cpp, and include the "al3c.hpp" file which is packaged with the al3c binary.
+Shared libraries for use with al3c should be written in C++, and include the "al3c.hpp" file which is packaged with the al3c binary.
 
 al3c.hpp declares two functions: 
 
@@ -742,6 +742,7 @@ This can be a 2-dimensional matrix, rows delimited by newlines, columns delimite
  <script src="js/shCore.js"></script>
 <script src="js/shBrushXml.js"></script>
   <script src="js/shBrushCpp.js"></script>
+	<script src="js/shBrushBash.js"></script>
   <script>
     SyntaxHighlighter.all()
   </script>
