@@ -7,7 +7,7 @@
 	<A>1000</A> <!-- minimum # of  acceptances per generation -->
 	<R>750</R> <!-- after each generation, the accepted distances will be sorted. this picks which distance to use as our new epsilon -->
 	<E>66</E> <!-- when our distances are LTE to this, we quit!-->
-	<cheat>0</cheat>
+	<cheat>0</cheat> <!-- (experimental... ignore for now) -->
 </ABC>
 <output>
 	<prefix>output/macs.</prefix> <!-- output file prefix -->
