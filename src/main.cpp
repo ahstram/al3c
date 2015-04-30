@@ -82,7 +82,7 @@ int main (int argc, char *argv[] ) {
 	doc.parse<0>(&buffer[0]);    // 0 means default parse flags
 
 	char **args=new char*[4+argc];
-	strcpy(args[0]=new char[128],"/home/rcf-40/astram/al3c/bin/mpirun");
+	strcpy(args[0]=new char[7],"mpirun");
 	strcpy(args[1]=new char[4],"-np");
 	
 	if (!doc.first_node("MPI")->first_node("NP")) {

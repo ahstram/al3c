@@ -1,5 +1,5 @@
 <MPI>
-	<NP>1</NP> <!-- number of processors to use-->
+	<NP>2</NP> <!-- number of processors to use-->
 </MPI>
 <ABC>
 	<G>0</G> <!-- number of generations of SMC to run, set to 1 if we just want rejection sampling, 0 to go forever -->
