@@ -111,23 +111,23 @@ int main (int argc, char *argv[] ) {
 	xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(&buffer[0]);    // 0 means default parse flags
 
-	char **args=new char*[3+argc];
-	//strcpy(args[0]=new char[7],"mpirun");
-	strcpy(args[0]=new char[4],"-np");
+	char **args=new char*[4+argc];
+	strcpy(args[0]=new char[7],"mpirun");
+	strcpy(args[1]=new char[4],"-np");
 	
 	if (!doc.first_node("MPI")->first_node("NP")) {
 		cerr<<"Error: Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 
-	args[1]=doc.first_node("MPI")->first_node("NP")->value();
+	args[2]=doc.first_node("MPI")->first_node("NP")->value();
 	NP_XML=atoi(args[1]);
 
 	for (int i=0;i<argc;i++) {
-		args[2+i]=argv[i];
+		args[3+i]=argv[i];
 	}
 
-	args[2+argc]=NULL;
+	args[3+argc]=NULL;
 	
 
 	if (NP_XML!=NP && NP==1) {
