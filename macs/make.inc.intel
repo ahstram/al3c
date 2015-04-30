@@ -1,4 +1,0 @@
-CPP =  icc
-CPPFLAGS += -Wall -O2 -stdlib=libstdc++ -lstdc++ 
-CPPINCLUDEFLAGS += 
-CPPLIBFLAGS += 
