@@ -1,4 +1,0 @@
-MPI = mpiicpc
-MPIFLAGS += -Wall -O2 -rdynamic  -ldl -static_mpi
-MPIINCLUDEFLAGS += 
-MPILIBFLAGS +=
