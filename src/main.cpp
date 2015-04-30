@@ -22,6 +22,12 @@
 #include <iomanip>
 #include <stdint.h>
 #include <dlfcn.h>
+
+#include <stdlib.h>
+
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include <unistd.h>
 
 #include "rapidxml/rapidxml.hpp"
@@ -33,6 +39,30 @@
 #include "weight.cpp"
 #include "generate.cpp"
 #include "signal.cpp"
+
+int check_mpirun() {
+
+ struct stat sb;
+  string delimiter = ":";
+  string path = string(getenv("PATH"));
+  size_t start_pos = 0, end_pos = 0;
+
+  while ((end_pos = path.find(':', start_pos)) != string::npos)
+    {
+      string current_path =
+        path.substr(start_pos, end_pos - start_pos) + "/mpirun";
+
+      if ((stat(current_path.c_str(), &sb) == 0) && (sb.st_mode & S_IXOTH))
+        {
+          return 1;
+         }
+
+      start_pos = end_pos + 1;
+     }
+
+  return 0;
+}
+
 void print_cpu_info()
  {
 
@@ -81,27 +111,32 @@ int main (int argc, char *argv[] ) {
 	xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(&buffer[0]);    // 0 means default parse flags
 
-	char **args=new char*[4+argc];
-	strcpy(args[0]=new char[7],"mpirun");
-	strcpy(args[1]=new char[4],"-np");
+	char **args=new char*[3+argc];
+	//strcpy(args[0]=new char[7],"mpirun");
+	strcpy(args[0]=new char[4],"-np");
 	
 	if (!doc.first_node("MPI")->first_node("NP")) {
 		cerr<<"Error: Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 
-	args[2]=doc.first_node("MPI")->first_node("NP")->value();
-	NP_XML=atoi(args[2]);
+	args[1]=doc.first_node("MPI")->first_node("NP")->value();
+	NP_XML=atoi(args[1]);
 
 	for (int i=0;i<argc;i++) {
-		args[3+i]=argv[i];
+		args[2+i]=argv[i];
 	}
 
-	args[3+argc]=NULL;
+	args[2+argc]=NULL;
 	
 
 	if (NP_XML!=NP && NP==1) {
-		int returncode=execvp("mpirun",args); 
+		int returncode;
+
+		if (check_mpirun())
+			returncode=execvp("mpirun",args);
+		else
+			returncode=execvp("bin/mpirun",args); 
 
 		if (returncode!=0) 
 			cerr<<"Warning: mpirun exited with code '"<<returncode<<"'"<<endl;

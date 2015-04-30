@@ -184,7 +184,7 @@ if [ "x$I_MPI_PROCESS_MANAGER" != "xmpd" -a "x$I_MPI_PROCESS_MANAGER" != "xMPD" 
             if [ -z "$I_MPI_HYDRA_HOST_FILE" ]; then
                 export I_MPI_HYDRA_HOST_FILE=$LOADL_HOSTFILE
             fi
-            mpiexec.hydra $@ <&0
+            bin/mpiexec.hydra $@ <&0
             rc=$?
         elif [ -n "$PE_HOSTFILE" ]; then
             machinefile="/tmp/sge_machinefile_$username_$$"
@@ -198,7 +198,7 @@ if [ "x$I_MPI_PROCESS_MANAGER" != "xmpd" -a "x$I_MPI_PROCESS_MANAGER" != "xMPD" 
                     np_boot=$(( np_boot + 1 ))
                 fi
             done < $PE_HOSTFILE
-            mpiexec.hydra -machinefile $machinefile $@ <&0
+            bin/mpiexec.hydra -machinefile $machinefile $@ <&0
             rc=$?
             rm -rf $machinefile
         fi
@@ -206,7 +206,7 @@ if [ "x$I_MPI_PROCESS_MANAGER" != "xmpd" -a "x$I_MPI_PROCESS_MANAGER" != "xMPD" 
     elif [ -n "$NB_PARALLEL_JOB_HOSTS" ]; then
         hosts_opt=`echo $NB_PARALLEL_JOB_HOSTS | tr ' ' ','`
         hosts_opt="-hosts `hostname -s`,$hosts_opt"
-        mpiexec.hydra $hosts_opt $@ <&0
+        bin/mpiexec.hydra $hosts_opt $@ <&0
         rc=$?
     # PBS or ordinary job
     else
@@ -214,7 +214,7 @@ if [ "x$I_MPI_PROCESS_MANAGER" != "xmpd" -a "x$I_MPI_PROCESS_MANAGER" != "xMPD" 
             export I_MPI_HYDRA_HOST_FILE=mpd.hosts
         fi
 
-        mpiexec.hydra "$@" <&0
+        bin/mpiexec.hydra "$@" <&0
 
         rc=$?
     fi
