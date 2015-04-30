@@ -325,7 +325,7 @@ int main (int argc, char *argv[] ) {
 
         // GKC: getting rid of compiler warning as destroy_summary_type variable
         // was not needed.
-	(destroy_summary_t*)dlsym(handle,"destroy_summary");
+	//(destroy_summary_t*)dlsym(handle,"destroy_summary");
 	//destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
 	dlsym_error = dlerror();
 	if (dlsym_error) {
