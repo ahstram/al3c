@@ -15,4 +15,4 @@
 <O>259	108	103	147
 119 53 66 132
 100 46 61 128</O> <!-- our observed data-->
-<lib>macs/macs_linux-x86-64.so</lib> <!-- location of users' shared library -->
+<lib>macs/macs_linux_x86-64.so</lib> <!-- location of users' shared library -->

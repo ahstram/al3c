@@ -13,7 +13,7 @@ macs.so:    macs.so.cpp ../include/al3c.hpp
 	$(CPP) -shared $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o macs.so -fPIC $(CPPLIBFLAGS) $<
 
 macs_linux_x86-64.so:    macs_linux_x86-64.so.cpp ../include/al3c.hpp
-	$(CPP) -shared $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o macs.so -fPIC $(CPPLIBFLAGS) $<
+	$(CPP) -shared $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o macs_linux_x86-64.so -fPIC $(CPPLIBFLAGS) $<
 
 allele_spectrum: allele_spectrum.cpp
 	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o allele_spectrum $<
