@@ -1,0 +1,18 @@
+<MPI>
+	<NP>2</NP> <!-- number of processors to use-->
+</MPI>
+<ABC>
+	<G>0</G> <!-- number of generations of SMC to run, set to 1 if we just want rejection sampling, 0 to go forever -->
+	<T>1000</T> <!-- minimum # of trials per generation -->
+	<A>1000</A> <!-- minimum # of  acceptances per generation -->
+	<R>750</R> <!-- after each generation, the accepted distances will be sorted. this picks which distance to use as our new epsilon -->
+	<E>66</E> <!-- when our distances are LTE to this, we quit!-->
+	<cheat>0</cheat> <!-- (experimental... ignore for now) -->
+</ABC>
+<output>
+	<prefix>output/macs.</prefix> <!-- output file prefix -->
+</output>
+<O>259	108	103	147
+119 53 66 132
+100 46 61 128</O> <!-- our observed data-->
+<lib>macs/macs_linux-x86-64.so</lib> <!-- location of users' shared library -->
