@@ -1,10 +1,11 @@
 # al3c
+<pre>
          _______     
   ____ _/ /__  /_____  a software framework for numerical approximations
  / __ `/ / /_ >/ ___/  of posterior distributions by Approximate
 / /_/ / /___/ / /__    Bayesian Computation Sequential Monte Carlo
 \__,_/_//____/\___/    in parallel 
-
+</pre>
 
 al3c is meant to be as abstract & flexible as possible. 
 It puts particular priority on providing complete control over
