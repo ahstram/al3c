@@ -1,6 +1,6 @@
 # al3c
 
-#H1 Example 
+# al3c+MaCS Example 
 We provide an al3c example for parallelized ABC-SMC using the coalescent simulator MaCS, available at https://github.com/gchen98/macs
 
 Running the provided example with al3c on a Linux 64-bit system is as simple as issuing the following commands:
