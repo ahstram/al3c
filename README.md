@@ -21,6 +21,5 @@ git clone https://github.com/gchen98/macs.git macs-binary && cd macs-binary && m
 cd macs/ && make && cd ../  
 bin/al3c cfg/macs.xml  
 ```
-Please note that compiling MaCS requires C++ Boost libraries
 
 Modifications to the make.inc files in the al3c/ and al3c/macs/ directory may be necessary for your environment.
