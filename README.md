@@ -16,7 +16,8 @@ To compile the example from source, you will need to ensure that an MPI library 
 git clone https://github.com/ahstram/al3c.git  
 cd al3c/  
 make  
-git clone https://github.com/gchen98/macs.git macs-binary && cd macs-binary && make && ln -s ../macs-binary/macs ../macs/macs && cd ..  ## plesae note
+## The following command compiles the MaCS binary, which requires C++ Boost libraries be installed
+git clone https://github.com/gchen98/macs.git macs-binary && cd macs-binary && make && ln -s ../macs-binary/macs ../macs/macs && cd .. 
 cd macs/ && make && cd ../  
 bin/al3c cfg/macs.xml  
 ```
