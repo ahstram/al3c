@@ -257,12 +257,12 @@ user_t::print(bool header) {
 ````
 
 ####<span id="param_summary_t">param_summary_t</span>
+```cpp
+struct param_summary_t;
+```
 <i>A user defined struct giving summary statistics necessary for a dynamic perturbation kernel</i>
 
-<table bgcolor="lightgray"><tr><td>
-struct param_summary_t;
 
-</td></tr></table>
 <b>Example</b>
 ```cpp
 struct param_summary_t {
