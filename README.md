@@ -42,20 +42,6 @@ bin/al3c cfg/macs.xml
 ```
 
 Modifications to the make.inc files in the al3c/ and al3c/macs/ directory may be necessary for your environment.
-<hr>
-<pre>
-Downloads:
-	v2015.01: Linux x64 binaries: <a href="#">static</a> <a href="#">dynamic</a>
-		  OS X  x64 binaries: <a href="#">static</a> <a href="#">dynamic</a>
-		  source code: <a href="http://github.com/ahstram/al3c">github.com/ahstram/al3c.git</a>		
-
-Publications:
-	Stram, AH. Marjoram, P. Chen, GK. "al3c: High-performance 
-	software for parameter inference using Approximate Bayesian
-	Computation". Bioinformatics, 2015. (Submitted)</pre>
-<P>
-<hr>
-
 <pre style="overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
  white-space: pre-wrap; /* css-3 */
  white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
