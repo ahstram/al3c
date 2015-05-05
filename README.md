@@ -108,7 +108,36 @@ user_summary_t, a summary statistic for user_t
 The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</a>, in order to complete the definition of these two templates.
 
 For a sample shared library's source code, please see this <a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>.
-
+<pre>
+void user_t::prior();
+	|		+-----------------------+
+	|		|	         	|
+	|		V			|
+	|	user_t::perturb();<-----+	|
+	|		|		|	|
+	|		|		|	|
+	|		V		|	|
+	+-----> user_t::simulate(); 	|	|
+			|		|	|
+		   	|		|	|
+		   	V		|	|
+		user_t::distance();-----+	|
+			|			|
+			|   prior_density();	|	
+		     (weight)			|
+			|   perturb_density();  |
+			|			|
+			V			|
+		user_summary_t::summarize();	|
+	  		|			|
+			|			|
+			V			|
+		user_t::print(); ---------------+
+			|
+			|
+			V
+		  (output file)
+</pre>
 ###Compiling the shared library
 
 ###XML configuration
