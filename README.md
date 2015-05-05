@@ -172,7 +172,6 @@ bin/al3c cfg/macs.xml
 float u01();
 ```
 
-<b>Example</b>
 
 ```c++
 seed=u01();
