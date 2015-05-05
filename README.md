@@ -113,7 +113,7 @@ For a sample shared library's source code, please see this <a href="https://gith
 
 ###XML configuration
 
-The XML configuration must define all nodes listed in <a href="#xml_req">XML Requirements</a>. 
+The XML configuration must define all nodes listed in <a href="#xmlreq">XML Requirements</a>. 
 
 A sample XML file is available <a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">here</a>.
 
@@ -153,17 +153,17 @@ bin/al3c cfg/macs.xml
         2.5 Simulating Data & Measuring Goodness of Fit
                 2.5.1 <a href="#simulate">user_t::simulate</a>
                 2.5.2 <a href="#distance">user_t::distance</a>
-3 <span id="xml_req">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
-        3.1 <a href="#xml_lib">lib</a> - Shared library
+3 <span id="xmlreq">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
+        3.1 <a href="#xmllib">lib</a> - Shared library
         3.2 MPI
-                3.2.1 <a href="#xml_NP">NP</a> - Number of Processors
+                3.2.1 <a href="#xmlNP">NP</a> - Number of Processors
         3.3 ABC
-                3.3.1 <a href="#xml_G">G</a> - Generations
-                3.3.5 <a href="#xml_R">R</a> - Rank
-                3.3.4 <a href="#xml_E">E</a> - Epsilon
-                3.3.3 <a href="#xml_A">A</a> - Acceptances
-                3.3.2 <a href="#xml_T">T</a> - Trials
-        3.4 <a href="#xml_O">O</a> - Observed data
+                3.3.1 <a href="#xmlG">G</a> - Generations
+                3.3.5 <a href="#xmlR">R</a> - Rank
+                3.3.4 <a href="#xmlE">E</a> - Epsilon
+                3.3.3 <a href="#xmlA">A</a> - Acceptances
+                3.3.2 <a href="#xmlT">T</a> - Trials
+        3.4 <a href="#xmlO">O</a> - Observed data
 </pre>
 
 ###C/C++ Provisions
@@ -531,7 +531,7 @@ user_t::distance() {
 
 ###XML: lib
 
-####<span id="xml_lib">lib</span>
+####<span id="xmllib">lib</span>
 <i>C++ library to load</i>
 
 <b>Notes</b>
@@ -545,7 +545,7 @@ user_t::distance() {
 
 ###XML: MPI
 
-####<span id="xml_NP">NP</span>
+####<span id="xmlNP">NP</span>
 <i>Number of processors to use</i>
 
 <b>Notes</b>
@@ -562,7 +562,7 @@ This should be the total number of processors <i>al3c</i> will be run with. If t
 ###XML: ABC
 
 
-####<span id="G">G</span>
+####<span id="xmlG">G</span>
 <i>Minimum number of generations of ABC-SMC to run before al3c quits</i>
 
 <b>Acceptable values</b>
@@ -571,7 +571,7 @@ integers in {0,1,...}
 <b>Notes</b>
 This is the minimum number of generations of ABC-SMC to run. 
 
-<i>al3c</i> will not quit until both "G" and "<a href="#xml_E">E</a>" are satisfied. If you'd like to quit strictly based on "G", set "E" to be "0".
+<i>al3c</i> will not quit until both "G" and "<a href="#xmlE">E</a>" are satisfied. If you'd like to quit strictly based on "G", set "E" to be "0".
 
 <b>Example</b>
 ```xml
@@ -580,7 +580,7 @@ This is the minimum number of generations of ABC-SMC to run.
 </ABC>
 ```
 
-####<span id="xml_R">R</span>
+####<span id="xmlR">R</span>
 <i>Rank of accepted parameter to set next generation's epsilon to</i>
 
 <b>Acceptable values</b>
@@ -611,7 +611,7 @@ If we would like to change the quantile used for each generation, we can specify
 ```
 
 
-####<span id="xml_E">E</span>
+####<span id="xmlE">E</span>
 <i>Maximum distance to observed data all accepted simulations in a generation must have before al3c quits</i>
 
 <b>Acceptable values</b>
@@ -621,9 +621,9 @@ strictly decreasing reals in [0,&infin;)<sup>G</sup>
 <b>Notes</b>
 When all accepted parameters in the most recent generation have simulated datasets with a distance from observed data less than or equal to "E", we quit.
 
-If you desire to explicitly set a rejection threshold schedule  ("epsilon schedule"), you can do so by letting this value be a vector of G strictly decreasing values, delimited by spaces or tabs. In that case, "<a href="#xml_R">R</a>" must be set to "0". Otherwise, use "R" for dynamic rank-based epsilon schedules. 
+If you desire to explicitly set a rejection threshold schedule  ("epsilon schedule"), you can do so by letting this value be a vector of G strictly decreasing values, delimited by spaces or tabs. In that case, "<a href="#xmlR">R</a>" must be set to "0". Otherwise, use "R" for dynamic rank-based epsilon schedules. 
 
-<i>al3c</i> will not quit until both "<a href="#xml_G">G</a>" and "E" are satisfied. If you'd like to quit strictly based on "E", set "G" to be "0".
+<i>al3c</i> will not quit until both "<a href="#xmlG">G</a>" and "E" are satisfied. If you'd like to quit strictly based on "E", set "G" to be "0".
 
 <b>Example</b>
 ```xml
@@ -639,7 +639,7 @@ If you desire to explicitly set a rejection threshold schedule  ("epsilon schedu
 ```
 
 
-####<span id="xml_A">A</span>
+####<span id="xmlA">A</span>
 <i>Number of accepted trials ("acceptances") per generation</i>
 
 <b>Acceptable values</b>
@@ -658,14 +658,14 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 </ABC>
 ```
 
-####<span id="T">T</span>
+####<span id="xmlT">T</span>
 <i>Minimum number of trials per generation</i>
 
 <b>Acceptable values</b>
 integers in {1,2,...}
 
 <b>Notes</b>
-This is the minimum number of trials we must have per generation. Each trial is either accepted or rejected. There may be more trials than specified here depending on the values of "<a href="#xml_E">E</a>" and "<a href="#xml_R">R</a>" are set.
+This is the minimum number of trials we must have per generation. Each trial is either accepted or rejected. There may be more trials than specified here depending on the values of "<a href="#xmlE">E</a>" and "<a href="#xmlR">R</a>" are set.
 
 The actual value used may be slightly higher than specified here, so that "<a href="#NP">NP</a>" divides "T", allowing for even allocation of computation across processors.
 
@@ -680,7 +680,7 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 
 ###XML: O
 
-####<span id="xml_O">O</span>
+####<span id="xmlO">O</span>
 <i>Observed data to simulate</i>
 
 <b>Notes</b>
