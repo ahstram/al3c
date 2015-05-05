@@ -17,7 +17,9 @@ space is not necessarily <i>R^n</i>
 	niche scientific questions, and would like to speed
 	things up by using ABC in parallel without too much 
 	parallel programming or effort.  
+
 	2) Those seeking use ABC with coalescent theory models.   
+
 
 To accomodate the latter users, we provide a number of examples using 
 <i>al3c</i> with <i>macs</i>, a  Markovian coalescent theory simulator, which can
