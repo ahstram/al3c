@@ -595,6 +595,7 @@ This should be the total number of processors <i>al3c</i> will be run with. If t
 <i>Minimum number of generations of ABC-SMC to run before al3c quits</i>
 
 <b>Acceptable values</b>
+
 integers in {0,1,...}
 
 <b>Notes</b>
@@ -648,6 +649,7 @@ If we would like to change the quantile used for each generation, we can specify
 <i>Maximum distance to observed data all accepted simulations in a generation must have before al3c quits</i>
 
 <b>Acceptable values</b>
+
 reals in [0,&infin;)
 strictly decreasing reals in [0,&infin;)<sup>G</sup>
 
@@ -677,6 +679,7 @@ If you desire to explicitly set a rejection threshold schedule  ("epsilon schedu
 <i>Number of accepted trials ("acceptances") per generation</i>
 
 <b>Acceptable values</b>
+
 integers in {1,2,...,T}
 
 <b>Notes</b>
@@ -697,6 +700,7 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 <i>Minimum number of trials per generation</i>
 
 <b>Acceptable values</b>
+
 integers in {1,2,...}
 
 <b>Notes</b>
