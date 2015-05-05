@@ -256,9 +256,10 @@ user_t::print(bool header) {
 }
 ````
 
-####<span id="param_summary_t">```cpp
+####<span id="param_summary_t">param_summary_t</span>
+```cpp
 struct param_summary_t;
-```</span>
+```
 <i>A user defined struct giving summary statistics necessary for a dynamic perturbation kernel</i>
 
 
