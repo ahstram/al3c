@@ -78,6 +78,8 @@ the XML file will then specify
 
 ###Compiling the al3c binary
 
+Note that compiling al3c requires MPI libraries be installed. To avoid installing MPI libraries on a Linux 64-bit system, you may instead use the static binary "bin/al3c_linux_x86-64" and skip this step.
+
 The following commands will obtain the al3c source code and and compile the al3c binary
 
 ```bash
@@ -86,10 +88,8 @@ cd al3c
 make
 ```
 
-Note that this generally requires that MPI libraries be installed on the system. To avoid installing MPI libraries on Linux 64-bit, you may skip the "make" step above, and use the included static binary in the "bin/" directory. MPI libraries are required on OS X systems.
-
 ###Coding the shared library
-Shared libraries for use with al3c should be written in C++, and include the "al3c.hpp" file which is packaged with the al3c binary.
+Shared libraries for use with al3c should be written in C++, and include the "al3c.hpp" file which is found in the "include" directory. 
 
 al3c.hpp declares two functions: 
 
@@ -100,6 +100,7 @@ al3c.hpp declares two functions:
 and defines two templates:
 
 user_t, the users' parameters of interest
+
 user_summary_t, a summary statistic for user_t
 
 The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</a>.
