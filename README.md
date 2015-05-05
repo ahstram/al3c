@@ -61,7 +61,9 @@ al3c consists of three components: the al3c binary, a user-defined shared librar
 |___________|
 
 </pre>
-No modification is necessary to the al3c binary-- it is readily available in the git repository. We are therefore most concerned with creating the shared library which will, at the very minimum, specify the:
+No modification is necessary to the al3c binary-- it is readily available in the git repository. 
+
+We must create a shared library which will specify the:
 
 - parameter space
 - prior distribution
@@ -72,7 +74,7 @@ No modification is necessary to the al3c binary-- it is readily available in the
 and an XML configuration file, which will specify
 
 - the location of the shared library (.so file)
-- the observed dataset
+- the observed datas
 - number of processors to use
 - basic ABC-SMC parameters
 
@@ -110,13 +112,15 @@ For a sample shared library's source code, please see this <a href="https://gith
 ###Compiling the shared library
 
 ###XML configuration</h3>
-The XML configuration file is loaded by al3c 
+
+The XML configuration must define all nodes listed in <a href="#xml_req">XML Requirements</a>. 
+
+A sample XML file is available <a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">here</a>.
 
 ###Running al3c</h3>
 al3c is run with the XML files to load as its sole argument, for example:
 
 bin/al3c cfg/macs.xml
-
 
 ##Reference Manual</h2>
 <pre>
