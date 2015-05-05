@@ -56,7 +56,7 @@ al3c consists of three components: the al3c binary, a user-defined shared librar
                |   al3c  | -----> | desired output |
               /|_________|        |                |
  ___________ /                    |                |
-|            |                    |________________|
+|           |                     |________________|
 | .so file  |
 |___________|
 
