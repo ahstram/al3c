@@ -281,9 +281,9 @@ struct param_summary_t {
 ####<span id="summarize">summarize</span>
 <i>Write to param_summary_t based on an array of param_t's</i>
 
-<table bgcolor="lightgray"><tr><td>
+```cpp
 framework_t::summarize(param_t **params,uint A);
-</td></tr></table>
+```
 <b>Relevant Variables</b>
 
 <font color="green">param_t **params</font> - parameter to format 
