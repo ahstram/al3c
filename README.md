@@ -713,6 +713,6 @@ This can be a 2-dimensional matrix, rows delimited by newlines, columns delimite
 ```xml
 <O>259        108        103        147
 119        53        66        132
-100        46        61        128</O>;
+100        46        61        128</O>
 ```
 
