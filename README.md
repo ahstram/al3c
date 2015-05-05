@@ -156,7 +156,7 @@ bin/al3c cfg/macs.xml
 3 <span id="xmlreq">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
         3.1 <a href="#lib">lib</a> - Shared library
         3.2 MPI
-                3.2.1 <a href="#xmlNP">NP</a> - Number of Processors
+                3.2.1 <a href="#NP">NP</a> - Number of Processors
         3.3 ABC
                 3.3.1 <a href="#xmlG">G</a> - Generations
                 3.3.5 <a href="#xmlR">R</a> - Rank
@@ -542,7 +542,7 @@ user_t::distance() {
 
 ###XML: MPI
 
-####<span id="xmlNP">NP</span>
+####<span id="NP">NP</span>
 <i>Number of processors to use</i>
 
 <b>Notes</b>
