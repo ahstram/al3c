@@ -136,7 +136,7 @@ bin/al3c cfg/macs.xml
 2 <span id="cpp_req">C/C++ Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>)
         2.1 Parameter & Parameter Summary Statistic Data Types
                 2.1.1 <a href="#param_t">param_t</a>
-		2.1.2 <a href="#size_of_param_t">user_t::size_of_param_t</a>
+                2.1.2 <a href="#size_of_param_t">user_t::size_of_param_t</a>
                 2.1.3 <a href="#param_summary_t">param_summary_t</a>
         2.2 Printing Parameter Data Type & Summarizing Acceptances
                 2.2.1 <a href="#print">user_t::print</a>
