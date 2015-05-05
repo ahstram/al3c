@@ -476,8 +476,7 @@ framework_t::simulate();
 <font color="brown">float **S</font> -  An <font color="blue">N</font>*<font color="blue">D</font> array of floating points containing simulated data
 
 <b>Example</b>
-<table  style="table-layout: fixed; width: 100%">
-<tr><td style="word-wrap: break-word">
+
 ```cpp
 user_t::simulate() {
 
