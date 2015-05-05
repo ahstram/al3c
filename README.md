@@ -442,8 +442,6 @@ void user_t::perturb() {
  
 <b>Example</b>
 
-<table  style="table-layout: fixed; width: 100%">
-<tr><td style="word-wrap: break-word">
 ```cpp
 float user_t::perturb_density() {
 
@@ -458,7 +456,6 @@ float user_t::perturb_density() {
         return 1.f;        
 }
 ```
-</td></tr></table>
 
 ###C/C++: Data simulation
 
