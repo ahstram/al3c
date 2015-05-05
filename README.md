@@ -280,7 +280,7 @@ struct param_summary_t;
 
 </td></tr></table>
 <b>Example</b>
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 struct param_summary_t {
 
         float MigrationRate_EurToAfr_Variance,
@@ -292,7 +292,7 @@ struct param_summary_t {
               PastEvent_EurToAfrMigration_Variance;
 
 } user_t::size_of_param_summary_t() { return sizeof(param_summary_t); }
-</pre>
+```
 ####<span id="summarize">summarize</span>
 <i>Write to param_summary_t based on an array of param_t's</i>
 
@@ -310,8 +310,7 @@ framework_t::summarize(param_t **params,uint A);
 
 
 <b>Example</b>
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
-
+```cpp
 user_summary_t::summarize(param_t **params, uint A) {
 
         float m1=0,m2=0;
@@ -346,9 +345,7 @@ user_summary_t::summarize(param_t **params, uint A) {
 
 
 }
-
-</pre>
-
+```
 ###C/C++: Generating the Prior Distribution
 
 ####<span id="prior">prior</span>
@@ -363,7 +360,7 @@ void framework_t::prior();
 
 
 <b>Example</b>
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 void user_t::prior() {
 
         param->MigrationRate_EurToAfr=u01()*0.4+0.84; // Unif[0.84,1.24]
@@ -374,8 +371,7 @@ void user_t::prior() {
         param->GrowthRate_Asn=u01()*0.45+0.30; // Unif[0.30, 0.75]
         param->PastEvent_EurToAfrMigration=u01()*2.8+4.8; // Unif[4.8,7.6]
 }
-
-</pre>
+```
 
 
 ####<span id="prior_density">prior_density<span>
@@ -396,7 +392,7 @@ float <font color="red"><return value></font> - The density of <font color="gree
 
 <table  style="table-layout: fixed; width: 100%">
 <tr><td style="word-wrap: break-word">
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 void user_t::prior_density {
 
         if (0.84<=param->MigrationRate_EurToAfr && param->MigrationRate_EurToAfr<=1.24
@@ -411,7 +407,7 @@ void user_t::prior_density {
                 return 0;
 }
 
-</pre>
+```
 </td></tr></table>
 
 ###C/C++: Perturbing Variables
@@ -435,7 +431,7 @@ void framework_t::perturb();
 
 <table  style="table-layout: fixed; width: 100%">
 <tr><td style="word-wrap: break-word">
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 void user_t::perturb() {
 
         param->MigrationRate_EurToAfr+=(u01()-0.5f)*sqrt(2*param_summary->MigrationRate_EurToAfr_Variance*12);
@@ -444,7 +440,7 @@ void user_t::perturb() {
 
         param->PastEvent_EurToAfrMigration+=(u01()-0.5f)*sqrt(2*param_summary->PastEvent_EurToAfrMigration*12);
 }
-</pre>
+```
 </td></tr></table>
 
 
@@ -468,7 +464,7 @@ void user_t::perturb() {
 
 <table  style="table-layout: fixed; width: 100%">
 <tr><td style="word-wrap: break-word">
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 float user_t::perturb_density() {
 
         if ( fabs(param->MigrationRate_EurToAfr - old_param->MigrationRate_EurToAfr) > sqrt(2*param_summary->MigrationRate_EurToAfr_Variance*12)/2.f ) 
@@ -481,7 +477,7 @@ float user_t::perturb_density() {
 
         return 1.f;        
 }
-</pre>
+```
 </td></tr></table>
 
 ###C/C++: Data simulation
@@ -561,8 +557,9 @@ user_t::distance() {
 <b>Notes</b>
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
-<lib>/home/rcf-40/astram/al3c/lib/libmacs.so</lib></pre>
+```xml
+<lib>/home/rcf-40/astram/al3c/lib/libmacs.so</lib>
+```
 
 
 
@@ -575,10 +572,11 @@ user_t::distance() {
 This should be the total number of processors <i>al3c</i> will be run with. If there are 8 nodes, each with 8 processors, we specify NP as "64" and let the MPI system do the rest.
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 <MPI>
         <NP>64</NP>  
-</MPI></pre>
+</MPI>
+```
 
 
 ###XML: ABC
@@ -596,11 +594,11 @@ This is the minimum number of generations of ABC-SMC to run.
 <i>al3c</i> will not quit until both "G" and "<a href="#E">E</a>" are satisfied. If you'd like to quit strictly based on "G", set "E" to be "0".
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 <ABC>
         <G>15</G>  
 </ABC>
-</pre>
+```
 
 ####<span id="T">T</span>
 <i>Minimum number of trials per generation</i>
@@ -615,11 +613,11 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 <ABC>
         <T>10000</T>  
 </ABC>
-</pre>
+```
 
 
 ####<span id="A">A</span>
@@ -635,11 +633,11 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 <ABC>
         <A>1000</A>  
 </ABC>
-</pre>
+```
 
 
 ####<span id="E">E</span>
@@ -657,7 +655,7 @@ If you desire to explicitly set a rejection threshold schedule  ("epsilon schedu
 <i>al3c</i> will not quit until both "<a href="#G">G</a>" and "E" are satisfied. If you'd like to quit strictly based on "E", set "G" to be "0".
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 <ABC>
         <E>1.4</E>  
 </ABC>
@@ -667,8 +665,7 @@ If you desire to explicitly set a rejection threshold schedule  ("epsilon schedu
 <ABC>
         <E>100 90 80 70 60 50 40 30 20 10 5 4 3 2 1</E>  
 </ABC>
-</pre>
-
+```
 
 
 
@@ -690,7 +687,7 @@ If we would like to change the quantile used for each generation, we can specify
 
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 <ABC>
         <R>250</R>  
 </ABC>
@@ -700,7 +697,7 @@ If we would like to change the quantile used for each generation, we can specify
 <ABC>
         <E>750 500 400 300 250 250 250 250 250 250 250 250 250 300 400</E>
 </ABC>
-</pre>
+```
 ###XML: O
 
 ####<span id="O">O</span>
