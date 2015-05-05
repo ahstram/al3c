@@ -6,13 +6,6 @@
 \__,_/_//____/\___/    in parallel 
 </pre><hr>
 
-al3c is meant to be as abstract & flexible as possible. 
-It puts particular priority on providing complete control over
-perturbation kernels to the user, for cases when the parameter
-space is not necessarily <i>R^n</i>
-
-
-
 <i>al3c</i> is written for two types of users:
 
 1) Those who have written their own software to address
