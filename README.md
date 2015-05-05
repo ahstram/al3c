@@ -168,9 +168,9 @@ bin/al3c cfg/macs.xml
 
 <i>Uniform random number generator</i>
 
-<table bgcolor="lightgray"><tr><td>
+```c++
 float u01();
-</td></tr></table>
+```
 
 <b>Example</b>
 
