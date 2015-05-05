@@ -154,7 +154,7 @@ bin/al3c cfg/macs.xml
                 2.5.1 <a href="#simulate">user_t::simulate</a>
                 2.5.2 <a href="#distance">user_t::distance</a>
 3 <span id="xmlreq">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
-        3.1 <a href="#lib">lib</a> - Shared library
+        3.1 <a href="#xmllib">lib</a> - Shared library
         3.2 MPI
                 3.2.1 <a href="#xmlNP">NP</a> - Number of Processors
         3.3 ABC
@@ -531,7 +531,7 @@ user_t::distance() {
 
 ###XML: lib
 
-####<span id="lib">lib</span>
+####<span id="xmllib">lib</span>
 <i>C++ library to load</i>
 
 <b>Notes</b>
