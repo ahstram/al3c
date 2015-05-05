@@ -535,7 +535,7 @@ user_t::distance() {
 
 <b>Example</b>
 ```xml
-<lib>/home/rcf-40/astram/al3c/lib/libmacs.so</lib>
+<lib>lib/libmacs.so</lib>
 ```
 
 
