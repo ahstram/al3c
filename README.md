@@ -1,5 +1,6 @@
 # al3c
-<hr><pre>
+<hr>
+<pre>
          _______     
   ____ _/ /__  /_____  a software framework for numerical approximations
  / __ `/ / /_ >/ ___/  of posterior distributions by Approximate
