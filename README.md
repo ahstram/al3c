@@ -278,10 +278,6 @@ struct param_summary_t {
 } 
 ```
 
-
-
-
-
 ####<span id="summarize">summarize</span>
 <i>Write to param_summary_t based on an array of param_t's</i>
 
