@@ -200,7 +200,7 @@ See <a href="#simulate">simulate()</a>
 struct param_t;
 </td></tr></table>
 <b>Example</b>
-```cpp
+```c++
 struct param_t {
 
         float MigrationRate_EurToAfr,
