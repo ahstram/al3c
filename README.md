@@ -481,20 +481,23 @@ float user_t::perturb_density() {
 ###C/C++: Data simulation
 
 ####<span id="simulate">simulate</span>
+```cpp
+framework_t::simulate();
+```
 <i>Simulate data according to given parameters</i>
 
-<table bgcolor="lightgray"><tr><td>
-framework_t::simulate();
-</td></tr></table>
 <b>Revelant Variables</b>
-
-<font color="green">param_t *param</font> - The parameter to simulate with
-<font color="blue">uint N</font> -  The number of rows of simulated/observed data
-<font color="blue">uint D</font> -  The number of columns (<b>D</b>imensions) of simulated/observed data
+```cpp
+param_t *param; // The parameter to simulate with
+uint N; // The number of rows of simulated/observed data
+uint D; // The number of columns (<b>D</b>imensions) of simulated/observed data
+```
 
 <b>Return Variables</b>
 
-<font color="brown">float **S</font> -  An <font color="blue">N</font>*<font color="blue">D</font> array of floating points containing simulated data
+```cpp
+float **S; // An N*D array of floating points containing simulated data
+```
 
 <b>Example</b>
 
