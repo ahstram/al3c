@@ -4,7 +4,7 @@
  / __ `/ / /_ >/ ___/  of posterior distributions by Approximate
 / /_/ / /___/ / /__    Bayesian Computation Sequential Monte Carlo
 \__,_/_//____/\___/    in parallel 
-</pre><hr>
+</pre>
 
 <i>al3c</i> is written for two types of users:
 
