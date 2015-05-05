@@ -509,7 +509,7 @@ framework_t::simulate();
 <b>Example</b>
 <table  style="table-layout: fixed; width: 100%">
 <tr><td style="word-wrap: break-word">
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 user_t::simulate() {
 
         ostringstream cmd;
@@ -521,15 +521,16 @@ user_t::simulate() {
         //this is a helper function that will write to **S
         exec_cmd(cmd.str().c_str());
 }
-</td></tr></table>
+```
 
 ####<span id="distance">distance</span>
 
 <i>Give the distance between simulated & observed data</i>
 
-<table bgcolor="lightgray"><tr><td>
+```cpp
 float framework_t::distance();
-</td></tr></table>
+```
+
 <b>Relevant Variables</b>
 
 <font color="blue">uint N</font> -  The number of rows of simulated/observed data
@@ -542,7 +543,8 @@ float framework_t::distance();
 <font color="red">float <return value></font> - The distance between observed & simulated data
  
 <b>Example</b>
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
+
 user_t::distance() {
 
         float r=0;
@@ -553,7 +555,8 @@ user_t::distance() {
 
         return sqrt(r);
 }
-</pre>
+```
+
 ###XML: lib</h3>
 
 ####<span id="lib">lib</span></h4>
