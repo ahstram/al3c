@@ -42,15 +42,10 @@ bin/al3c cfg/macs.xml
 ```
 
 Modifications to the make.inc files in the al3c/ and al3c/macs/ directory may be necessary for your environment.
-<pre style="overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
- white-space: pre-wrap; /* css-3 */
- white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
- white-space: -pre-wrap; /* Opera 4-6 */
- white-space: -o-pre-wrap; /* Opera 7 */
- word-wrap: break-word; /* Internet Explorer 5.5+ */">
-<h2>Tutorial</h2>
-<h3>Overview</h3>
+#Tutorial 
+
 al3c consists of three components: the al3c binary, a user-defined shared library (.so file), and an XML file, which specifies parameters to be used with the user-defined shared library (.so file).
+<pre>
 
  ___________
 |	    |
@@ -65,6 +60,7 @@ al3c consists of three components: the al3c binary, a user-defined shared librar
 | .so file  |
 |___________|
 
+</pre>
 No modification is necessary to the al3c binary-- it is readily available from the above download links. We are therefore most concerned with creating the shared library which will, at the very minimum, specify the:
 
 - parameter space
