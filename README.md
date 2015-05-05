@@ -275,7 +275,7 @@ struct param_summary_t {
               GrowthRate_Asn_Variance,
               PastEvent_EurToAfrMigration_Variance;
 
-} 
+};
 ```
 
 ####<span id="summarize">summarize</span>
