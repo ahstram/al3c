@@ -1,5 +1,3 @@
-# al3c
-<hr>
 <pre>
          _______     
   ____ _/ /__  /_____  a software framework for numerical approximations
