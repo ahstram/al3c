@@ -345,11 +345,12 @@ user_summary_t::summarize(param_t **params, uint A) {
 ###C/C++: Generating the Prior Distribution
 
 ####<span id="prior">prior</span>
+```cpp
+void framework_t::prior();
+```
 <i>Generate random parameters from the prior distribution</i>
 
-<table bgcolor="lightgray"><tr><td>
-void framework_t::prior();
-</td></tr></table>
+
 <b>Return Variables</b>
 
 ```cpp
