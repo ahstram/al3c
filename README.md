@@ -109,7 +109,7 @@ For a sample shared library's source code, please see this <a href="https://gith
 
 ###Compiling the shared library
 
-###>XML configuration</h3>
+###XML configuration</h3>
 The XML configuration file is loaded by al3c 
 
 ###Running al3c</h3>
@@ -119,7 +119,7 @@ bin/al3c cfg/macs.xml
 
 
 ##Reference Manual</h2>
-
+<pre>
 1 C/C++ Provisions
         1.1 Variables
                 1.1.1 <a href="#param">param</a> 
@@ -160,7 +160,7 @@ bin/al3c cfg/macs.xml
                 3.3.3 <a href="#A">A</a> - Acceptances
                 3.3.2 <a href="#T">T</a> - Trials
         3.4 <a href="#O">O</a> - Observed data
-
+</pre>
 <IMG WIDTH=560 HEIGHT=3 SRC="/graphics/USCBar2.gif" ALT="=====================================================================">
 
 <h3>C/C++ Provisions</h3>
