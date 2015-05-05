@@ -158,11 +158,11 @@ bin/al3c cfg/macs.xml
         3.2 MPI
                 3.2.1 <a href="#xml_NP">NP</a> - Number of Processors
         3.3 ABC
-                3.3.1 <a href="#G">G</a> - Generations
-                3.3.5 <a href="#R">R</a> - Rank
-                3.3.4 <a href="#E">E</a> - Epsilon
-                3.3.3 <a href="#A">A</a> - Acceptances
-                3.3.2 <a href="#T">T</a> - Trials
+                3.3.1 <a href="#xml_G">G</a> - Generations
+                3.3.5 <a href="#xml_R">R</a> - Rank
+                3.3.4 <a href="#xml_E">E</a> - Epsilon
+                3.3.3 <a href="#xml_A">A</a> - Acceptances
+                3.3.2 <a href="#xml_T">T</a> - Trials
         3.4 <a href="#xml_O">O</a> - Observed data
 </pre>
 
@@ -571,7 +571,7 @@ integers in {0,1,...}
 <b>Notes</b>
 This is the minimum number of generations of ABC-SMC to run. 
 
-<i>al3c</i> will not quit until both "G" and "<a href="#E">E</a>" are satisfied. If you'd like to quit strictly based on "G", set "E" to be "0".
+<i>al3c</i> will not quit until both "G" and "<a href="#xml_E">E</a>" are satisfied. If you'd like to quit strictly based on "G", set "E" to be "0".
 
 <b>Example</b>
 ```xml
@@ -580,76 +580,7 @@ This is the minimum number of generations of ABC-SMC to run.
 </ABC>
 ```
 
-####<span id="T">T</span>
-<i>Minimum number of trials per generation</i>
-
-<b>Acceptable values</b>
-integers in {1,2,...}
-
-<b>Notes</b>
-This is the minimum number of trials we must have per generation. Each trial is either accepted or rejected. There may be more trials than specified here depending on the values of "<a href="#E">E</a>" and "<a href="#R">R</a>" are set.
-
-The actual value used may be slightly higher than specified here, so that "<a href="#NP">NP</a>" divides "T", allowing for even allocation of computation across processors.
-
-
-<b>Example</b>
-```xml
-<ABC>
-        <T>10000</T>  
-</ABC>
-```
-
-
-####<span id="A">A</span>
-<i>Number of accepted trials ("acceptances") per generation</i>
-
-<b>Acceptable values</b>
-integers in {1,2,...,T}
-
-<b>Notes</b>
-This is the number of accepted parameters we desire per generation.
-
-The actual value used may be slightly higher than specified here, so that "<a href="#NP">NP</a>" divides "A", allowing for even allocation of computation across processors.
-
-
-<b>Example</b>
-```xml
-<ABC>
-        <A>1000</A>  
-</ABC>
-```
-
-
-####<span id="E">E</span>
-<i>Maximum distance to observed data all accepted simulations in a generation must have before al3c quits</i>
-
-<b>Acceptable values</b>
-reals in [0,&infin;)
-strictly decreasing reals in [0,&infin;)<sup>G</sup>
-
-<b>Notes</b>
-When all accepted parameters in the most recent generation have simulated datasets with a distance from observed data less than or equal to "E", we quit.
-
-If you desire to explicitly set a rejection threshold schedule  ("epsilon schedule"), you can do so by letting this value be a vector of G strictly decreasing values, delimited by spaces or tabs. In that case, "<a href="#R">R</a>" must be set to "0". Otherwise, use "R" for dynamic rank-based epsilon schedules. 
-
-<i>al3c</i> will not quit until both "<a href="#G">G</a>" and "E" are satisfied. If you'd like to quit strictly based on "E", set "G" to be "0".
-
-<b>Example</b>
-```xml
-<ABC>
-        <E>1.4</E>  
-</ABC>
-
-<!-- Or, if we'd like to set an explicit epsilon schedule, do it like this: -->
-
-<ABC>
-        <E>100 90 80 70 60 50 40 30 20 10 5 4 3 2 1</E>  
-</ABC>
-```
-
-
-
-####<span id="R">R</span>
+####<span id="xml_R">R</span>
 <i>Rank of accepted parameter to set next generation's epsilon to</i>
 
 <b>Acceptable values</b>
@@ -678,6 +609,75 @@ If we would like to change the quantile used for each generation, we can specify
         <E>750 500 400 300 250 250 250 250 250 250 250 250 250 300 400</E>
 </ABC>
 ```
+
+
+####<span id="xml_E">E</span>
+<i>Maximum distance to observed data all accepted simulations in a generation must have before al3c quits</i>
+
+<b>Acceptable values</b>
+reals in [0,&infin;)
+strictly decreasing reals in [0,&infin;)<sup>G</sup>
+
+<b>Notes</b>
+When all accepted parameters in the most recent generation have simulated datasets with a distance from observed data less than or equal to "E", we quit.
+
+If you desire to explicitly set a rejection threshold schedule  ("epsilon schedule"), you can do so by letting this value be a vector of G strictly decreasing values, delimited by spaces or tabs. In that case, "<a href="#xml_R">R</a>" must be set to "0". Otherwise, use "R" for dynamic rank-based epsilon schedules. 
+
+<i>al3c</i> will not quit until both "<a href="#xml_G">G</a>" and "E" are satisfied. If you'd like to quit strictly based on "E", set "G" to be "0".
+
+<b>Example</b>
+```xml
+<ABC>
+        <E>1.4</E>  
+</ABC>
+
+<!-- Or, if we'd like to set an explicit epsilon schedule, do it like this: -->
+
+<ABC>
+        <E>100 90 80 70 60 50 40 30 20 10 5 4 3 2 1</E>  
+</ABC>
+```
+
+
+####<span id="xml_A">A</span>
+<i>Number of accepted trials ("acceptances") per generation</i>
+
+<b>Acceptable values</b>
+integers in {1,2,...,T}
+
+<b>Notes</b>
+This is the number of accepted parameters we desire per generation.
+
+The actual value used may be slightly higher than specified here, so that "<a href="#NP">NP</a>" divides "A", allowing for even allocation of computation across processors.
+
+
+<b>Example</b>
+```xml
+<ABC>
+        <A>1000</A>  
+</ABC>
+```
+
+####<span id="T">T</span>
+<i>Minimum number of trials per generation</i>
+
+<b>Acceptable values</b>
+integers in {1,2,...}
+
+<b>Notes</b>
+This is the minimum number of trials we must have per generation. Each trial is either accepted or rejected. There may be more trials than specified here depending on the values of "<a href="#xml_E">E</a>" and "<a href="#xml_R">R</a>" are set.
+
+The actual value used may be slightly higher than specified here, so that "<a href="#NP">NP</a>" divides "T", allowing for even allocation of computation across processors.
+
+
+<b>Example</b>
+```xml
+<ABC>
+        <T>10000</T>  
+</ABC>
+```
+
+
 ###XML: O
 
 ####<span id="xml_O">O</span>
