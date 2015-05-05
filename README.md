@@ -42,7 +42,7 @@ bin/al3c cfg/macs.xml
 ```
 
 Modifications to the make.inc files in the al3c/ and al3c/macs/ directory may be necessary for your environment.
-#Tutorial 
+##Tutorial 
 
 al3c consists of three components: the al3c binary, a user-defined shared library (.so file), and an XML file, which specifies parameters to be used with the user-defined shared library (.so file).
 <pre>
@@ -79,11 +79,13 @@ the XML file will then specify
 
 The following commands will obtain the al3c source code and and compile the al3c binary
 
-<pre class='brush: bash; gutter: false; toolbar: false;'>git clone http://github.com/ahstram/al3c.git
+```bash
+git clone http://github.com/ahstram/al3c.git
 cd al3c
-make</pre>
+make
+```
 
-Note that this generally requires that MPI libraries be installed on the system. To avoid installing MPI libraries on Linux, you may obtain the al3c linux static binary from above. MPI libraries are required on OS X systems.
+Note that this generally requires that MPI libraries be installed on the system. To avoid installing MPI libraries on Linux 64-bit, you may skip the "make" step above, and use the included static binary in the "bin/" directory. MPI libraries are required on OS X systems.
 
 <h3>Writing the shared library</h3>
 Shared libraries for use with al3c should be written in C++, and include the "al3c.hpp" file which is packaged with the al3c binary.
