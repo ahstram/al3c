@@ -8,7 +8,7 @@
 
 <i>al3c</i> is written for two types of users:
 
-Those who have written their own software to address niche scientific questions, and would like to speed things up by using ABC in parallel without too much parallel programming or effort.  
+1) Those who have written their own software to address niche scientific questions, and would like to speed things up by using ABC in parallel without too much parallel programming or effort.  
 
 2) Those seeking use ABC with coalescent theory models.   
 
