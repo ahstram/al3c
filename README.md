@@ -13,12 +13,12 @@ space is not necessarily <i>R^n</i>
 
 <i>al3c</i> is written for two types of users:
 
-	1) Those who have written their own software to address
+1) Those who have written their own software to address
 	niche scientific questions, and would like to speed
 	things up by using ABC in parallel without too much 
 	parallel programming or effort.  
 
-	2) Those seeking use ABC with coalescent theory models.   
+2) Those seeking use ABC with coalescent theory models.   
 
 
 To accomodate the latter users, we provide a number of examples using 
