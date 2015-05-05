@@ -200,6 +200,7 @@ See <a href="#simulate">simulate()</a>
 struct param_t;
 </td></tr></table>
 <b>Example</b>
+
 ```c++
 struct param_t {
 
