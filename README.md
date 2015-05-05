@@ -531,7 +531,8 @@ user_t::distance() {
 
 ###XML: lib
 
-####<span id="libXML">libXML</span>
+####<span id="libXML">lib</span>
+
 <i>C++ library to load</i>
 
 <b>Notes</b>
