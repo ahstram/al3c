@@ -61,7 +61,7 @@ al3c consists of three components: the al3c binary, a user-defined shared librar
 |___________|
 
 </pre>
-No modification is necessary to the al3c binary-- it is readily available from the above download links. We are therefore most concerned with creating the shared library which will, at the very minimum, specify the:
+No modification is necessary to the al3c binary-- it is readily available in the git repository. We are therefore most concerned with creating the shared library which will, at the very minimum, specify the:
 
 - parameter space
 - prior distribution
@@ -69,7 +69,7 @@ No modification is necessary to the al3c binary-- it is readily available from t
 - simulation model
 - distance function to compare observed & simulated data
 
-the XML file will then specify
+and an XML configuration file, which will specify
 
 - the location of the shared library (.so file)
 - the observed dataset
@@ -200,7 +200,7 @@ See <a href="#simulate">simulate()</a>
 struct param_t;
 </td></tr></table>
 <b>Example</b>
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```cpp
 struct param_t {
 
         float MigrationRate_EurToAfr,
@@ -211,7 +211,7 @@ struct param_t {
               GrowthRate_Asn,
               PastEvent_EurToAfrMigration;
 }; user_t::size_of_param_t() { return sizeof(param_t); } 
-</pre>
+```
 
 <hr>
 <h4><span id="print">print</span></h4>
