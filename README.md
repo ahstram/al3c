@@ -375,8 +375,6 @@ float <font color="red"><return value></font> - The density of <font color="gree
 
 <b>Example</b>
 
-<table  style="table-layout: fixed; width: 100%">
-<tr><td style="word-wrap: break-word">
 ```cpp
 void user_t::prior_density {
 
@@ -393,16 +391,16 @@ void user_t::prior_density {
 }
 
 ```
-</td></tr></table>
 
 ###C/C++: Perturbing Variables
 
 ####<span id="perturb">perturb</span>
 <i>Perturb parameters according to a desired perturbation kernel</i>
 
-<table bgcolor="lightgray"><tr><td>
+```cpp
 void framework_t::perturb();
-</td></tr></table>
+```
+
 <b>Relevant Variables</b>
 
 <font color="green">param_summary_t *param_summary</font> -  A user defined struct giving summary statistics of the last generation's accepted parameters
@@ -414,8 +412,6 @@ void framework_t::perturb();
 
 <b>Example</b>
 
-<table  style="table-layout: fixed; width: 100%">
-<tr><td style="word-wrap: break-word">
 ```cpp
 void user_t::perturb() {
 
@@ -426,7 +422,6 @@ void user_t::perturb() {
         param->PastEvent_EurToAfrMigration+=(u01()-0.5f)*sqrt(2*param_summary->PastEvent_EurToAfrMigration*12);
 }
 ```
-</td></tr></table>
 
 
 ####<span id="perturb_density">perturb_density</span>
