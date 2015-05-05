@@ -93,7 +93,7 @@ void user_t::prior();
                         |                |      |
                         |                |      |
                         V                |      |
-                user_t::distance();-----+       |
+                user_t::distance();------+      |
                         |                       |
                         |   prior_density();    |        
                      (weight)                   |
