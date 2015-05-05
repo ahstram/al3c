@@ -75,7 +75,7 @@ the XML file will then specify
 - the observed dataset
 - number of processors to use
 - basic ABC-SMC parameters
-<h3>Compiling the al3c binary</h3>
+###Compiling the al3c binary
 
 The following commands will obtain the al3c source code and and compile the al3c binary
 
@@ -87,7 +87,7 @@ make
 
 Note that this generally requires that MPI libraries be installed on the system. To avoid installing MPI libraries on Linux 64-bit, you may skip the "make" step above, and use the included static binary in the "bin/" directory. MPI libraries are required on OS X systems.
 
-<h3>Writing the shared library</h3>
+###Coding the shared library
 Shared libraries for use with al3c should be written in C++, and include the "al3c.hpp" file which is packaged with the al3c binary.
 
 al3c.hpp declares two functions: 
