@@ -75,6 +75,7 @@ the XML file will then specify
 - the observed dataset
 - number of processors to use
 - basic ABC-SMC parameters
+
 ###Compiling the al3c binary
 
 The following commands will obtain the al3c source code and and compile the al3c binary
