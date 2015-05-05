@@ -163,7 +163,7 @@ bin/al3c cfg/macs.xml
                 3.3.4 <a href="#E">E</a> - Epsilon
                 3.3.3 <a href="#A">A</a> - Acceptances
                 3.3.2 <a href="#T">T</a> - Trials
-        3.4 <a href="#O">O</a> - Observed data
+        3.4 <a href="#xml_O">O</a> - Observed data
 </pre>
 
 ###C/C++ Provisions
@@ -680,7 +680,7 @@ If we would like to change the quantile used for each generation, we can specify
 ```
 ###XML: O
 
-####<span id="O">O</span>
+####<span id="xml_O">O</span>
 <i>Observed data to simulate</i>
 
 <b>Notes</b>
