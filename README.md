@@ -422,6 +422,7 @@ void framework_t::perturb();
 ```cpp
 param_summary_t *param_summary; // A user defined struct giving summary statistics of the last generation's accepted parameters
 param_t *param; // The parameter to be perturbed
+```
 
 <b>Return Variables</b>
 
@@ -450,15 +451,16 @@ float framework_t::perturb_density(param_t *old_param);
 <i>Give the probability density of a parameter perturbation</i>
 
 <b>Relevant Variables</b>
-
-<font color="green">param_t *old_param</font> - A parameter from last generation's acceptances
-<font color="green">param_t *param</font> - The perturbed parameter
-<font color="green">param_summary_t *summary</font> - A user defined struct giving summary statistics of the last generation's accepted parameters
+```cpp
+param_t *old_param; // A parameter from last generation's acceptances
+param_t *param; // The perturbed parameter
+param_summary_t *summary; // A user defined struct giving summary statistics of the last generation's accepted parameters
+```
 
 <b>Return Variables</b>
-
-<font color="red">float <return value></font> - The probability density of <font color="green">param</font> being perturbed from <font color="green">old_param</font>, according to the perturbation kernel specified in perturb()
- 
+```cpp
+float <return value> // The probability density of param being perturbed from old_param, according to the perturbation kernel specified in perturb()
+```
 <b>Example</b>
 
 ```cpp
