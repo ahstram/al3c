@@ -517,26 +517,29 @@ user_t::simulate() {
 
 ####<span id="distance">distance</span>
 
-<i>Give the distance between simulated & observed data</i>
-
 ```cpp
 float framework_t::distance();
 ```
+<i>Give the distance between simulated & observed data</i>
+
 
 <b>Relevant Variables</b>
 
-<font color="blue">uint N</font> -  The number of rows of simulated/observed data
-<font color="blue">uint D</font> -  The number of columns (<b>D</b>imensions) of simulated/observed data
-<font color="green">float **S</font> - An <font color="blue">N</font>x<font color="blue">D</font> matrix of floating points containing simulated data
-<font color="blue">float **O</font> - An <font color="blue">N</font>x<font color="blue">D</font> matrix of floating points containing observed data
+```cpp
+uint N; // The number of rows of simulated/observed data
+uint D; // The number of columns ("D"imensions) of simulated/observed data
+float **S; // An N*D matrix of floating points containing simulated data
+float **O; // An N*D matrix of floating points containing observed data
+```
 
 <b>Return Variables</b>
 
-<font color="red">float <return value></font> - The distance between observed & simulated data
+```cpp
+float <return value>; // The distance between observed & simulated data
+```
  
 <b>Example</b>
 ```cpp
-
 user_t::distance() {
 
         float r=0;
