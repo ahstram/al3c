@@ -48,7 +48,7 @@ al3c consists of three components: the al3c binary, a user-defined shared librar
 <pre>
 
  ___________
-|	    |
+|           |
 | XML file  |			   ________________	
 |___________| 			  |		   |
 	     \  _________	  |		   |
