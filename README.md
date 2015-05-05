@@ -143,6 +143,12 @@ The user must then define all functions listed in <a href="#cpp_req">C/C++ Requi
 For a sample shared library's source code, please see this <a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>.
 ###Compiling the shared library
 
+We may compile our source file as a shared library using the "-shared" and "-fPIC" compilers flags, like such:
+
+```bash
+        gcc -shared -o user_library.so -fPIC user_library.cpp
+```
+
 ###XML configuration
 
 The XML configuration must define all nodes listed in <a href="#xmlreq">XML Requirements</a>. 
