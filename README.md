@@ -161,16 +161,19 @@ bin/al3c cfg/macs.xml
                 3.3.2 <a href="#T">T</a> - Trials
         3.4 <a href="#O">O</a> - Observed data
 </pre>
-<IMG WIDTH=560 HEIGHT=3 SRC="/graphics/USCBar2.gif" ALT="=====================================================================">
 
-<h3>C/C++ Provisions</h3>
-<h4><span id="u01">u01</span></h4>
+###C/C++ Provisions
+
+####<span id="u01">u01</span>
+
 <i>Uniform random number generator</i>
 
 <table bgcolor="lightgray"><tr><td>
 float u01();
 </td></tr></table>
+
 <b>Example</b>
+
 ```c++
 seed=u01();
 seed_rng(seed);
