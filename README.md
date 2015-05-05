@@ -49,14 +49,14 @@ al3c consists of three components: the al3c binary, a user-defined shared librar
 
  ___________
 |           |
-| XML file  |			   ________________	
-|___________| 			  |		   |
-	     \  _________	  |		   |
-	      \|	 |	  |		   |
-	       |   al3c  | -----> | desired output |
-	      /|_________|	  |		   |
- ___________ /			  |		   |
-|	    |			  |________________|
+| XML file  |                      ________________        
+|___________|                           |                   |
+             \  _________          |                   |
+              \|         |          |                   |
+               |   al3c  | -----> | desired output |
+              /|_________|          |                   |
+ ___________ /                          |                   |
+|            |                          |________________|
 | .so file  |
 |___________|
 
@@ -115,45 +115,45 @@ bin/al3c cfg/macs.xml
 <h2>Reference Manual</h2>
 
 1 C/C++ Provisions
-	1.1 Variables
-		1.1.1 <a href="#param">param</a> 
-		1.1.2 <a href="#param_summary">param_summary</a>
-		1.1.3 <a href="#S">S</a>
-		1.1.4 <a href="#O">O</a>
-		1.1.5 <a href="#N">N</a>
-		1.1.6 <a href="#D">D</a>
-		1.1.7 <a href="#d">d</a>
-		1.1.8 <a href="#w">w</a>
-	1.2 Functions
-		1.2.1 <a href="#u01">u01</a>
-		1.2.2 <a href="#exec_cmd">exec_cmd</a>
+        1.1 Variables
+                1.1.1 <a href="#param">param</a> 
+                1.1.2 <a href="#param_summary">param_summary</a>
+                1.1.3 <a href="#S">S</a>
+                1.1.4 <a href="#O">O</a>
+                1.1.5 <a href="#N">N</a>
+                1.1.6 <a href="#D">D</a>
+                1.1.7 <a href="#d">d</a>
+                1.1.8 <a href="#w">w</a>
+        1.2 Functions
+                1.2.1 <a href="#u01">u01</a>
+                1.2.2 <a href="#exec_cmd">exec_cmd</a>
 2 <span id="cpp_req">C/C++ Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>)
-	2.1 Parameter & Parameter Summary Statistic Data Types
-		2.1.1 <a href="#param_t">param_t</a> 
-		2.1.2 <a href="#param_summary_t">param_summary_t</a>
-	2.2 Printing Parameter Data Type & Summarizing Acceptances
-		2.2.1 <a href="#print">user_t::print</a>
-		2.2.2 <a href="#summarize">user_summary_t::summarize</a>
-	2.3 Generating the Prior Distribution
-		2.3.1 <a href="#prior">user_t::prior</a> 
-		2.3.2 <a href="#prior_density">user_t::prior_density</a>
-	2.4 Perturbing Parameters
-		2.4.1 <a href="#perturb">user_t::perturb</a>
-		2.4.2 <a href="#perturb_density">user_t::perturb_density</a>
-	2.5 Simulating Data & Measuring Goodness of Fit
-		2.5.1 <a href="#simulate">user_t::simulate</a>
-		2.5.2 <a href="#distance">user_t::distance</a>
+        2.1 Parameter & Parameter Summary Statistic Data Types
+                2.1.1 <a href="#param_t">param_t</a> 
+                2.1.2 <a href="#param_summary_t">param_summary_t</a>
+        2.2 Printing Parameter Data Type & Summarizing Acceptances
+                2.2.1 <a href="#print">user_t::print</a>
+                2.2.2 <a href="#summarize">user_summary_t::summarize</a>
+        2.3 Generating the Prior Distribution
+                2.3.1 <a href="#prior">user_t::prior</a> 
+                2.3.2 <a href="#prior_density">user_t::prior_density</a>
+        2.4 Perturbing Parameters
+                2.4.1 <a href="#perturb">user_t::perturb</a>
+                2.4.2 <a href="#perturb_density">user_t::perturb_density</a>
+        2.5 Simulating Data & Measuring Goodness of Fit
+                2.5.1 <a href="#simulate">user_t::simulate</a>
+                2.5.2 <a href="#distance">user_t::distance</a>
 3 <span id="xml_req">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
-	3.1 <a href="#lib">lib</a> - Shared library
-	3.2 MPI
-		3.2.1 <a href="#NP">NP</a> - Number of Processors
-	3.3 ABC
-		3.3.1 <a href="#G">G</a> - Generations
-		3.3.5 <a href="#R">R</a> - Rank
-		3.3.4 <a href="#E">E</a> - Epsilon
-		3.3.3 <a href="#A">A</a> - Acceptances
-		3.3.2 <a href="#T">T</a> - Trials
-	3.4 <a href="#O">O</a> - Observed data
+        3.1 <a href="#lib">lib</a> - Shared library
+        3.2 MPI
+                3.2.1 <a href="#NP">NP</a> - Number of Processors
+        3.3 ABC
+                3.3.1 <a href="#G">G</a> - Generations
+                3.3.5 <a href="#R">R</a> - Rank
+                3.3.4 <a href="#E">E</a> - Epsilon
+                3.3.3 <a href="#A">A</a> - Acceptances
+                3.3.2 <a href="#T">T</a> - Trials
+        3.4 <a href="#O">O</a> - Observed data
 
 <IMG WIDTH=560 HEIGHT=3 SRC="/graphics/USCBar2.gif" ALT="=====================================================================">
 
@@ -170,8 +170,8 @@ seed=u01();
 seed_rng(seed);
 
 while (1) {
-	x=rng();
-	...
+        x=rng();
+        ...
 }
 </pre>
 <hr>
@@ -197,13 +197,13 @@ struct param_t;
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 struct param_t {
 
-	float MigrationRate_EurToAfr,
-	      MigrationRate_AsnToAfr,
-	      MigrationRate_AsnToEur,
-	      EffectivePopulationSize_Afr,
-	      GrowthRate_Eur,
-	      GrowthRate_Asn,
-	      PastEvent_EurToAfrMigration;
+        float MigrationRate_EurToAfr,
+              MigrationRate_AsnToAfr,
+              MigrationRate_AsnToEur,
+              EffectivePopulationSize_Afr,
+              GrowthRate_Eur,
+              GrowthRate_Asn,
+              PastEvent_EurToAfrMigration;
 }; user_t::size_of_param_t() { return sizeof(param_t); } 
 </pre>
 
@@ -231,14 +231,14 @@ const char *<font color="red">&lt;return value&gt;</font>
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 user_t::print(bool header) {
 
-	ofstringstream output;
+        ofstringstream output;
 
-	if (header)
-		output&lt;&lt;"#distance	weight	MigrationRate_EurToAfr	MigrationRate_AsnToAfr	MigrationRate_AsnToEur	EffectivePopulationSize_Afr	GrowthRate_Eur	GrowthRate_Asn	PastEvent_EurToAfrMigration"&lt;&lt;endl;
-	else
-		output&lt&lt;*d&lt&lt;*w&lt&lt;param->MigrationRate_EurToAfr&lt;&lt;param->MigrationRate_AsnToAfr&lt;&lt;param->MigrationRate_AsnToEur&lt;&lt;param->EffectivePopulationSize_Afr&lt;&lt;param->GrowthRate_Eur&lt;&lt;param->GrowthRate_Asn&lt;&lt;param->PastEvent_EurToAfrMigration&lt;&lt;endl;
-		
-	return output.str().c_str();
+        if (header)
+                output&lt;&lt;"#distance        weight        MigrationRate_EurToAfr        MigrationRate_AsnToAfr        MigrationRate_AsnToEur        EffectivePopulationSize_Afr        GrowthRate_Eur        GrowthRate_Asn        PastEvent_EurToAfrMigration"&lt;&lt;endl;
+        else
+                output&lt&lt;*d&lt&lt;*w&lt&lt;param->MigrationRate_EurToAfr&lt;&lt;param->MigrationRate_AsnToAfr&lt;&lt;param->MigrationRate_AsnToEur&lt;&lt;param->EffectivePopulationSize_Afr&lt;&lt;param->GrowthRate_Eur&lt;&lt;param->GrowthRate_Asn&lt;&lt;param->PastEvent_EurToAfrMigration&lt;&lt;endl;
+                
+        return output.str().c_str();
 }
 </pre>
 </td>
@@ -256,13 +256,13 @@ struct param_summary_t;
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 struct param_summary_t {
 
-	float MigrationRate_EurToAfr_Variance,
-	      MigrationRate_AsnToAfr_Variance,
-	      MigrationRate_AsnToEur_Variance,
-	      EffectivePopulationSize_Afr_Variance,
-	      GrowthRate_Eur_Variance,
-	      GrowthRate_Asn_Variance,
-	      PastEvent_EurToAfrMigration_Variance;
+        float MigrationRate_EurToAfr_Variance,
+              MigrationRate_AsnToAfr_Variance,
+              MigrationRate_AsnToEur_Variance,
+              EffectivePopulationSize_Afr_Variance,
+              GrowthRate_Eur_Variance,
+              GrowthRate_Asn_Variance,
+              PastEvent_EurToAfrMigration_Variance;
 
 } user_t::size_of_param_summary_t() { return sizeof(param_summary_t); }
 </pre>
@@ -288,35 +288,35 @@ framework_t::summarize(param_t **params,uint A);
 
 user_summary_t::summarize(param_t **params, uint A) {
 
-	float m1=0,m2=0;
+        float m1=0,m2=0;
 
-	for (uint a=0;a&lt;A;a++) {
-		m1+=params[a]->MigrationRate_EurToAfr;
-		m2+=params[a]->MigrationRate_EurToAfr*params[a]->MigrationRate_EurToAfr;
-	}
-	m1/=(float)A;
-	m2/=(float)A;
+        for (uint a=0;a&lt;A;a++) {
+                m1+=params[a]->MigrationRate_EurToAfr;
+                m2+=params[a]->MigrationRate_EurToAfr*params[a]->MigrationRate_EurToAfr;
+        }
+        m1/=(float)A;
+        m2/=(float)A;
 
-	param_summary->MigrationRate_EurToAfr_Variance=m2-m1*m1;
+        param_summary->MigrationRate_EurToAfr_Variance=m2-m1*m1;
 
 /*
-	...
-	
-	(repeat for other parameters)
+        ...
+        
+        (repeat for other parameters)
 
-	...
+        ...
 */
 
-	m1=0, m2=0;
+        m1=0, m2=0;
 
-	for (uint a=0;a&lt;A;a++) {
-		m1+=params[a]->PastEvent_EurToAfrMigration;
-		m2+=params[a]->PastEvent_EurToAfrMigration*params[a]->MigrationRate_PastEvent_EurToAfrMigration;
-	} 
-	m1/=(float)A;
-	m2/=(float)A;
+        for (uint a=0;a&lt;A;a++) {
+                m1+=params[a]->PastEvent_EurToAfrMigration;
+                m2+=params[a]->PastEvent_EurToAfrMigration*params[a]->MigrationRate_PastEvent_EurToAfrMigration;
+        } 
+        m1/=(float)A;
+        m2/=(float)A;
 
-	param_summary->PastEvent_EurToAfrMigration_Variance=m2-m1*m1;
+        param_summary->PastEvent_EurToAfrMigration_Variance=m2-m1*m1;
 
 
 }
@@ -341,13 +341,13 @@ void framework_t::prior();
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 void user_t::prior() {
 
-	param->MigrationRate_EurToAfr=u01()*0.4+0.84; // Unif[0.84,1.24]
-	param->MigrationRate_AsnToAfr=u01()*0.32+0.16; // Unif[0.16,0.48]
-	param->MigrationRate_AsnToEur=u01()*0.84+0.72; // Unif[0.72,1.56]
-	param->EffectivePopulationSize_Afr=u01()*0.2994+1.319; // Unif[1.319, 1.6184]
-	param->GrowthRate_Eur=u01()*0.31+0.28; // Unif[0.28, 0.59]
-	param->GrowthRate_Asn=u01()*0.45+0.30; // Unif[0.30, 0.75]
-	param->PastEvent_EurToAfrMigration=u01()*2.8+4.8; // Unif[4.8,7.6]
+        param->MigrationRate_EurToAfr=u01()*0.4+0.84; // Unif[0.84,1.24]
+        param->MigrationRate_AsnToAfr=u01()*0.32+0.16; // Unif[0.16,0.48]
+        param->MigrationRate_AsnToEur=u01()*0.84+0.72; // Unif[0.72,1.56]
+        param->EffectivePopulationSize_Afr=u01()*0.2994+1.319; // Unif[1.319, 1.6184]
+        param->GrowthRate_Eur=u01()*0.31+0.28; // Unif[0.28, 0.59]
+        param->GrowthRate_Asn=u01()*0.45+0.30; // Unif[0.30, 0.75]
+        param->PastEvent_EurToAfrMigration=u01()*2.8+4.8; // Unif[4.8,7.6]
 }
 
 </pre>
@@ -375,16 +375,16 @@ float <font color="red">&lt;return value&gt;</font> - The density of <font color
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 void user_t::prior_density {
 
-	if (0.84<=param->MigrationRate_EurToAfr && param->MigrationRate_EurToAfr<=1.24
-		 && 0.16<=param->MigrationRate_AsnToAfr && param->MigrationRate_AsnToAfr<=0.48
-		 && 0.72<=param->MigrationRate_AsnToEur && param->MigrationRate_AsnToEur<=1.56
-		 && 1.319<=param->EffectivePopulationSize_Afr && param->EffectivePopulationSize_Afr<=1.6184
-		&& 0.28<=param->GrowthRate_Eur && param->GrowthRate_Eur<=0.59
-		 && 0.3<=param->GrowthRate_Asn && param->GrowthRate_Asn<=0.75
-		&& 4.8<=param->PastEvent_EurToAfrMigration && param->PastEvent_EurToAfrMigration<=7.6)
-		return 1;
-	else
-		return 0;
+        if (0.84<=param->MigrationRate_EurToAfr && param->MigrationRate_EurToAfr<=1.24
+                 && 0.16<=param->MigrationRate_AsnToAfr && param->MigrationRate_AsnToAfr<=0.48
+                 && 0.72<=param->MigrationRate_AsnToEur && param->MigrationRate_AsnToEur<=1.56
+                 && 1.319<=param->EffectivePopulationSize_Afr && param->EffectivePopulationSize_Afr<=1.6184
+                && 0.28<=param->GrowthRate_Eur && param->GrowthRate_Eur<=0.59
+                 && 0.3<=param->GrowthRate_Asn && param->GrowthRate_Asn<=0.75
+                && 4.8<=param->PastEvent_EurToAfrMigration && param->PastEvent_EurToAfrMigration<=7.6)
+                return 1;
+        else
+                return 0;
 }
 
 </pre>
@@ -415,11 +415,11 @@ void framework_t::perturb();
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 void user_t::perturb() {
 
-	param->MigrationRate_EurToAfr+=(u01()-0.5f)*sqrt(2*param_summary->MigrationRate_EurToAfr_Variance*12);
+        param->MigrationRate_EurToAfr+=(u01()-0.5f)*sqrt(2*param_summary->MigrationRate_EurToAfr_Variance*12);
 
-	/* ... repeat for other parameters ... */
+        /* ... repeat for other parameters ... */
 
-	param->PastEvent_EurToAfrMigration+=(u01()-0.5f)*sqrt(2*param_summary->PastEvent_EurToAfrMigration*12);
+        param->PastEvent_EurToAfrMigration+=(u01()-0.5f)*sqrt(2*param_summary->PastEvent_EurToAfrMigration*12);
 }
 </pre>
 </td></tr></table>
@@ -449,15 +449,15 @@ void user_t::perturb() {
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 float user_t::perturb_density() {
 
-	if ( fabs(param->MigrationRate_EurToAfr - old_param->MigrationRate_EurToAfr) > sqrt(2*param_summary->MigrationRate_EurToAfr_Variance*12)/2.f ) 
-		return 0.f;
+        if ( fabs(param->MigrationRate_EurToAfr - old_param->MigrationRate_EurToAfr) > sqrt(2*param_summary->MigrationRate_EurToAfr_Variance*12)/2.f ) 
+                return 0.f;
 
-	/* ... repeat for other parameters ... */
+        /* ... repeat for other parameters ... */
 
-	if ( fabs(param->PastEvent_EurToAfrMigration - old_param->PastEvent_EurToAfrMigration) > sqrt(2*param_summary->PastEvent_EurToAfrMigration_Variance*12)/2.f ) 
-		return 0.f;
+        if ( fabs(param->PastEvent_EurToAfrMigration - old_param->PastEvent_EurToAfrMigration) > sqrt(2*param_summary->PastEvent_EurToAfrMigration_Variance*12)/2.f ) 
+                return 0.f;
 
-	return 1.f;	
+        return 1.f;        
 }
 </pre>
 </td></tr></table>
@@ -487,14 +487,14 @@ framework_t::simulate();
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 user_t::simulate() {
 
-	ostringstream cmd;
+        ostringstream cmd;
 
-	uint seed=(uint)u01()*UINT_MAX;
+        uint seed=(uint)u01()*UINT_MAX;
 
-	cmd&lt;&lt;"macs.sh 718 100000 -s "&lt;&lt;seed&lt;&lt;" -t .001 -I 3 176 170 372 0 -m 2 1 "&lt;&lt;param->MigrationRate_EurToAfr&lt;&lt;" -m 3 1 "&lt;&lt;param->MigrationRate_AsnToAfr&lt;&lt;" -m 3 2 "&lt;&lt;param->MigrationRate_AsnToEur&lt;&lt;" -n 1 "&lt;&lt;param->EffectivePopulationSize_Afr&lt;&lt;" -g 2 "&lt;&lt;param->GrowthRate_Eur&lt;&lt;" -g 3 "&lt;&lt;param->GrowthRate_Asn&lt;&lt;" -eg .0230000 2 0 -eg .0230001 3 0 -ej .0230002 3 2 -em .0230003 2 1 "&lt;&lt;param->PastEvent_EurToAfrMigration&lt;&lt;" -en .0230004 2 0.1861 -ej .051 2 1 -en .148 1 0.731 -r 0.0006"&lt;&lt;endl;
+        cmd&lt;&lt;"macs.sh 718 100000 -s "&lt;&lt;seed&lt;&lt;" -t .001 -I 3 176 170 372 0 -m 2 1 "&lt;&lt;param->MigrationRate_EurToAfr&lt;&lt;" -m 3 1 "&lt;&lt;param->MigrationRate_AsnToAfr&lt;&lt;" -m 3 2 "&lt;&lt;param->MigrationRate_AsnToEur&lt;&lt;" -n 1 "&lt;&lt;param->EffectivePopulationSize_Afr&lt;&lt;" -g 2 "&lt;&lt;param->GrowthRate_Eur&lt;&lt;" -g 3 "&lt;&lt;param->GrowthRate_Asn&lt;&lt;" -eg .0230000 2 0 -eg .0230001 3 0 -ej .0230002 3 2 -em .0230003 2 1 "&lt;&lt;param->PastEvent_EurToAfrMigration&lt;&lt;" -en .0230004 2 0.1861 -ej .051 2 1 -en .148 1 0.731 -r 0.0006"&lt;&lt;endl;
 
-	//this is a helper function that will write to **S
-	exec_cmd(cmd.str().c_str());
+        //this is a helper function that will write to **S
+        exec_cmd(cmd.str().c_str());
 }
 </td></tr></table>
 <hr>
@@ -519,13 +519,13 @@ float framework_t::distance();
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
 user_t::distance() {
 
-	float r=0;
+        float r=0;
 
-	for (uint n=0;n&lt;N;n++)
-		for (uint d=0;d&lt;D;d++)
-			r+=pow(S[n][d]-O[n][d],2);
+        for (uint n=0;n&lt;N;n++)
+                for (uint d=0;d&lt;D;d++)
+                        r+=pow(S[n][d]-O[n][d],2);
 
-	return sqrt(r);
+        return sqrt(r);
 }
 </pre>
 <h3>XML: lib</h3>
@@ -552,7 +552,7 @@ This should be the total number of processors <i>al3c</i> will be run with. If t
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
 &lt;MPI&gt;
-	&lt;NP&gt;64&lt;/NP&gt;  
+        &lt;NP&gt;64&lt;/NP&gt;  
 &lt;/MPI&gt;</pre>
 
 
@@ -575,7 +575,7 @@ This is the minimum number of generations of ABC-SMC to run.
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
 &lt;ABC&gt;
-	&lt;G&gt;15&lt;/G&gt;  
+        &lt;G&gt;15&lt;/G&gt;  
 &lt;/ABC&gt;
 </pre>
 
@@ -595,7 +595,7 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
 &lt;ABC&gt;
-	&lt;T&gt;10000&lt;/T&gt;  
+        &lt;T&gt;10000&lt;/T&gt;  
 &lt;/ABC&gt;
 </pre>
 
@@ -616,7 +616,7 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
 &lt;ABC&gt;
-	&lt;A&gt;1000&lt;/A&gt;  
+        &lt;A&gt;1000&lt;/A&gt;  
 &lt;/ABC&gt;
 </pre>
 
@@ -639,13 +639,13 @@ If you desire to explicitly set a rejection threshold schedule  ("epsilon schedu
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
 &lt;ABC&gt;
-	&lt;E&gt;1.4&lt;/E&gt;  
+        &lt;E&gt;1.4&lt;/E&gt;  
 &lt;/ABC&gt;
 
 &lt;!-- Or, if we'd like to set an explicit epsilon schedule, do it like this: --&gt;
 
 &lt;ABC&gt;
-	&lt;E&gt;100 90 80 70 60 50 40 30 20 10 5 4 3 2 1&lt;/E&gt;  
+        &lt;E&gt;100 90 80 70 60 50 40 30 20 10 5 4 3 2 1&lt;/E&gt;  
 &lt;/ABC&gt;
 </pre>
 
@@ -673,13 +673,13 @@ If we would like to change the quantile used for each generation, we can specify
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
 &lt;ABC&gt;
-	&lt;R&gt;250&lt;/R&gt;  
+        &lt;R&gt;250&lt;/R&gt;  
 &lt;/ABC&gt;
 
 &lt;!-- Or, if we'd like to vary the rank over generations, do it like this: --&gt;
 
 &lt;ABC&gt;
-	&lt;E&gt;750 500 400 300 250 250 250 250 250 250 250 250 250 300 400&lt;/E&gt;
+        &lt;E&gt;750 500 400 300 250 250 250 250 250 250 250 250 250 300 400&lt;/E&gt;
 &lt;/ABC&gt;
 </pre>
 <hr>
@@ -693,9 +693,9 @@ This can be a 2-dimensional matrix, rows delimited by newlines, columns delimite
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;O&gt;259	108	103	147
-119	53	66	132
-100	46	61	128&lt;/O&gt;</pre>
+&lt;O&gt;259        108        103        147
+119        53        66        132
+100        46        61        128&lt;/O&gt;</pre>
 
 <hr>
 
@@ -713,7 +713,7 @@ This can be a 2-dimensional matrix, rows delimited by newlines, columns delimite
  <script src="js/shCore.js"></script>
 <script src="js/shBrushXml.js"></script>
   <script src="js/shBrushCpp.js"></script>
-	<script src="js/shBrushBash.js"></script>
+        <script src="js/shBrushBash.js"></script>
   <script>
     SyntaxHighlighter.all()
   </script>
