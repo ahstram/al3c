@@ -720,30 +720,9 @@ If we would like to change the quantile used for each generation, we can specify
 This can be a 2-dimensional matrix, rows delimited by newlines, columns delimited by tabs/spaces/columns. The number of rows and columns will be counted, and the values of "N" and "D" will be inferred accordingly.
 
 <b>Example</b>
-<pre class='brush: xml; gutter: false; toolbar: false;'>
+```xml
 &lt;O&gt;259        108        103        147
 119        53        66        132
-100        46        61        128&lt;/O&gt;</pre>
+100        46        61        128&lt;/O&gt;
+```
 
-<hr>
-
-    </div>
-
-    <div id="sidebar" style="width:560px;
-    float:right;
-    margin-right:0px;
-    </div>
-
-</div>
-</body>
-  <link href="css/shCore.css" rel="stylesheet" type="text/css" />
-  <link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" />
- <script src="js/shCore.js"></script>
-<script src="js/shBrushXml.js"></script>
-  <script src="js/shBrushCpp.js"></script>
-        <script src="js/shBrushBash.js"></script>
-  <script>
-    SyntaxHighlighter.all()
-  </script>
-
-</html>
