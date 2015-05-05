@@ -1,3 +1,7 @@
+```c++
+uint x=0;
+```
+
 <pre>
          _______     
   ____ _/ /__  /_____  a software framework for numerical approximations
