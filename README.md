@@ -101,7 +101,9 @@ and defines two templates:
 
 user_t, the users' parameters of interest
 
+
 user_summary_t, a summary statistic for user_t
+
 
 The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</a>.
 
