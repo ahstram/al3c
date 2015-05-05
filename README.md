@@ -255,7 +255,7 @@ const char *framework_t::print();
 
 <b>Return Value</b>
 
-const char *<font color="red">&lt;return value&gt;</font>
+const char *<font color="red"><return value></font>
 
 <b>Example</b>
 
@@ -265,9 +265,9 @@ user_t::print(bool header) {
         ofstringstream output;
 
         if (header)
-                output&lt;&lt;"#distance        weight        MigrationRate_EurToAfr        MigrationRate_AsnToAfr        MigrationRate_AsnToEur        EffectivePopulationSize_Afr        GrowthRate_Eur        GrowthRate_Asn        PastEvent_EurToAfrMigration"&lt;&lt;endl;
+                output<<"#distance        weight        MigrationRate_EurToAfr        MigrationRate_AsnToAfr        MigrationRate_AsnToEur        EffectivePopulationSize_Afr        GrowthRate_Eur        GrowthRate_Asn        PastEvent_EurToAfrMigration"<<endl;
         else
-                output&lt&lt;*d&lt&lt;*w&lt&lt;param->MigrationRate_EurToAfr&lt;&lt;param->MigrationRate_AsnToAfr&lt;&lt;param->MigrationRate_AsnToEur&lt;&lt;param->EffectivePopulationSize_Afr&lt;&lt;param->GrowthRate_Eur&lt;&lt;param->GrowthRate_Asn&lt;&lt;param->PastEvent_EurToAfrMigration&lt;&lt;endl;
+                output&lt<*d&lt<*w&lt<param->MigrationRate_EurToAfr<<param->MigrationRate_AsnToAfr<<param->MigrationRate_AsnToEur<<param->EffectivePopulationSize_Afr<<param->GrowthRate_Eur<<param->GrowthRate_Asn<<param->PastEvent_EurToAfrMigration<<endl;
                 
         return output.str().c_str();
 }
@@ -318,7 +318,7 @@ user_summary_t::summarize(param_t **params, uint A) {
 
         float m1=0,m2=0;
 
-        for (uint a=0;a&lt;A;a++) {
+        for (uint a=0;a<A;a++) {
                 m1+=params[a]->MigrationRate_EurToAfr;
                 m2+=params[a]->MigrationRate_EurToAfr*params[a]->MigrationRate_EurToAfr;
         }
@@ -337,7 +337,7 @@ user_summary_t::summarize(param_t **params, uint A) {
 
         m1=0, m2=0;
 
-        for (uint a=0;a&lt;A;a++) {
+        for (uint a=0;a<A;a++) {
                 m1+=params[a]->PastEvent_EurToAfrMigration;
                 m2+=params[a]->PastEvent_EurToAfrMigration*params[a]->MigrationRate_PastEvent_EurToAfrMigration;
         } 
@@ -394,7 +394,7 @@ void user_t::prior() {
 
 <b>Return Variables</b>
 
-float <font color="red">&lt;return value&gt;</font> - The density of <font color="green">param</font> according to the prior distribution
+float <font color="red"><return value></font> - The density of <font color="green">param</font> according to the prior distribution
 
 <b>Example</b>
 
@@ -468,7 +468,7 @@ void user_t::perturb() {
 
 <b>Return Variables</b>
 
-<font color="red">float &lt;return value&gt;</font> - The probability density of <font color="green">param</font> being perturbed from <font color="green">old_param</font>, according to the perturbation kernel specified in perturb()
+<font color="red">float <return value></font> - The probability density of <font color="green">param</font> being perturbed from <font color="green">old_param</font>, according to the perturbation kernel specified in perturb()
  
 <b>Example</b>
 
@@ -519,7 +519,7 @@ user_t::simulate() {
 
         uint seed=(uint)u01()*UINT_MAX;
 
-        cmd&lt;&lt;"macs.sh 718 100000 -s "&lt;&lt;seed&lt;&lt;" -t .001 -I 3 176 170 372 0 -m 2 1 "&lt;&lt;param->MigrationRate_EurToAfr&lt;&lt;" -m 3 1 "&lt;&lt;param->MigrationRate_AsnToAfr&lt;&lt;" -m 3 2 "&lt;&lt;param->MigrationRate_AsnToEur&lt;&lt;" -n 1 "&lt;&lt;param->EffectivePopulationSize_Afr&lt;&lt;" -g 2 "&lt;&lt;param->GrowthRate_Eur&lt;&lt;" -g 3 "&lt;&lt;param->GrowthRate_Asn&lt;&lt;" -eg .0230000 2 0 -eg .0230001 3 0 -ej .0230002 3 2 -em .0230003 2 1 "&lt;&lt;param->PastEvent_EurToAfrMigration&lt;&lt;" -en .0230004 2 0.1861 -ej .051 2 1 -en .148 1 0.731 -r 0.0006"&lt;&lt;endl;
+        cmd<<"macs.sh 718 100000 -s "<<seed<<" -t .001 -I 3 176 170 372 0 -m 2 1 "<<param->MigrationRate_EurToAfr<<" -m 3 1 "<<param->MigrationRate_AsnToAfr<<" -m 3 2 "<<param->MigrationRate_AsnToEur<<" -n 1 "<<param->EffectivePopulationSize_Afr<<" -g 2 "<<param->GrowthRate_Eur<<" -g 3 "<<param->GrowthRate_Asn<<" -eg .0230000 2 0 -eg .0230001 3 0 -ej .0230002 3 2 -em .0230003 2 1 "<<param->PastEvent_EurToAfrMigration<<" -en .0230004 2 0.1861 -ej .051 2 1 -en .148 1 0.731 -r 0.0006"<<endl;
 
         //this is a helper function that will write to **S
         exec_cmd(cmd.str().c_str());
@@ -541,7 +541,7 @@ float framework_t::distance();
 
 <b>Return Variables</b>
 
-<font color="red">float &lt;return value&gt;</font> - The distance between observed & simulated data
+<font color="red">float <return value></font> - The distance between observed & simulated data
  
 <b>Example</b>
 <pre class='brush: cpp; gutter: false; toolbar: false;'>
@@ -549,8 +549,8 @@ user_t::distance() {
 
         float r=0;
 
-        for (uint n=0;n&lt;N;n++)
-                for (uint d=0;d&lt;D;d++)
+        for (uint n=0;n<N;n++)
+                for (uint d=0;d<D;d++)
                         r+=pow(S[n][d]-O[n][d],2);
 
         return sqrt(r);
@@ -565,7 +565,7 @@ user_t::distance() {
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;lib&gt;/home/rcf-40/astram/al3c/lib/libmacs.so&lt;/lib&gt;</pre>
+<lib>/home/rcf-40/astram/al3c/lib/libmacs.so</lib></pre>
 
 
 
@@ -579,9 +579,9 @@ This should be the total number of processors <i>al3c</i> will be run with. If t
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;MPI&gt;
-        &lt;NP&gt;64&lt;/NP&gt;  
-&lt;/MPI&gt;</pre>
+<MPI>
+        <NP>64</NP>  
+</MPI></pre>
 
 
 <hr>
@@ -602,9 +602,9 @@ This is the minimum number of generations of ABC-SMC to run.
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;ABC&gt;
-        &lt;G&gt;15&lt;/G&gt;  
-&lt;/ABC&gt;
+<ABC>
+        <G>15</G>  
+</ABC>
 </pre>
 
 <hr>
@@ -622,9 +622,9 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;ABC&gt;
-        &lt;T&gt;10000&lt;/T&gt;  
-&lt;/ABC&gt;
+<ABC>
+        <T>10000</T>  
+</ABC>
 </pre>
 
 
@@ -643,9 +643,9 @@ The actual value used may be slightly higher than specified here, so that "<a hr
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;ABC&gt;
-        &lt;A&gt;1000&lt;/A&gt;  
-&lt;/ABC&gt;
+<ABC>
+        <A>1000</A>  
+</ABC>
 </pre>
 
 
@@ -666,15 +666,15 @@ If you desire to explicitly set a rejection threshold schedule  ("epsilon schedu
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;ABC&gt;
-        &lt;E&gt;1.4&lt;/E&gt;  
-&lt;/ABC&gt;
+<ABC>
+        <E>1.4</E>  
+</ABC>
 
-&lt;!-- Or, if we'd like to set an explicit epsilon schedule, do it like this: --&gt;
+<!-- Or, if we'd like to set an explicit epsilon schedule, do it like this: -->
 
-&lt;ABC&gt;
-        &lt;E&gt;100 90 80 70 60 50 40 30 20 10 5 4 3 2 1&lt;/E&gt;  
-&lt;/ABC&gt;
+<ABC>
+        <E>100 90 80 70 60 50 40 30 20 10 5 4 3 2 1</E>  
+</ABC>
 </pre>
 
 
@@ -700,15 +700,15 @@ If we would like to change the quantile used for each generation, we can specify
 
 <b>Example</b>
 <pre class='brush: xml; gutter: false; toolbar: false;'>
-&lt;ABC&gt;
-        &lt;R&gt;250&lt;/R&gt;  
-&lt;/ABC&gt;
+<ABC>
+        <R>250</R>  
+</ABC>
 
-&lt;!-- Or, if we'd like to vary the rank over generations, do it like this: --&gt;
+<!-- Or, if we'd like to vary the rank over generations, do it like this: -->
 
-&lt;ABC&gt;
-        &lt;E&gt;750 500 400 300 250 250 250 250 250 250 250 250 250 300 400&lt;/E&gt;
-&lt;/ABC&gt;
+<ABC>
+        <E>750 500 400 300 250 250 250 250 250 250 250 250 250 300 400</E>
+</ABC>
 </pre>
 <hr>
 <h3>XML: O</h3>
