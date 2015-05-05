@@ -191,6 +191,7 @@ uint exec_cmd(const char *cmd);
 ```
 
 Example:
+
 See <a href="#simulate">simulate()</a>
 
 ###C/C++: Parameter & Parameter Summary Statistics
@@ -217,12 +218,14 @@ struct param_t {
 }; user_t::size_of_param_t() { return sizeof(param_t); } 
 ```
 
-<h4><span id="print">print</span></h4>
+####<span id="print">print</span></h4>
+
 <i>Format parameter for printing</i>
 
-<table bgcolor="lightgray"><tr><td>
+```c++
 const char *framework_t::print();
-</td></tr></table>
+```
+
 <b>Relevant Variables</b>
 
 <font color="green">param_t *param</font> - parameter to format 
@@ -235,9 +238,8 @@ const char *framework_t::print();
 const char *<font color="red">&lt;return value&gt;</font>
 
 <b>Example</b>
-<table  style="table-layout: fixed; width: 100%">
-<tr><td style="word-wrap: break-word">
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+
+```cpp
 user_t::print(bool header) {
 
         ofstringstream output;
@@ -249,12 +251,9 @@ user_t::print(bool header) {
                 
         return output.str().c_str();
 }
-</pre>
-</td>
-</tr>
-</table>
-<hr>
-<h4><span id="param_summary_t">param_summary_t</span></h4>
+````
+
+####<span id="param_summary_t">param_summary_t</span></h4>
 <i>A user defined struct giving summary statistics necessary for a dynamic perturbation kernel</i>
 
 <table bgcolor="lightgray"><tr><td>
