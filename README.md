@@ -170,12 +170,13 @@ bin/al3c cfg/macs.xml
 
 ####<span id="u01">u01</span>
 
-<i>Uniform random number generator</i>
-
 ```c++
 float u01();
 ```
-Example:
+
+<i>Uniform random number generator</i>
+
+<b>Example</b>
 
 ```c++
 seed=u01();
@@ -187,13 +188,14 @@ while (1) {
 }
 ```
 ####<span id="exec_cmd">exec_cmd</span>
-<i>Run command via system call</i>
 
 ```cpp
 uint exec_cmd(const char *cmd);
 ```
 
-Example:
+<i>Run command via system call</i>
+
+<b>Example</b>
 
 See <a href="#simulate">simulate()</a>
 
@@ -201,13 +203,14 @@ See <a href="#simulate">simulate()</a>
 
 ####<span id="param_t">param_t</span>
 
-<i>A user defined struct with the parameters we are investigating</i>
-
 ```cpp
 struct param_t;
 ```
 
-Example:
+<i>A user defined struct with the parameters we are investigating</i>
+
+<b>Example</b>
+
 ```c++
 struct param_t {
 
@@ -223,18 +226,21 @@ struct param_t {
 
 ####<span id="print">print</span>
 
-<i>Format parameter for printing</i>
 
 ```c++
 const char *framework_t::print();
 ```
 
+<i>Format parameter for printing</i>
+
 <b>Relevant Variables</b>
 
-<font color="green">param_t *param</font> - parameter to format 
-<font color="green">float *d</font> - the distance of <font color="green">param</font>'s simulation
-<font color="green">float *w</fonT> - the weight of <font color="green">param</font>
-<font color="green">bool header</font> - printing header or not
+```c++
+param_t *param</font> // parameter to format 
+float *d //  the distance of <font color="green">param</font>'s simulation
+float *w // // the weight of <font color="green">param</font>
+bool header // printing header or not
+```
 
 <b>Return Value</b>
 
