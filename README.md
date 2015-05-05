@@ -146,7 +146,7 @@ For a sample shared library's source code, please see this <a href="https://gith
 We may compile our source file as a shared library using the "-shared" and "-fPIC" compilers flags, like such:
 
 ```bash
-        gcc -shared -o user_library.so -fPIC user_library.cpp
+        gcc -shared -o macs.so -fPIC macs.so.cpp
 ```
 
 ###XML configuration
