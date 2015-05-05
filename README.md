@@ -186,23 +186,24 @@ while (1) {
 <h4><span id="exec_cmd">exec_cmd</span></h4>
 <i>Run command via system call</i>
 
-<table bgcolor="lightgray"><tr><td>
+```cpp
 uint exec_cmd(const char *cmd);
-</td></tr></table>
-<b>Example</b>
+```
+
+Example:
 See <a href="#simulate">simulate()</a>
 
+###C/C++: Parameter & Parameter Summary Statistics
 
-<h3>C/C++: Parameter & Parameter Summary Statistics</h3>
-<hr>
-<h4><span id="param_t">param_t</span></h4>
+####<span id="param_t">param_t</span></h4>
+
 <i>A user defined struct with the parameters we are investigating</i>
 
-<table bgcolor="lightgray"><tr><td>
+```cpp
 struct param_t;
-</td></tr></table>
-<b>Example</b>
+```
 
+Example:
 ```c++
 struct param_t {
 
