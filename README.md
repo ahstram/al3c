@@ -11,6 +11,8 @@ It puts particular priority on providing complete control over
 perturbation kernels to the user, for cases when the parameter
 space is not necessarily <i>R^n</i>
 
+
+
 <i>al3c</i> is written for two types of users:
 
 1) Those who have written their own software to address
@@ -22,7 +24,7 @@ space is not necessarily <i>R^n</i>
 
 
 To accomodate the latter users, we provide a number of examples using 
-<i>al3c</i> with <i>macs</i>, a  Markovian coalescent theory simulator, which can
+<i>al3c</i> with <i>MaCS</i>, a  Markovian coalescent theory simulator, which can
 easily be modified for the user's specific case. 
 </pre>
 
