@@ -91,34 +91,34 @@ make
 ###Coding the shared library
 Shared libraries for use with al3c should be written in C++, and include the "al3c.hpp" file which is found in the "include" directory. 
 
-al3c.hpp declares two functions: 
+al3c.hpp defines two functions: 
 
-<a href="#u01">u01</a>, which must be used when seeding any random number generators, in order to ensure that different processors do not use the same random number seed.
+<a href="#u01">u01</a>, which must be used as the shared library's random number generator, or used to seed any external random number generator, in order to ensure that different processors do not use the same random number seed. 
 
 <a href="#exec_cmd">exec_cmd</a>, an optional function call external programs to simulate data
 
-and defines two templates:
+al3c.hpp declares two templates:
 
 user_t, the users' parameters of interest
 
-
 user_summary_t, a summary statistic for user_t
 
-
-The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</a>.
+The user must then define all functions listed in <a href="#cpp_req">C/C++ Requirements</a>, in order to complete the definition of these two templates.
 
 For a sample shared library's source code, please see this <a href="https://github.com/ahstram/al3c/blob/master/macs/macs.so.cpp">sample</a>.
 
-<h3>Compiling the shared library</h3>
-<h3>XML configuration</h3>
+###Compiling the shared library
+
+###>XML configuration</h3>
 The XML configuration file is loaded by al3c 
 
-<h3>Running al3c</h3>
+###Running al3c</h3>
 al3c is run with the XML files to load as its sole argument, for example:
 
 bin/al3c cfg/macs.xml
-<hr>
-<h2>Reference Manual</h2>
+
+
+##Reference Manual</h2>
 
 1 C/C++ Provisions
         1.1 Variables
