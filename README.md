@@ -1,7 +1,3 @@
-```cpp
-uint x=0;
-```
-
 <pre>
          _______     
   ____ _/ /__  /_____  a software framework for numerical approximations
@@ -175,7 +171,7 @@ bin/al3c cfg/macs.xml
 float u01();
 </td></tr></table>
 <b>Example</b>
-<pre class='brush: cpp; gutter: false; toolbar: false;'>
+```c++
 seed=u01();
 seed_rng(seed);
 
@@ -183,7 +179,7 @@ while (1) {
         x=rng();
         ...
 }
-</pre>
+```
 <hr>
 <h4><span id="exec_cmd">exec_cmd</span></h4>
 <i>Run command via system call</i>
@@ -218,7 +214,6 @@ struct param_t {
 }; user_t::size_of_param_t() { return sizeof(param_t); } 
 ```
 
-<hr>
 <h4><span id="print">print</span></h4>
 <i>Format parameter for printing</i>
 
