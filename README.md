@@ -31,9 +31,9 @@ cd al3c/
 bin/al3c_linux_x86-64 cfg/macs_linux-x86-64.xml  
 ```
 
-### Mac OS-X 64-bit
+### Mac OS-X 
 
-Running the provided example with al3c on a Linux 64-bit system is as simple as issuing the following commands:
+Running the provided example with al3c on a Mac OS X system is as simple as issuing the following commands:
 
 ```bash
 git clone https://github.com/ahstram/al3c.git  
