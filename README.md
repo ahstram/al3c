@@ -21,9 +21,9 @@ easily be modified for the user's specific case.
 ## al3c+MaCS Example 
 We provide an al3c example for parallelized ABC-SMC using the coalescent simulator MaCS, available at https://github.com/gchen98/macs
 
-#### Linux 64-bit
+## Quick Example:
 
-Running the provided example with al3c on a Linux 64-bit system is as simple as issuing the following commands:
+#### Linux 64-bit
 
 ```bash
 git clone https://github.com/ahstram/al3c.git  
@@ -31,9 +31,8 @@ cd al3c/
 bin/al3c_linux_x86-64 cfg/macs_linux-x86-64.xml  
 ```
 
-### Mac OS-X 
+#### Mac OS-X 
 
-Running the provided example with al3c on a Mac OS X system is as simple as issuing the following commands:
 
 ```bash
 git clone https://github.com/ahstram/al3c.git  
@@ -41,7 +40,7 @@ cd al3c/
 bin/al3c_darwin_x86-64 cfg/macs_darwin-x86-64.xml  
 ```
 
-### Compile from source
+#### From source
 
 To compile the example from source, you will need to ensure that an MPI library such as Intel MPI Library, OpenMPI or MPICH2 is installed, then follow:
 
