@@ -21,7 +21,7 @@ easily be modified for the user's specific case.
 ## al3c+MaCS Example 
 We provide an al3c example for parallelized ABC-SMC using the coalescent simulator MaCS, available at https://github.com/gchen98/macs
 
-## Quick Example:
+Here are some quick examples that can get you running al3c without much thought:
 
 #### Linux 64-bit
 
