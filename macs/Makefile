@@ -24,10 +24,10 @@ allele_spectrum: allele_spectrum.cpp
 	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS)  -o allele_spectrum $<
 
 allele_spectrum_darwin_x86-64: allele_spectrum.cpp
-	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS) -static  -o allele_spectrum_darwin_x86-64 $<
+	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS) -o allele_spectrum_darwin_x86-64 $<
 
 allele_spectrum_linux_x86-64: allele_spectrum.cpp
 	$(CPP) $(CPPFLAGS) $(CPPINCLUDEFLAGS) -static  -o allele_spectrum_linux_x86-64 $<
 
 clean:
-	-rm allele_spectrum allele_spectrum_linux_x86-64 macs.so macs_linux_x86-64.so
+	-rm allele_spectrum allele_spectrum_darwin_x86-64 allele_spectrum_linux_x86-64 macs.so macs_darwin_x86-64.so macs_linux_x86-64.so 
