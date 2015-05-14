@@ -129,7 +129,7 @@ void user_t::prior();
 
 ###Compiling the al3c binary
 
-Note that compiling al3c requires MPI libraries be installed. To avoid installing MPI libraries on a Linux 64-bit system, you may instead use the static binary "bin/al3c_linux_x86-64" and skip this step.
+Note that compiling al3c requires MPI libraries be installed. To avoid installing MPI libraries on a Linux 64-bit or OS X system, you may instead use the static binary "bin/al3c_linux_x86-64" (Linux) or "bin/al3c_darwin_x86-64" (OS X) and skip this step.
 
 The following commands will obtain the al3c source code and and compile the al3c binary
 
