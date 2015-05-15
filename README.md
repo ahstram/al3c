@@ -23,6 +23,8 @@ We provide an al3c example for parallelized ABC-SMC using the coalescent simulat
 
 Here are some quick examples that can get you running al3c without much thought:
 
+*If you have MPI libraries already installed, please skip to the "Compile from source" example. Existing MPI libraries will likely interfere with the Linux and OS-X binaries we provide below.*
+
 #### Linux 64-bit
 
 ```bash
