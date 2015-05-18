@@ -38,23 +38,43 @@ struct param_summary_t {
 
 void user_t::prior() {
 
-	param->MigrationRate_AfrToEur=u01()*0.4+0.84; // Unif[0.84,1.24]
-	param->MigrationRate_AfrToAsn=u01()*0.32+0.16; // Unif[0.16,0.48]
-	param->MigrationRate_EurToAsn=u01()*0.84+0.72; // Unif[0.72,1.56]
+//	param->MigrationRate_AfrToEur=u01()*0.4+0.84; // Unif[0.84,1.24] --> [2.1,3.1]
+	param->MigrationRate_AfrToEur=u01()*1.0+2.1; // Unif[2.1,3.1]
+
+//	param->MigrationRate_AfrToAsn=u01()*0.32+0.16; // Unif[0.16,0.48] --> [0.4, 1.2]
+	param->MigrationRate_AfrToAsn=u01()*0.8+0.4; // Unif[0.16,0.48] --> [0.4, 1.2]
+
+//	param->MigrationRate_EurToAsn=u01()*0.84+0.72; // Unif[0.72,1.56] --> [1.8, 3.9]
+	param->MigrationRate_EurToAsn=u01()*2.1+1.8; // Unif[1.8, 3.9]
+
+
 	param->EffectivePopulationSize_Afr=u01()*0.2994+1.319; // Unif[1.319, 1.6184]
 	param->GrowthRate_Eur=u01()*0.31+0.28; // Unif[0.28, 0.59]
 	param->GrowthRate_Asn=u01()*0.45+0.30; // Unif[0.30, 0.75]
-	param->PastEvent_AfrToEurProportion=u01()*2.8+4.8; // Unif[4.8,7.6]
+
+
+	//param->PastEvent_AfrToEurProportion=u01()*2.8+4.8; // Unif[4.8,7.6] --> [12, 19]
+	param->PastEvent_AfrToEurProportion=u01()*7+12; //  Unif[12, 19]
 
 };
 float user_t::prior_density() {
-	if (0.84<=param->MigrationRate_AfrToEur && param->MigrationRate_AfrToEur<=1.24
-		 && 0.16<=param->MigrationRate_AfrToAsn && param->MigrationRate_AfrToAsn<=0.48
-		 && 0.72<=param->MigrationRate_EurToAsn && param->MigrationRate_EurToAsn<=1.56
+//	if (0.84<=param->MigrationRate_AfrToEur && param->MigrationRate_AfrToEur<=1.24
+//		 && 0.16<=param->MigrationRate_AfrToAsn && param->MigrationRate_AfrToAsn<=0.48
+//		 && 0.72<=param->MigrationRate_EurToAsn && param->MigrationRate_EurToAsn<=1.56
+//		 && 1.319<=param->EffectivePopulationSize_Afr && param->EffectivePopulationSize_Afr<=1.6184
+//		&& 0.28<=param->GrowthRate_Eur && param->GrowthRate_Eur<=0.59
+//		 && 0.3<=param->GrowthRate_Asn && param->GrowthRate_Asn<=0.75
+//		&& 4.8<=param->PastEvent_AfrToEurProportion && param->PastEvent_AfrToEurProportion<=7.6)
+
+if (2.1<=param->MigrationRate_AfrToEur && param->MigrationRate_AfrToEur<=3.1
+		 && 0.4<=param->MigrationRate_AfrToAsn && param->MigrationRate_AfrToAsn<=1.2
+		 && 1.8<=param->MigrationRate_EurToAsn && param->MigrationRate_EurToAsn<=3.9
 		 && 1.319<=param->EffectivePopulationSize_Afr && param->EffectivePopulationSize_Afr<=1.6184
 		&& 0.28<=param->GrowthRate_Eur && param->GrowthRate_Eur<=0.59
 		 && 0.3<=param->GrowthRate_Asn && param->GrowthRate_Asn<=0.75
-		&& 4.8<=param->PastEvent_AfrToEurProportion && param->PastEvent_AfrToEurProportion<=7.6)
+		&& 12<=param->PastEvent_AfrToEurProportion && param->PastEvent_AfrToEurProportion<=19)
+
+
 		return 1;
 	else
 		return 0;
