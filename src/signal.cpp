@@ -5,8 +5,8 @@ int SIGNUM=0;
 void signal_callback_handler(int signum) {
 
 	SIGNUM=signum;
+	
+	if (np==0)
+		cerr<<"Received signal '"<<SIGNUM<<"', stand by while we finish this generation..."<<endl;
 
-	cerr<<"Received signal '"<<SIGNUM<<"', stand by while we finish this generation..."<<endl;
-
-	exit(EXIT_FAILURE);
 }

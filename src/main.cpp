@@ -38,73 +38,73 @@
 #include "progress.cpp"
 #include "weight.cpp"
 #include "generate.cpp"
+
+#include "mpi_check.cpp"
+
+int np;
 #include "signal.cpp"
-
-int check_mpirun() {
-
- struct stat sb;
-  string delimiter = ":";
-  string path = string(getenv("PATH"));
-  size_t start_pos = 0, end_pos = 0;
-
-  while ((end_pos = path.find(':', start_pos)) != string::npos)
-    {
-      string current_path =
-        path.substr(start_pos, end_pos - start_pos) + "/mpirun";
-
-      if ((stat(current_path.c_str(), &sb) == 0) && (sb.st_mode & S_IXOTH))
-        {
-          return 1;
-         }
-
-      start_pos = end_pos + 1;
-     }
-
-  return 0;
-}
-
-void print_cpu_info()
- {
-
-        int len,nprocs,rank;
-    char name[MPI_MAX_PROCESSOR_NAME];
-
-    MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
-    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
-    MPI_Get_processor_name(name, &len);
-
-
-cerr<<"processor "<<rank+1<<"/"<<nprocs<<" on "<<name<<" initialized"<<endl;
-}
 
 
 int main (int argc, char *argv[] ) {
 
-	//register signal handler
+
+//configuration file...
+	if (argc!=2) {
+		cerr<<"Error! Run with "<<argv[0]<<" <XML configuration>"<<endl;
+		exit(EXIT_FAILURE);
+	}
+
+	ifstream xmlfile (argv[1]);
+	
+	if (!xmlfile) {
+		cerr<<"Error! Could not open XML file '"<<argv[1]<<"'"<<endl;
+		exit(EXIT_FAILURE);
+	}
+
+//variables
+
+	uint NP_XML=0,NP=0;
+
+	uint d=0,D=0, n=0,N,g=0,G,T, T_per_proc,A, A_per_proc, *R, cheat=0, sample;
+	float **O=NULL,*E, last_epsilon=FLT_MAX, epsilon=FLT_MAX,x=0,sum_weight=0, max_weight, perturb_scale,perturb_scales,prior_scale,prior_scales,  *perturb_density_matrix, *prior_density_vector, quit_threshold;
+
+	char *output_prefix=NULL, *lib_string=NULL, *ptr_a,*ptr_b,*ptr_c,*line, *O_string=NULL, *last_data, *current_data, *proposed_data, *loan_data;
+
+	const char *dlsym_error;
+	void *handle;
+
+	create_t *user_type;
+	create_summary_t *user_summary_type;
+
+	destroy_t *destroy_user_type;
+	//destroy_summary_t *destroy_user_summary_type;
+
+	framework_t<param_t> **last, **current, **proposed, *loan, **fptr_a;
+	param_t **last_params;
+	uint size_of_mem;
+	
+	framework_summary_t<param_summary_t> *last_summary;
+
+	double pre_pre_timer,pre_timer,timer,post_timer;
+
+	output_prefix=new char[128];
+
+//register signal handler
 	signal(SIGINT, signal_callback_handler);
 
 //get MPI running...
-	uint NP_XML=0,NP=0,np;
 	MPI::Init();
-
-//	MPI_Buffer_attach(malloc(1024*1024),1024*1024);
 
 	np=MPI::COMM_WORLD.Get_rank(),  NP=MPI::COMM_WORLD.Get_size();
 //make sure only one argument specified
 	if (argc!=2) {
-		cerr<<"Error: Incorrect arguments specified. Usage is: 'al3c config.xml'"<<endl;
+		cerr<<"Error! Incorrect arguments specified. Usage is: 'al3c config.xml'"<<endl;
 		exit(EXIT_FAILURE);
 	}
 
 //if not already running in MPI, this will invoke it for us...
 	//if ((getenv("OMPI_COMM_WORLD_RANK")==NULL && getenv("PMI_RANK")==NULL && getenv("LAMRANK")==NULL )|| )  {
 
-	
-	ifstream xmlfile (argv[1]);
-	if (!xmlfile) {
-		cerr<<"Error: Could not open XML file '"<<argv[1]<<"'"<<endl;
-		exit(EXIT_FAILURE);
-	}
 	vector<char> buffer((istreambuf_iterator<char>(xmlfile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	using namespace rapidxml;
@@ -116,7 +116,7 @@ int main (int argc, char *argv[] ) {
 	strcpy(args[1]=new char[4],"-np");
 	
 	if (!doc.first_node("MPI")->first_node("NP")) {
-		cerr<<"Error: Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
+		cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -144,73 +144,35 @@ int main (int argc, char *argv[] ) {
 	} 
 
 	if (np==0)
-		cerr<<"al3c version 14.11 initialized with "<<NP<<" processors"<<endl;
+		cerr<<"al3c version 15.6 initialized with "<<NP<<" processors"<<endl;
 
 	print_cpu_info();
-
-//variable declarations go here...
-	uint d=0,D=0, n=0,N,g=0,G,T, T_per_proc,A, A_per_proc, *R, cheat=0, sample;
-	float **O=NULL,*E, last_epsilon=FLT_MAX, epsilon=FLT_MAX,x=0,sum_weight=0, max_weight, perturb_scale,perturb_scales,prior_scale,prior_scales,  *perturb_density_matrix, *prior_density_vector, quit_threshold;
-
-	char *output_prefix=NULL, *lib_string=NULL, *ptr_a,*ptr_b,*ptr_c,*line, *O_string=NULL, *last_data, *current_data, *proposed_data, *loan_data;
-
-	const char *dlsym_error;
-	void *handle;
-
-	create_t *user_type;
-	create_summary_t *user_summary_type;
-
-	destroy_t *destroy_user_type;
-	//destroy_summary_t *destroy_user_summary_type;
-
-	framework_t<param_t> **last, **current, **proposed, *loan, **fptr_a;
-	param_t **last_params;
-	uint size_of_mem;
-	
-	framework_summary_t<param_summary_t> *last_summary;
-
-	double pre_pre_timer,pre_timer,timer,post_timer;
-
-
-// read XML configuration (from all processors)
-//
-/*
-	ifstream xmlfile (argv[1]);
-	assert(xmlfile);
-	vector<char> buffer((istreambuf_iterator<char>(xmlfile)), istreambuf_iterator<char>());
-	buffer.push_back('\0');
-	using namespace rapidxml;
-
-	xml_document<> doc;    // character type defaults to char
-	doc.parse<0>(&buffer[0]);    // 0 means default parse flags
-*/
-	output_prefix=new char[128];
 
 	strcpy(output_prefix,doc.first_node("output")->first_node("prefix")->value());
 
 	if(!doc.first_node("ABC")->first_node("T")) {
 		if (np==0)
-			cerr<<"Error: Could not find required <ABC><T></T></ABC> in XML file"<<endl;
+			cerr<<"Error! Could not find required <ABC><T></T></ABC> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	T=atoi(doc.first_node("ABC")->first_node("T")->value());
 
 	if(!doc.first_node("ABC")->first_node("A")) {
 		if (np==0)
-			cerr<<"Error: Could not find required <ABC><A></A></ABC> in XML file"<<endl;
+			cerr<<"Error! Could not find required <ABC><A></A></ABC> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	A=atoi(doc.first_node("ABC")->first_node("A")->value());
 	if(!doc.first_node("ABC")->first_node("G")) {
 		if (np==0)
-			cerr<<"Error: Could not find required <ABC><G></G></ABC> in XML file"<<endl;
+			cerr<<"Error! Could not find required <ABC><G></G></ABC> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	G=atoi(doc.first_node("ABC")->first_node("G")->value());
 
 	if(!doc.first_node("ABC")->first_node("R")) {
 		if (np==0)
-			cerr<<"Error: Could not find required <ABC><R></R></ABC> in XML file"<<endl;
+			cerr<<"Error! Could not find required <ABC><R></R></ABC> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	if (G!=0)
@@ -222,7 +184,7 @@ int main (int argc, char *argv[] ) {
 		ABC_R>>R[g];
 		if (A<R[g]) {
 			if(np==0)
-				cerr<<"Error: <ABC><R>"<<R[g]<<"</R></ABC> must between 0 and A="<<A<<endl;
+				cerr<<"Error! <ABC><R>"<<R[g]<<"</R></ABC> must between 0 and A="<<A<<endl;
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -239,7 +201,7 @@ int main (int argc, char *argv[] ) {
 
 	if(!doc.first_node("ABC")->first_node("E")) {
 		if (np==0)
-			cerr<<"Error: Could not find required <ABC><E></E></ABC> in XML file"<<endl;
+			cerr<<"Error! Could not find required <ABC><E></E></ABC> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -266,7 +228,7 @@ int main (int argc, char *argv[] ) {
 	
 	if(!doc.first_node("O")) {
 		if (np==0)
-			cerr<<"Error: Could not find required <O></O> in XML file"<<endl;
+			cerr<<"Error! Could not find required <O></O> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	O_string=new char[doc.first_node("O")->value_size()+1];
@@ -317,10 +279,10 @@ int main (int argc, char *argv[] ) {
 		cheat=atoi(doc.first_node("ABC")->first_node("cheat")->value());
 
 
-//use dlopen to open the user provided library & check we have what we need
+	//use dlopen to open the user provided library & check we have what we need
 
 	if(!doc.first_node("lib")) {
-		cerr<<"Error: Could not find required <lib></lib> in XML file"<<endl;
+		cerr<<"Error! Could not find required <lib></lib> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	lib_string=doc.first_node("lib")->value();
@@ -545,16 +507,10 @@ int main (int argc, char *argv[] ) {
 		sum_weight=calc_sum_weight(current,A_per_proc,np);
 		for (uint a=0;a<A_per_proc;a++) {
 			*(current[np*A_per_proc+a]->w)/=sum_weight;
-
-		
 		}
 		for (uint r=0;r<NP;r++)
 			MPI::COMM_WORLD.Bcast(current[A_per_proc*r]->d,size_of_mem*A_per_proc,MPI::CHAR,r);
 
-		/*for (uint a=0;a<A_per_proc;a++) {
-			cerr<<"current="<<*(current[np*A_per_proc+a]->w)<<endl;
-
-		}*/
 	//print this generation's acceptances to the .g file and add to the .summary file
 
 		post_timer=MPI_Wtime();
@@ -590,12 +546,6 @@ int main (int argc, char *argv[] ) {
 		last=current;
 		current=fptr_a;
 
-//		fptr_b=last_data;
-//		last_data=fptr_b;
-//		current_data=fptr_b;
-
-
-
 	//print what the timer says	
 		if (np==0)
 			cerr<<" in "<<(post_timer-pre_pre_timer)<<" seconds"<<endl;
@@ -610,16 +560,14 @@ int main (int argc, char *argv[] ) {
 		if (SIGNUM) {
 			if (np==0)
 				cerr<<"quitting because signal '"<<SIGNUM<<"' has been received"<<endl;
-
+			break;
 		}
 
 	}
 
 
-// gracefully quit
-
+	// gracefully quit
 	MPI::Finalize();
 
 	exit(EXIT_SUCCESS);
-
 }
