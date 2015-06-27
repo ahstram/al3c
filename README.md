@@ -314,7 +314,7 @@ user_t::print(bool header) {
         if (header)
                 output<<"#distance        weight        MigrationRate_EurToAfr        MigrationRate_AsnToAfr        MigrationRate_AsnToEur        EffectivePopulationSize_Afr        GrowthRate_Eur        GrowthRate_Asn        PastEvent_EurToAfrMigration"<<endl;
         else
-                output&lt<*d&lt<*w&lt<param->MigrationRate_EurToAfr<<param->MigrationRate_AsnToAfr<<param->MigrationRate_AsnToEur<<param->EffectivePopulationSize_Afr<<param->GrowthRate_Eur<<param->GrowthRate_Asn<<param->PastEvent_EurToAfrMigration<<endl;
+                output<<*d<<*w<<param->MigrationRate_EurToAfr<<param->MigrationRate_AsnToAfr<<param->MigrationRate_AsnToEur<<param->EffectivePopulationSize_Afr<<param->GrowthRate_Eur<<param->GrowthRate_Asn<<param->PastEvent_EurToAfrMigration<<endl;
                 
         return output.str().c_str();
 }
