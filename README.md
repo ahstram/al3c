@@ -19,7 +19,7 @@ easily be modified for the user's specific case.
 </pre>
 
 ## Support
-For help with using al3c, please contact Alex Stram at astram@usc.edu
+For help with using al3c, please email Alexander Stram at astram@usc.edu
 
 ## al3c+MaCS Example 
 We provide an al3c example for parallelized ABC-SMC using the coalescent simulator MaCS, available at https://github.com/gchen98/macs
