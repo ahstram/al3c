@@ -13,7 +13,7 @@
 
 uint64_t u01n;
 uint32_t *rnd_array=NULL;
-sfmt_t sfmt;;
+sfmt_t sfmt;
 
 
 uint32_t *skew_seed(bool random) {
@@ -48,7 +48,7 @@ repeat:
 			rnd_array=new uint32_t[RND_BUFFER];
 			uint32_t *seeds=skew_seed(RANDOM_SEED);
 			sfmt_init_by_array(&sfmt, seeds, SKEW_SEEDS);
-			delete seeds;
+			delete [] seeds;
 		}
 		sfmt_fill_array32(&sfmt, rnd_array, RND_BUFFER);
 		u01n=1;

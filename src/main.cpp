@@ -78,7 +78,7 @@ int main (int argc, char *argv[] ) {
 	create_summary_t *user_summary_type;
 
 	destroy_t *destroy_user_type;
-	//destroy_summary_t *destroy_user_summary_type;
+	destroy_summary_t *destroy_user_summary_type;
 
 	framework_t<param_t> **last, **current, **proposed, *loan, **fptr_a;
 	param_t **last_params;
@@ -88,7 +88,6 @@ int main (int argc, char *argv[] ) {
 
 	double pre_pre_timer,pre_timer,timer,post_timer;
 
-	output_prefix=new char[128];
 
 //register signal handler
 	signal(SIGINT, signal_callback_handler);
@@ -117,18 +116,21 @@ int main (int argc, char *argv[] ) {
 		cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
-	char **args=new char*[4+argc];
-	args[0]=strdup("mpirun");
-	args[1]=strdup("-np");
-	args[2]=doc.first_node("MPI")->first_node("NP")->value();
-	for (int i=0;i<argc;i++) {
-		args[3+i]=argv[i];
-	} args[3+argc]=NULL;
-	
-	NP_XML=atoi(args[2]);
+		
+	NP_XML=atoi(doc.first_node("MPI")->first_node("NP")->value());
 
 	if (NP_XML!=NP && NP==1) {
+
 		int returncode;
+
+		char **args=new char*[4+argc];
+		args[0]=strdup("mpirun");
+		args[1]=strdup("-np");
+		args[2]=strdup(doc.first_node("MPI")->first_node("NP")->value());
+
+		for (int i=0;i<argc;i++) {
+			args[3+i]=argv[i];
+		} args[3+argc]=NULL; 
 
 		if (check_mpirun())
 			returncode=execvp("mpirun",args);
@@ -137,6 +139,11 @@ int main (int argc, char *argv[] ) {
 
 		if (returncode!=0) 
 			cerr<<"Warning: mpirun exited with code '"<<returncode<<"'"<<endl;
+
+		//for (int i=0;i<3;i++)
+		//	delete args[i];
+	//	delete args;
+
 		exit(returncode);
 	} 
 
@@ -145,7 +152,7 @@ int main (int argc, char *argv[] ) {
 
 	print_cpu_info();
 
-	strcpy(output_prefix,doc.first_node("output")->first_node("prefix")->value());
+	output_prefix=strdup(doc.first_node("output")->first_node("prefix")->value());
 
 	if(!doc.first_node("ABC")->first_node("T")) {
 		if (np==0)
@@ -320,7 +327,7 @@ int main (int argc, char *argv[] ) {
         // GKC: getting rid of compiler warning as destroy_summary_type variable
         // was not needed.
 	//(destroy_summary_t*)dlsym(handle,"destroy_summary");
-	//destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
+	destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
 	dlsym_error = dlerror();
 	if (dlsym_error) {
 		cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
@@ -362,6 +369,9 @@ int main (int argc, char *argv[] ) {
 	last_params=new param_t*[A];
 
 	last_summary=user_summary_type(last_params,A);
+
+
+	//user_type *tmp=new user_type(NULL,NULL,0,0,NULL);
 
 			// d		w		param						S
 	size_of_mem=sizeof(float)+sizeof(float)+user_type(NULL,NULL,0,0,NULL)->size_of_param_t+(N)*(D)*sizeof(float);
@@ -562,6 +572,32 @@ int main (int argc, char *argv[] ) {
 
 	}
 
+
+	delete last_data;
+	delete current_data;
+	delete proposed_data;
+	delete loan_data;
+
+
+	delete [] R;
+	destroy_user_summary_type(last_summary);
+
+	for (uint t=0;t<T;t++) {
+		destroy_user_type(proposed[t]);
+		//delete proposed[t];////		proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
+		if (t<A) {
+			//delete current[t];
+			destroy_user_type(current[t]);
+			destroy_user_type(last[t]);
+			//delete last[t];
+		//	current[t]=user_type(current_data+size_of_mem*t,last_summary->summary,N,D,O);
+		//	last[t]=user_type(last_data+size_of_mem*t,last_summary->summary,N,D,O);
+		}
+	}// loan=user_type(loan_data,last_summary->summary,N,D,O);
+
+	delete output_prefix;
+
+	delete [] rnd_array;
 
 	// gracefully quit
 	MPI::Finalize();

@@ -64,7 +64,7 @@ public:
 
 		pclose(pipe);
 
-		delete output;
+		delete [] output;
 
 		if (n!=N || d!=D) {
 			cerr<<"Warning! Command '"<<cmd<<"' did not give an "<<N<<"x"<<D<<" matrix"<<endl;
@@ -142,17 +142,25 @@ class user_t:public framework_t<param_t> {
 		w=d+1;
 		param=reinterpret_cast<param_t *>(w+1);		
 
-		S=new float*[N]; //this is OK since it's just more pointers
 
-		for (uint n=0;n<N;n++) 			// ptr 	d		w		param		..S...
-			S[n]=reinterpret_cast<float *>( ptr+sizeof(float)+sizeof(float)+find_size_of_param_t()+(D)*sizeof(float)*n );
+		//if (N>0) {
+			S=new float*[N]; //this is OK since it's just more pointers
+
+			for (uint n=0;n<N;n++) 			// ptr 	d		w		param		..S...
+				S[n]=reinterpret_cast<float *>( ptr+sizeof(float)+sizeof(float)+find_size_of_param_t()+(D)*sizeof(float)*n );
+		//}
 	}
 	virtual ~user_t() {
-		delete S;
+		/*if (N>0) {
+
+			for (uint i=0;i<N;i++)
+				delete  S[i];
+			delete [] S;
+
+		}*/
 	};
 
 };  
-
 
 // the types of the class factories
 typedef framework_t<param_t>* create_t(char *ptr, param_summary_t *ss_ptr,uint N_xml, uint D_xml, float **O_xml);
@@ -161,20 +169,19 @@ typedef framework_summary_t<param_summary_t>* create_summary_t(param_t **params,
 typedef void destroy_summary_t(framework_summary_t<param_summary_t>* user_summary);
 
 #ifndef	AL3C
-extern "C" framework_t<param_t>* create(char *ptr, param_summary_t *ss_ptr,uint N_xml, uint D_xml, float **O_xml) {
-	return new user_t(ptr,ss_ptr,N_xml,D_xml,O_xml);
-}
-extern "C" void destroy(user_t *user) {
-	delete user;
-}
-extern "C" framework_summary_t<param_summary_t>* create_summary(param_t **params, uint A) {
-	return new user_summary_t(params,A);
-}
-extern "C" void destroy_summary(user_summary_t *user_summary) {
-	delete user_summary;
-}
+	extern "C" framework_t<param_t>* create(char *ptr, param_summary_t *ss_ptr,uint N_xml, uint D_xml, float **O_xml) {
+		return new user_t(ptr,ss_ptr,N_xml,D_xml,O_xml);
+	}
+	extern "C" void destroy(user_t *user) {
+		delete user;
+	}
+	extern "C" framework_summary_t<param_summary_t>* create_summary(param_t **params, uint A) {
+		return new user_summary_t(params,A);
+	}
+	extern "C" void destroy_summary(user_summary_t *user_summary) {
+		delete user_summary;
+	}
 
-float u01();
-float n01(float u1, float u2, bool use_sin);
-
+	float u01();
+	float n01(float u1, float u2, bool use_sin);
 #endif

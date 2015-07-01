@@ -2,7 +2,7 @@ include make.inc
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-        CPPFLAGS += -undefined dynamic_lookup -stdlib=libstdc++ -lstdc++ 
+        CPPFLAGS += -undefined dynamic_lookup -stdlib=libstdc++ -lstdc++  -g
 endif
 
 all: macs.so allele_spectrum
