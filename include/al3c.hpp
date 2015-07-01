@@ -143,21 +143,21 @@ class user_t:public framework_t<param_t> {
 		param=reinterpret_cast<param_t *>(w+1);		
 
 
-		//if (N>0) {
+	//	if (N>0) {
 			S=new float*[N]; //this is OK since it's just more pointers
 
 			for (uint n=0;n<N;n++) 			// ptr 	d		w		param		..S...
 				S[n]=reinterpret_cast<float *>( ptr+sizeof(float)+sizeof(float)+find_size_of_param_t()+(D)*sizeof(float)*n );
-		//}
+	//	}
 	}
 	virtual ~user_t() {
-		/*if (N>0) {
+	//	if (N>0) {
 
 			for (uint i=0;i<N;i++)
 				delete  S[i];
 			delete [] S;
 
-		}*/
+	//	}
 	};
 
 };  

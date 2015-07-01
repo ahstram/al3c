@@ -371,10 +371,12 @@ int main (int argc, char *argv[] ) {
 	last_summary=user_summary_type(last_params,A);
 
 
-	//user_type *tmp=new user_type(NULL,NULL,0,0,NULL);
+	framework_t<param_t> *tmp_t=user_type(NULL,NULL,0,0,NULL);
 
 			// d		w		param						S
-	size_of_mem=sizeof(float)+sizeof(float)+user_type(NULL,NULL,0,0,NULL)->size_of_param_t+(N)*(D)*sizeof(float);
+	size_of_mem=sizeof(float)+sizeof(float)+tmp_t->size_of_param_t+(N)*(D)*sizeof(float);
+
+	destroy_user_type(tmp_t);
 
 	last_data=new char[size_of_mem*A], current_data=new char[size_of_mem*A], proposed_data=new char[size_of_mem*T], loan_data=new char[size_of_mem];
 
@@ -573,29 +575,31 @@ int main (int argc, char *argv[] ) {
 	}
 
 
-	delete last_data;
-	delete current_data;
-	delete proposed_data;
-	delete loan_data;
-
 
 	delete [] R;
 	destroy_user_summary_type(last_summary);
 
 	for (uint t=0;t<T;t++) {
 		destroy_user_type(proposed[t]);
-		//delete proposed[t];////		proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
 		if (t<A) {
-			//delete current[t];
 			destroy_user_type(current[t]);
 			destroy_user_type(last[t]);
-			//delete last[t];
-		//	current[t]=user_type(current_data+size_of_mem*t,last_summary->summary,N,D,O);
-		//	last[t]=user_type(last_data+size_of_mem*t,last_summary->summary,N,D,O);
 		}
-	}// loan=user_type(loan_data,last_summary->summary,N,D,O);
+	} 
 
-	delete output_prefix;
+	destroy_user_type(loan);
+
+	delete [] proposed;
+	delete [] current;
+	delete [] last;
+
+	delete  last_data;
+	delete  current_data;
+	delete  proposed_data;
+	delete  loan_data;
+
+
+	free(output_prefix);
 
 	delete [] rnd_array;
 
