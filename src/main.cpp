@@ -1,3 +1,4 @@
+#define VERSION	15.7
 #define AL3C 1
 #define MAX(a,b)	((a)>(b) ? (a):(b)) 
 #define MIN(a,b)	((a)<(b) ? (a):(b)) 
@@ -92,6 +93,7 @@ int main (int argc, char *argv[] ) {
 //register signal handler
 	signal(SIGINT, signal_callback_handler);
 
+
 //get MPI running...
 	MPI::Init();
 
@@ -103,7 +105,6 @@ int main (int argc, char *argv[] ) {
 	}
 
 //if not already running in MPI, this will invoke it for us...
-	//if ((getenv("OMPI_COMM_WORLD_RANK")==NULL && getenv("PMI_RANK")==NULL && getenv("LAMRANK")==NULL )|| )  {
 
 	vector<char> buffer((istreambuf_iterator<char>(xmlfile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
@@ -111,24 +112,20 @@ int main (int argc, char *argv[] ) {
 	xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(&buffer[0]);    // 0 means default parse flags
 
-	char **args=new char*[4+argc];
-	strcpy(args[0]=new char[7],"mpirun");
-	strcpy(args[1]=new char[4],"-np");
-	
+
 	if (!doc.first_node("MPI")->first_node("NP")) {
 		cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
-
+	char **args=new char*[4+argc];
+	args[0]=strdup("mpirun");
+	args[1]=strdup("-np");
 	args[2]=doc.first_node("MPI")->first_node("NP")->value();
-	NP_XML=atoi(args[1]);
-
 	for (int i=0;i<argc;i++) {
 		args[3+i]=argv[i];
-	}
-
-	args[3+argc]=NULL;
+	} args[3+argc]=NULL;
 	
+	NP_XML=atoi(args[2]);
 
 	if (NP_XML!=NP && NP==1) {
 		int returncode;
@@ -144,7 +141,7 @@ int main (int argc, char *argv[] ) {
 	} 
 
 	if (np==0)
-		cerr<<"al3c version 15.6 initialized with "<<NP<<" processors"<<endl;
+		cerr<<"al3c version "<<VERSION<<" initialized with "<<NP<<" processors"<<endl;
 
 	print_cpu_info();
 
