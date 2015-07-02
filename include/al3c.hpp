@@ -153,8 +153,8 @@ class user_t:public framework_t<param_t> {
 	virtual ~user_t() {
 	//	if (N>0) {
 
-			for (uint i=0;i<N;i++)
-				delete  S[i];
+	//		for (uint i=0;i<N;i++)
+	//			delete  S[i];
 			delete [] S;
 
 	//	}

@@ -140,9 +140,9 @@ int main (int argc, char *argv[] ) {
 		if (returncode!=0) 
 			cerr<<"Warning: mpirun exited with code '"<<returncode<<"'"<<endl;
 
-		//for (int i=0;i<3;i++)
-		//	delete args[i];
-	//	delete args;
+		for (int i=0;i<3;i++)
+			free(args[i]);
+		delete [] args;
 
 		exit(returncode);
 	} 
@@ -235,9 +235,10 @@ int main (int argc, char *argv[] ) {
 			cerr<<"Error! Could not find required <O></O> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
-	O_string=new char[doc.first_node("O")->value_size()+1];
+	//O_string=new char[doc.first_node("O")->value_size()+1];
 
-	memcpy(O_string,doc.first_node("O")->value(),doc.first_node("O")->value_size()+1);
+	//memcpy(O_string,doc.first_node("O")->value(),doc.first_node("O")->value_size()+1);
+	O_string=strdup(doc.first_node("O")->value());
 	line=strtok_r(O_string,"\n",&ptr_b);
 	if (line[0]=='#')
 		N=0;
@@ -261,7 +262,7 @@ int main (int argc, char *argv[] ) {
 		}
 
 	O=new float*[N];
-	delete O_string;
+	free(O_string);
 	O_string=doc.first_node("O")->value();
 	line=strtok_r(O_string,"\n",&ptr_b);	
 	n=0;
@@ -338,6 +339,7 @@ int main (int argc, char *argv[] ) {
 	if (np==0)
 		cerr<<" done"<<endl;
 
+	
 
 // give the userr basic info about our simulation & reset T/A so that NP divides them...
 	if (np==0) 
@@ -378,7 +380,7 @@ int main (int argc, char *argv[] ) {
 
 	destroy_user_type(tmp_t);
 
-	last_data=new char[size_of_mem*A], current_data=new char[size_of_mem*A], proposed_data=new char[size_of_mem*T], loan_data=new char[size_of_mem];
+	last_data=new char[size_of_mem*A](), current_data=new char[size_of_mem*A](), proposed_data=new char[size_of_mem*T](), loan_data=new char[size_of_mem]();
 
 	for (uint t=0;t<T;t++) {
 		proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
@@ -574,6 +576,11 @@ int main (int argc, char *argv[] ) {
 
 	}
 
+	delete [] t0;
+
+	delete [] perturb_density_matrix;
+	delete [] prior_density_vector;
+
 
 
 	delete [] R;
@@ -593,18 +600,28 @@ int main (int argc, char *argv[] ) {
 	delete [] current;
 	delete [] last;
 
-	delete  last_data;
-	delete  current_data;
-	delete  proposed_data;
-	delete  loan_data;
+	delete [] last_data;
+	delete [] current_data;
+	delete []  proposed_data;
+	delete [] loan_data;
 
+	delete [] last_params;
+
+
+	delete [] E;
+
+	for (uint i=0;i<N;i++)
+		delete [] O[i];
+	delete [] O;
 
 	free(output_prefix);
 
 	delete [] rnd_array;
-
 	// gracefully quit
 	MPI::Finalize();
+
+	dlclose(handle);
+
 
 	exit(EXIT_SUCCESS);
 }

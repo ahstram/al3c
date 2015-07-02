@@ -47,5 +47,5 @@ void generate(float **O, uint N, uint D,framework_t<param_t> **proposed, uint T,
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	delete t;
+	delete [] t;
 }
