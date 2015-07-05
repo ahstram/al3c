@@ -23,12 +23,9 @@
 #include <iomanip>
 #include <stdint.h>
 #include <dlfcn.h>
-
 #include <stdlib.h>
-
 #include <sys/stat.h>
 #include <sys/types.h>
-
 #include <unistd.h>
 
 #include "rapidxml/rapidxml.hpp"
@@ -45,12 +42,8 @@ struct timers_t {
 #include "progress.cpp"
 #include "weight.cpp"
 #include "generate.cpp"
-
 #include "mpi_check.cpp"
-
 #include "signal.cpp"
-
-
 
 int main (int argc, char *argv[] ) {
 
@@ -86,7 +79,7 @@ int main (int argc, char *argv[] ) {
 	destroy_t *destroy_user_type;
 	destroy_summary_t *destroy_user_summary_type;
 
-	framework_t<param_t> **last, **current, **proposed,  **fptr_a;
+	framework_t<param_t> **last, **current, **proposed,  **tmp;
 	param_t **last_params;
 	uint size_of_mem;
 	
@@ -339,15 +332,9 @@ int main (int argc, char *argv[] ) {
 		exit(EXIT_FAILURE);
     	}
 
-
-	if (np==0)
-		cerr<<" done"<<endl;
-
-	
-
 // give the userr basic info about our simulation & reset T/A so that NP divides them...
-	if (np==0) 
-		cerr<<"Requested "<<T<<" trials and "<<A<<" acceptances,";
+	if (np==0)
+		cerr<<" done\nRequested "<<T<<" trials and "<<A<<" acceptances,";
 	
 
 	T_per_proc=(T+NP-1)/NP;
@@ -504,9 +491,9 @@ int main (int argc, char *argv[] ) {
 
 		//switch our "last" with "current" acceptances
 
-		fptr_a=last;
+		tmp=last;
 		last=current;
-		current=fptr_a;
+		current=tmp;
 
 		timers.end=MPI_Wtime();
 
@@ -555,13 +542,13 @@ int main (int argc, char *argv[] ) {
 	delete [] proposed;
 	delete [] current;
 	delete [] last;
+	delete [] last_params;
 
 	delete [] last_data;
 	delete [] current_data;
 	delete []  proposed_data;
 
-	delete [] last_params;
-
+	
 
 	delete [] E;
 
@@ -576,7 +563,6 @@ int main (int argc, char *argv[] ) {
 	MPI::Finalize();
 
 	dlclose(handle);
-
 
 	exit(EXIT_SUCCESS);
 }

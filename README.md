@@ -348,7 +348,7 @@ struct param_summary_t {
 ####<span id="summarize">summarize</span>
 
 ```cpp
-framework_t::summarize(param_t **params,uint A);
+framework_t::summarize();
 ```
 
 <i>Write to param_summary_t based on an array of param_t's</i>
@@ -368,7 +368,7 @@ param_summary_t *param_summary; // Desired statistics of accepted parameters
 
 <b>Example</b>
 ```cpp
-user_summary_t::summarize(param_t **params, uint A) {
+user_summary_t::summarize() {
 
         float m1=0,m2=0;
 
