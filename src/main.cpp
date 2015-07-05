@@ -6,27 +6,26 @@
 #define LINE_LEN	1024 
 #define __STDC_LIMIT_MACROS
 
-#include <cstdlib>
-#include <fstream>
+//#include <cstdlib>
+//#include <fstream>
 #include <iostream>
 #include <algorithm> //for sort
 #include <sstream>
 #include <vector>
 #include <time.h>
-#include <getopt.h>
+//#include <getopt.h>
 #include <math.h>
 #include <string.h>
 #include <assert.h>
 #include <mpi.h>
 #include <float.h>
-#include <time.h>
-#include <iomanip>
-#include <stdint.h>
+//#include <iomanip>
+//#include <stdint.h>
 #include <dlfcn.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+//#include <sys/types.h>
+//#include <unistd.h>
 
 #include "rapidxml/rapidxml.hpp"
 
