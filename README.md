@@ -456,7 +456,7 @@ float <return value>; // The density of param according to the prior distributio
 <b>Example</b>
 
 ```cpp
-void user_t::prior_density {
+void user_t::prior_density() {
 
         if (0.84<=param->MigrationRate_EurToAfr && param->MigrationRate_EurToAfr<=1.24
                  && 0.16<=param->MigrationRate_AsnToAfr && param->MigrationRate_AsnToAfr<=0.48
