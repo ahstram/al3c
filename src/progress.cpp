@@ -1,5 +1,37 @@
+void print_summary(char *output_prefix, uint g,uint A,float last_epsilon, framework_t<param_t> **current) {
 
-void print_progress(uint *t, uint T, uint np, uint NP, uint g, uint G, float eps) {
+	if (np==0) {
+	ostringstream s_output;
+	s_output<<output_prefix<<g;
+
+	ofstream f_output;
+	f_output.open(s_output.str().data(),ios::out);
+
+	assert(f_output.is_open());
+
+	current[0]->print(f_output,1);
+
+	for (uint a=0;a<A;a++) {
+		current[a]->print(f_output,0);
+	} f_output.close();
+
+	ostringstream s_output_summary;
+	s_output_summary<<output_prefix<<"summary";
+	f_output.open(s_output_summary.str().data(),ios::out | std::ofstream::app);
+	assert(f_output.is_open());
+
+	if (g==1)
+		f_output<<"generation\tepsilon\ttime"<<endl;
+	f_output<<g<<"\t"<<last_epsilon<<"\t"<<timers.end-timers.begin<<endl;
+
+
+//this goes to stder...
+	cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<endl;
+
+	}
+}
+
+void print_progress(uint *t, uint T, uint NP, uint g, uint G, float eps) {
 
 //	MPI_Barrier(MPI_COMM_WORLD);
 
@@ -14,7 +46,7 @@ void print_progress(uint *t, uint T, uint np, uint NP, uint g, uint G, float eps
 }
 
 
-void update_progress(uint *t,uint T, uint np, uint NP, float eps, MPI_Request *mpi_request) {
+void update_progress(uint *t,uint T, uint NP, float eps, MPI_Request *mpi_request) {
 
 //	if (t[np]>0)
 //		MPI_Wait(mpi_request+np, MPI_STATUS_IGNORE);

@@ -1,4 +1,4 @@
-void generate(float **O, uint N, uint D,framework_t<param_t> **proposed, uint T, framework_t<param_t> **last, framework_t<param_t> *loan, float max_weight, uint A_per_proc, uint A, float eps, uint np, uint NP, uint g, uint G, param_summary_t *summary,bool cheat, uint size_of_mem) {
+void generate(float **O, uint N, uint D,framework_t<param_t> **proposed, uint T, framework_t<param_t> **last, float max_weight, uint A_per_proc, uint A, float eps, uint NP, uint g, uint G, param_summary_t *summary,bool cheat, uint size_of_mem) {
 
 	uint sample;
 
@@ -13,8 +13,7 @@ void generate(float **O, uint N, uint D,framework_t<param_t> **proposed, uint T,
 			}
 		}
 
-	print_progress(t,T,np,NP,g,G,eps);
-
+	print_progress(t,T,NP,g,G,eps);
 	
 	for (;t[np]<T;t[np]++) {
 
@@ -43,7 +42,7 @@ void generate(float **O, uint N, uint D,framework_t<param_t> **proposed, uint T,
 	}
 
 	//one last print...
-	print_progress(t,T,np,NP,g,G,eps);
+	print_progress(t,T,NP,g,G,eps);
 
 	MPI_Barrier(MPI_COMM_WORLD);
 

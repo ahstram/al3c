@@ -35,6 +35,12 @@
 
 #include "../include/al3c.hpp"
 
+int np;
+
+struct timers_t {
+	double begin,end;
+} timers;
+
 #include "u01.cpp"
 #include "progress.cpp"
 #include "weight.cpp"
@@ -42,8 +48,8 @@
 
 #include "mpi_check.cpp"
 
-int np;
 #include "signal.cpp"
+
 
 
 int main (int argc, char *argv[] ) {
@@ -63,13 +69,13 @@ int main (int argc, char *argv[] ) {
 	}
 
 //variables
-
+	
 	uint NP_XML=0,NP=0;
 
 	uint d=0,D=0, n=0,N,g=0,G,T, T_per_proc,A, A_per_proc, *R, cheat=0, sample;
 	float **O=NULL,*E, last_epsilon=FLT_MAX, epsilon=FLT_MAX,x=0,sum_weight=0, max_weight, perturb_scale,perturb_scales,prior_scale,prior_scales,  *perturb_density_matrix, *prior_density_vector, quit_threshold;
 
-	char *output_prefix=NULL, *lib_string=NULL, *ptr_a,*ptr_b,*ptr_c,*line, *O_string=NULL, *last_data, *current_data, *proposed_data, *loan_data;
+	char *output_prefix=NULL, *lib_string=NULL, *ptr_a,*ptr_b,*ptr_c,*line, *O_string=NULL, *last_data, *current_data, *proposed_data;
 
 	const char *dlsym_error;
 	void *handle;
@@ -80,13 +86,11 @@ int main (int argc, char *argv[] ) {
 	destroy_t *destroy_user_type;
 	destroy_summary_t *destroy_user_summary_type;
 
-	framework_t<param_t> **last, **current, **proposed, *loan, **fptr_a;
+	framework_t<param_t> **last, **current, **proposed,  **fptr_a;
 	param_t **last_params;
 	uint size_of_mem;
 	
 	framework_summary_t<param_summary_t> *last_summary;
-
-	double pre_pre_timer,pre_timer,timer,post_timer;
 
 
 //register signal handler
@@ -380,7 +384,7 @@ int main (int argc, char *argv[] ) {
 
 	destroy_user_type(tmp_t);
 
-	last_data=new char[size_of_mem*A](), current_data=new char[size_of_mem*A](), proposed_data=new char[size_of_mem*T](), loan_data=new char[size_of_mem]();
+	last_data=new char[size_of_mem*A](), current_data=new char[size_of_mem*A](), proposed_data=new char[size_of_mem*T]() ;
 
 	for (uint t=0;t<T;t++) {
 		proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
@@ -388,7 +392,8 @@ int main (int argc, char *argv[] ) {
 			current[t]=user_type(current_data+size_of_mem*t,last_summary->summary,N,D,O);
 			last[t]=user_type(last_data+size_of_mem*t,last_summary->summary,N,D,O);
 		}
-	} loan=user_type(loan_data,last_summary->summary,N,D,O);
+	} 
+
 
 
 
@@ -427,9 +432,9 @@ int main (int argc, char *argv[] ) {
 	uint *t0=new uint[NP]();
 	for (g=1;g<=G || G==0 ;g++) {
 
-		pre_pre_timer=MPI_Wtime();
+		timers.begin=MPI_Wtime();
 
-		print_progress(t0,T_per_proc, np, NP,g, G, epsilon);
+		print_progress(t0,T_per_proc,  NP,g, G, epsilon);
 
 		for (uint a=0;a<A;a++)
 			last_params[a]=last[a]->param;
@@ -446,13 +451,7 @@ int main (int argc, char *argv[] ) {
 			proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
 		}
 	
-
-		pre_timer=MPI_Wtime();
-		
-
-		generate(O,N,D,proposed+T_per_proc*np,T_per_proc, last,loan, max_weight,  A_per_proc, A, epsilon, np, NP, g, G, last_summary->summary,cheat, size_of_mem);
-
-		timer=MPI_Wtime();
+		generate(O,N,D,proposed+T_per_proc*np,T_per_proc, last, max_weight,  A_per_proc, A, epsilon,  NP, g, G, last_summary->summary,cheat, size_of_mem);
 
 		for (uint r=0;r<NP;r++)  //can't point to ->d because that won't necessarily be at the start (since we sorted the pointers)
 			MPI::COMM_WORLD.Bcast(proposed_data+T_per_proc*r*size_of_mem,T_per_proc*size_of_mem,MPI::CHAR,r);
@@ -522,45 +521,19 @@ int main (int argc, char *argv[] ) {
 		for (uint r=0;r<NP;r++)
 			MPI::COMM_WORLD.Bcast(current[A_per_proc*r]->d,size_of_mem*A_per_proc,MPI::CHAR,r);
 
-	//print this generation's acceptances to the .g file and add to the .summary file
-
-		post_timer=MPI_Wtime();
-	
-		if (np==0) { 
-	
-			ostringstream s_output;
-			s_output<<output_prefix<<g;
-			ofstream f_output;
-			f_output.open(s_output.str().data(),ios::out);
-			assert(f_output.is_open());
-
-
-			current[0]->print(f_output,1);
-			for (uint a=0;a<A;a++) {
-				current[a]->print(f_output,0);
-			}
-			f_output.close();
-
-			ostringstream s_output_summary;
-			s_output_summary<<output_prefix<<"summary";
-			f_output.open(s_output_summary.str().data(),ios::out | std::ofstream::app);
-			assert(f_output.is_open());
-
-			if (g==1)
-				f_output<<"generation\tepsilon\tpre_time\tgenerate_time\tpost_time"<<endl;
-			f_output<<g<<"\t"<<last_epsilon<<"\t"<<pre_timer-pre_pre_timer<<"\t"<<timer-pre_timer<<"\t"<<post_timer-timer<<endl;
-		}
-
-	//switch our "last" with "current" acceptances
+		//switch our "last" with "current" acceptances
 
 		fptr_a=last;
 		last=current;
 		current=fptr_a;
 
-	//print what the timer says	
-		if (np==0)
-			cerr<<" in "<<(post_timer-pre_pre_timer)<<" seconds"<<endl;
+		timers.end=MPI_Wtime();
 
+//print what the timer says	
+//print this generation's acceptances to the .g file and add to the .summary file
+	
+		print_summary(output_prefix,g,A,last_epsilon,current);	
+			
 	//quit if the quit_threshold has been reached, otherwise continue
 		if (last_epsilon<=quit_threshold) {
 			if (np==0)
@@ -594,7 +567,6 @@ int main (int argc, char *argv[] ) {
 		}
 	} 
 
-	destroy_user_type(loan);
 
 	delete [] proposed;
 	delete [] current;
@@ -603,7 +575,6 @@ int main (int argc, char *argv[] ) {
 	delete [] last_data;
 	delete [] current_data;
 	delete []  proposed_data;
-	delete [] loan_data;
 
 	delete [] last_params;
 
