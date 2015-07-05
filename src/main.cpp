@@ -27,12 +27,11 @@ uint np=0, NP=0, SIGNUM=0;
 #include "u01.cpp"
 #include "progress.cpp"
 #include "weight.cpp"
-#include "generate.cpp"
+#include "SMC.cpp"
 #include "mpi_check.cpp"
 #include "signal.cpp"
 
 int main (int argc, char *argv[] ) {
-
 
 //configuration file...
 	if (argc!=2) {
@@ -46,20 +45,14 @@ int main (int argc, char *argv[] ) {
 		cerr<<"Error! Could not open XML file '"<<argv[1]<<"'"<<endl;
 		exit(EXIT_FAILURE);
 	}
-
-//variables
-	
 	
 //register signal handler
 	signal(SIGINT, signal_callback_handler);
-
 
 //get MPI running...
 	MPI::Init();
 
 	np=MPI::COMM_WORLD.Get_rank(),  NP=MPI::COMM_WORLD.Get_size();
-
-//if not already running in MPI, this will invoke it for us...
 
 	vector<char> buffer((istreambuf_iterator<char>(xmlfile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
@@ -71,8 +64,8 @@ int main (int argc, char *argv[] ) {
 		cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
-		
-
+	
+//if not already running in MPI, this will invoke it for us...
 	if (atoi(doc.first_node("MPI")->first_node("NP")->value())!=(int)NP && NP==1) {
 
 		int returncode;
@@ -102,10 +95,10 @@ int main (int argc, char *argv[] ) {
 	} 
 
 //initialize our ABC routine
-	generations_t generations(&doc);
+	SMC_t SMC(&doc);
 
 //begin the loop 
-	generations.loop();
+	SMC.loop();
 		
 	delete [] rnd_array;
 	// gracefully quit

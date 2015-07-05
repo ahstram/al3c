@@ -1,4 +1,4 @@
-class generations_t {
+class SMC_t {
 
 public:
 
@@ -211,10 +211,9 @@ public:
 		delete [] t;
 	}
 
-
+//enter our loop of SMC...
 	void loop() {
-	//enter our loop of generations...
-
+	
 		for (uint a=0;a<A_per_proc;a++) {
 			last[np*A_per_proc+a]->prior();
 			*(last[np*A_per_proc+a]->w)=1/(float)A;
@@ -293,7 +292,7 @@ public:
 			
 	}
 	
-	generations_t(rapidxml::xml_document<> *doc) {
+	SMC_t(rapidxml::xml_document<> *doc) {
 
 	
 		d=0, D=0, n=0, cheat=0,cheat=0;
@@ -524,7 +523,7 @@ public:
 		} 
 	}
 	
-	~generations_t() {
+	~SMC_t() {
 	
 		dlclose(handle);
 
