@@ -18,6 +18,10 @@ To accomodate the latter users, we provide a number of examples using
 easily be modified for the user's specific case. 
 </pre>
 
+## Publication
+
+<a href="http://bioinformatics.oxfordjournals.org/content/early/2015/07/02/bioinformatics.btv393.abstract">al3c: High-performance software for parameter inference using Approximate Bayesian Computation</a>
+
 ## Support
 For help with using al3c, please email Alexander Stram at astram@usc.edu
 
