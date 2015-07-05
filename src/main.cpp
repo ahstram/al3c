@@ -56,24 +56,24 @@ int main (int argc, char *argv[] ) {
 
 	vector<char> buffer((istreambuf_iterator<char>(xmlfile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
-	rapidxml::xml_document<> doc;    // character type defaults to char
-	doc.parse<0>(&buffer[0]);    // 0 means default parse flags
+	rapidxml::xml_document<> cfg;    // character type defaults to char
+	cfg.parse<0>(&buffer[0]);    // 0 means default parse flags
 
 
-	if (!doc.first_node("MPI")->first_node("NP")) {
+	if (!cfg.first_node("MPI")->first_node("NP")) {
 		cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
 	
 //if not already running in MPI, this will invoke it for us...
-	if (atoi(doc.first_node("MPI")->first_node("NP")->value())!=(int)NP && NP==1) {
+	if (atoi(cfg.first_node("MPI")->first_node("NP")->value())!=(int)NP && NP==1) {
 
 		int returncode;
 
 		char **args=new char*[4+argc];
 		args[0]=strdup("mpirun");
 		args[1]=strdup("-np");
-		args[2]=strdup(doc.first_node("MPI")->first_node("NP")->value());
+		args[2]=strdup(cfg.first_node("MPI")->first_node("NP")->value());
 
 		for (int i=0;i<argc;i++) {
 			args[3+i]=argv[i];
@@ -95,7 +95,7 @@ int main (int argc, char *argv[] ) {
 	} 
 
 //initialize our ABC routine
-	SMC_t SMC(&doc);
+	SMC_t SMC(&cfg);
 
 //begin the loop 
 	SMC.loop();

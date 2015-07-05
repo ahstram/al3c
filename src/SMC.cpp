@@ -292,27 +292,27 @@ public:
 			
 	}
 	
-	SMC_t(rapidxml::xml_document<> *doc) {
+	SMC_t(rapidxml::xml_document<> *cfg) {
 
 	
 		d=0, D=0, n=0, cheat=0,cheat=0;
 		last_epsilon=FLT_MAX, epsilon=FLT_MAX,x=0,sum_weight=0;
 
-		output_prefix=strdup(doc->first_node("output")->first_node("prefix")->value());
+		output_prefix=strdup(cfg->first_node("output")->first_node("prefix")->value());
 
-		if(!doc->first_node("ABC")->first_node("T")) {
+		if(!cfg->first_node("ABC")->first_node("T")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><T></T></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
-		T=atoi(doc->first_node("ABC")->first_node("T")->value());
+		T=atoi(cfg->first_node("ABC")->first_node("T")->value());
 	
-		if(!doc->first_node("ABC")->first_node("A")) {
+		if(!cfg->first_node("ABC")->first_node("A")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><A></A></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
-		A=atoi(doc->first_node("ABC")->first_node("A")->value());
+		A=atoi(cfg->first_node("ABC")->first_node("A")->value());
 			
 	// reset T/A so that NP divides them...
 		if (np==0)
@@ -328,14 +328,14 @@ public:
 			cerr<<" giving you "<<T<<" and "<<A<<endl;
 		
 	
-		if(!doc->first_node("ABC")->first_node("G")) {
+		if(!cfg->first_node("ABC")->first_node("G")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><G></G></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
-		G=atoi(doc->first_node("ABC")->first_node("G")->value());
+		G=atoi(cfg->first_node("ABC")->first_node("G")->value());
 	
-		if(!doc->first_node("ABC")->first_node("R")) {
+		if(!cfg->first_node("ABC")->first_node("R")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><R></R></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
@@ -344,7 +344,7 @@ public:
 			R=new uint[G];
 		else
 			R=new uint[1];
-		stringstream ABC_R(doc->first_node("ABC")->first_node("R")->value());
+		stringstream ABC_R(cfg->first_node("ABC")->first_node("R")->value());
 		for (g=0;ABC_R.good();g++)  {
 			ABC_R>>R[g];
 			if (A<R[g]) {
@@ -358,11 +358,11 @@ public:
 				R[g]=R[0];
 		else if (g!=G) {
 			if (np==0)
-				cerr<<"Error! <ABC><R>"<<doc->first_node("ABC")->first_node("R")->value()<<"</R></ABC> must have length 1 or G="<<G<<endl;
+				cerr<<"Error! <ABC><R>"<<cfg->first_node("ABC")->first_node("R")->value()<<"</R></ABC> must have length 1 or G="<<G<<endl;
 			exit(EXIT_FAILURE);
 		}
 
-		if(!doc->first_node("ABC")->first_node("E")) {
+		if(!cfg->first_node("ABC")->first_node("E")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><E></E></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
@@ -372,7 +372,7 @@ public:
 			E=new float[G];
 		else
 			E=new float[1];
-		stringstream ABC_E(doc->first_node("ABC")->first_node("E")->value());
+		stringstream ABC_E(cfg->first_node("ABC")->first_node("E")->value());
 		for (g=0;ABC_E.good();g++)  {
 			ABC_E>>E[g];
 		}
@@ -381,7 +381,7 @@ public:
 				E[g]=E[0];
 		} else if (g!=G) {
 			if (np==0)
-				cerr<<"Error! <ABC><E>"<<doc->first_node("ABC")->first_node("E")->value()<<"</E></ABC> must have length 1 or G="<<G<<endl;
+				cerr<<"Error! <ABC><E>"<<cfg->first_node("ABC")->first_node("E")->value()<<"</E></ABC> must have length 1 or G="<<G<<endl;
 			exit(EXIT_FAILURE);
 		}
 		if (G!=0)
@@ -389,13 +389,13 @@ public:
 		else
 			terminal_epsilon=E[0];	
 		
-		if(!doc->first_node("O")) {
+		if(!cfg->first_node("O")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <O></O> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
 
-		O_string=strdup(doc->first_node("O")->value());
+		O_string=strdup(cfg->first_node("O")->value());
 		line=strtok_r(O_string,"\n",&ptr_b);
 		if (line[0]=='#')
 			N=0;
@@ -420,7 +420,7 @@ public:
 	
 		O=new float*[N];
 		free(O_string);
-		O_string=doc->first_node("O")->value();
+		O_string=cfg->first_node("O")->value();
 		line=strtok_r(O_string,"\n",&ptr_b);	
 		n=0;
 		while(1) {
@@ -437,8 +437,8 @@ public:
 	
 		assert(n==N && d==D);
 		
-		if(doc->first_node("ABC")->first_node("cheat"))
-			cheat=atoi(doc->first_node("ABC")->first_node("cheat")->value());
+		if(cfg->first_node("ABC")->first_node("cheat"))
+			cheat=atoi(cfg->first_node("ABC")->first_node("cheat")->value());
 	
 	
 		//use dlopen to open the user provided library & check we have what we need
@@ -455,12 +455,12 @@ public:
 			} cerr<<endl; 
 		}
 
-		if(!doc->first_node("lib")) {
+		if(!cfg->first_node("lib")) {
 			cerr<<"Error! Could not find required <lib></lib> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
 
-		char *lib_string=doc->first_node("lib")->value();
+		char *lib_string=cfg->first_node("lib")->value();
 
 		if (np==0) 
 			cerr<<"Loading '"<<lib_string<<"' shared library...";
