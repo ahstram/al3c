@@ -1,7 +1,5 @@
 #include <signal.h>
 
-int SIGNUM=0;
-
 void signal_callback_handler(int signum) {
 
 	SIGNUM=signum;

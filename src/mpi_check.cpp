@@ -24,13 +24,16 @@ int check_mpirun() {
 void print_cpu_info()
  {
 
+	if (np==0)
+		cerr<<"al3c version "<<VERSION<<" initialized with "<<NP<<" processors"<<endl;
+
+
         int len,nprocs,rank;
     char name[MPI_MAX_PROCESSOR_NAME];
 
     MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
     MPI_Comm_rank(MPI_COMM_WORLD,&rank);
     MPI_Get_processor_name(name, &len);
-
 
 cerr<<"processor "<<rank+1<<"/"<<nprocs<<" on "<<name<<" initialized"<<endl;
 }

@@ -1,3 +1,5 @@
+/*
+
 void print_summary(char *output_prefix, uint g,uint A,float last_epsilon, framework_t<param_t> **current) {
 
 	if (np==0) {
@@ -40,9 +42,9 @@ void print_progress(uint *t, uint T, uint NP, uint g, uint G, float eps) {
 	}
 
 }
+*/
 
-
-void update_progress(uint *t,uint T, uint NP, float eps, MPI_Request *mpi_request) {
+//void update_progress(uint *t,uint T, uint NP, float eps, MPI_Request *mpi_request) {
 
 //	if (t[np]>0)
 //		MPI_Wait(mpi_request+np, MPI_STATUS_IGNORE);
@@ -86,6 +88,6 @@ void update_progress(uint *t,uint T, uint NP, float eps, MPI_Request *mpi_reques
                         MPI::COMM_WORLD.Recv(t+status.MPI_SOURCE,1,MPI::INT,status.MPI_SOURCE,status.MPI_TAG);
 	}
 */
-}
+//}
 
 
