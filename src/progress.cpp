@@ -24,10 +24,6 @@ void print_summary(char *output_prefix, uint g,uint A,float last_epsilon, framew
 		f_output<<"generation\tepsilon\ttime"<<endl;
 	f_output<<g<<"\t"<<last_epsilon<<"\t"<<timers.end-timers.begin<<endl;
 
-
-//this goes to stder...
-	cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<endl;
-
 	}
 }
 

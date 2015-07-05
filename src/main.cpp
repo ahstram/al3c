@@ -394,9 +394,6 @@ int main (int argc, char *argv[] ) {
 		}
 	} 
 
-
-
-
 //distribute our last parameters from the prior() distribution, weight properly, and broadcast 
 
 	for (uint a=0;a<A_per_proc;a++) {
@@ -407,29 +404,13 @@ int main (int argc, char *argv[] ) {
 	for (uint r=0;r<NP;r++) 
 		MPI::COMM_WORLD.Bcast(last[A_per_proc*r]->d,size_of_mem*A_per_proc,MPI::CHAR,r);
 
-//print our prior to the .0 file...
-
-	if (np==0) {
-		ostringstream s_output;
-		s_output<<output_prefix<<"0";
-		ofstream f_output;
-		f_output.open(s_output.str().data(),ios::out);
-		assert(f_output.is_open());
-			//f_output<<last[0]->print(1);
-			last[0]->print(f_output,1);
-			for (uint a=0;a<A;a++) {
-				//f_output<<last[a]->print(0);
-				last[a]->print(f_output,0);
-			}
-		f_output.close();
-	}
 	perturb_density_matrix=new float[A*A];
 	prior_density_vector=new float[A*A];
 
 //enter our loop of generations...
 
-
 	uint *t0=new uint[NP]();
+
 	for (g=1;g<=G || G==0 ;g++) {
 
 		timers.begin=MPI_Wtime();
@@ -529,9 +510,11 @@ int main (int argc, char *argv[] ) {
 
 		timers.end=MPI_Wtime();
 
-//print what the timer says	
-//print this generation's acceptances to the .g file and add to the .summary file
-	
+	//printing status...
+
+		if (np==0)	
+			cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<endl;
+
 		print_summary(output_prefix,g,A,last_epsilon,current);	
 			
 	//quit if the quit_threshold has been reached, otherwise continue
@@ -541,6 +524,7 @@ int main (int argc, char *argv[] ) {
 			break;
 		}
 
+	//if we've reached a CTRL+C, quit...
 		if (SIGNUM) {
 			if (np==0)
 				cerr<<"quitting because signal '"<<SIGNUM<<"' has been received"<<endl;
