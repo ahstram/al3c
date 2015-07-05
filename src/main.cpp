@@ -223,9 +223,7 @@ int main (int argc, char *argv[] ) {
 			cerr<<"Error! Could not find required <O></O> in XML file"<<endl;
 		exit(EXIT_FAILURE);
 	}
-	//O_string=new char[doc.first_node("O")->value_size()+1];
 
-	//memcpy(O_string,doc.first_node("O")->value(),doc.first_node("O")->value_size()+1);
 	O_string=strdup(doc.first_node("O")->value());
 	line=strtok_r(O_string,"\n",&ptr_b);
 	if (line[0]=='#')
