@@ -24,8 +24,8 @@
 #include "../include/al3c.hpp"
 
 uint np=0, NP=0, SIGNUM=0;
+
 #include "u01.cpp"
-#include "progress.cpp"
 #include "weight.cpp"
 #include "SMC.cpp"
 #include "mpi_check.cpp"
@@ -93,6 +93,8 @@ int main (int argc, char *argv[] ) {
 
 		exit(returncode);
 	} 
+
+	print_cpu_info();
 
 //initialize our ABC routine
 	SMC_t SMC(&cfg);

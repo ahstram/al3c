@@ -45,6 +45,11 @@ repeat:
 
 	if (u01n%RND_BUFFER==1) {
 		if (rnd_array==NULL) {
+
+			if (np==0) {
+				cerr<<"-- Invoking SIMD-oriented Fast Mersenne Twister (SFMT) pseudo-random number generator.\n-- Copyright (c) 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University.\n-- Copyright (c) 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and The University of Tokyo.\n-- All rights reserved."<<endl;
+			}
+
 			rnd_array=new uint32_t[RND_BUFFER];
 			uint32_t *seeds=skew_seed(RANDOM_SEED);
 			sfmt_init_by_array(&sfmt, seeds, SKEW_SEEDS);
