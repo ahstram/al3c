@@ -4,12 +4,12 @@
 
 #define SFMT_MEXP 19937
 #define RANDOM_SEED 1 //be careful: without this, you may run on repeat after a while!
-#define PI 3.141592653589793238462
 #define RND_BUFFER	16777216
 #define SKEW_SEEDS	256
-#define LEFT_OPEN 1 // this means 
-#define RIGHT_OPEN 2 // this means that 
-#define BOTH_OPEN 3
+
+#define LEFT_OPEN 1 // U(0,1]
+#define RIGHT_OPEN 2 // U[0,1)
+#define BOTH_OPEN 3 // U(0,1)
 
 uint64_t u01n;
 uint32_t *rnd_array=NULL;
@@ -31,10 +31,6 @@ for (uint i=0;i<SKEW_SEEDS;i++) {
 }
 return seed;
 }
-
-#define LEFT_OPEN 1 // this means 
-#define RIGHT_OPEN 2 // this means that 
-#define BOTH_OPEN 3
 
 float u01(char c) {
 
