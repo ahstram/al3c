@@ -198,7 +198,8 @@ public:
 
 			_proposed[t[np]]->simulate();
 
-			if ( (*(_proposed[t[np]]->d)=_proposed[t[np]]->distance() ) > epsilon)
+
+			if ( (*(_proposed[t[np]]->d)=_proposed[t[np]]->distance() ) > epsilon) 
 				goto repeat;
 
 		}
@@ -225,7 +226,7 @@ public:
 	
 		
 		uint *t0=new uint[NP]();
-
+		
 		for (g=1;g<=G || G==0 ;g++) {
 	
 			timers.begin=MPI_Wtime();
@@ -257,12 +258,8 @@ public:
 			sort_proposed();
 	// calc	ulate perturb_density_matrix and prior_density_vector
 			calculate_weights();
-		
-			//switch our "last" with "current" acceptances
-			swap_frameworks(); //switch current & last
-	
+
 			timers.end=MPI_Wtime();
-	
 	
 		//printing status...
 	
@@ -270,7 +267,10 @@ public:
 				cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<endl;
 	
 			print_summary();	
-				
+			
+		//switch our "last" with "current" acceptances
+			swap_frameworks(); //switch current & last
+	
 		//quit if the terminal_epsilon has been reached, otherwise continue
 			if (last_epsilon<=terminal_epsilon) {
 				if (np==0)
