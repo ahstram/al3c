@@ -43,7 +43,12 @@ repeat:
 		if (rnd_array==NULL) {
 
 			if (np==0) {
-				cerr<<"-- Invoking SIMD-oriented Fast Mersenne Twister (SFMT) pseudo-random number generator.\n-- Copyright (c) 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University.\n-- Copyright (c) 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and The University of Tokyo.\n-- All rights reserved."<<endl;
+cerr<<"+------------------------------------------------------------------------------+\n"; 
+cerr<<"|             Invoking SIMD-oriented Fast Mersenne Twister (SFMT)              |\n";
+cerr<<"| Copyright 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University  |\n";
+cerr<<"| Copyright 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and      |\n";
+cerr<<"|                The University of Tokyo. All rights reserved.                 |\n";
+cerr<<"+------------------------------------------------------------------------------+"<<endl;
 			}
 
 			rnd_array=new uint32_t[RND_BUFFER];
