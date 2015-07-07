@@ -28,7 +28,7 @@ public:
 
 	uint d,D, n,N,g,G,T, T_per_proc,A, A_per_proc, *R, cheat, sample;
 
-	float **O,*E, last_epsilon, epsilon,x,sum_weight, max_weight, terminal_epsilon;
+	float **O,*E, last_epsilon, current_epsilon, terminal_epsilon,x,sum_weight, max_weight;
 	char *output_prefix, *ptr_a,*ptr_b,*ptr_c,*line, *O_string;
 
 	char *last_data, *current_data, *proposed_data;
@@ -42,27 +42,27 @@ public:
 	void sort_proposed() {
 			if (np==0) {
 				sort(proposed,proposed+T,sortMethod); 
-				epsilon=*(proposed[A-1]->d);
+				current_epsilon=*(proposed[A-1]->d);
 
 				for (uint a=0,t=0;t<T && a<A;t++)
-					if (*(proposed[t]->d) <= epsilon) {
+					if (*(proposed[t]->d) <= current_epsilon) {
 						memcpy(current[a]->d,proposed[t]->d,size_of_mem);
 						a++;
 					} 
 
-				epsilon=last_epsilon;
+				current_epsilon=last_epsilon;
 				if (G==0) {
 					if (R[0])
-						epsilon=*(current[R[0]-1]->d);
+						current_epsilon=*(current[R[0]-1]->d);
 				} else {
 					if (R[g-1])
-						epsilon=*(current[R[g-1]-1]->d); 
+						current_epsilon=*(current[R[g-1]-1]->d); 
 					else
-						epsilon=E[g-1];
+						current_epsilon=E[g-1];
 				}
 
-			epsilon=MAX(epsilon,terminal_epsilon);
-			} MPI::COMM_WORLD.Bcast(&epsilon,1,MPI::FLOAT,0);
+			current_epsilon=MAX(current_epsilon,terminal_epsilon);
+			} MPI::COMM_WORLD.Bcast(&current_epsilon,1,MPI::FLOAT,0);
 			MPI::COMM_WORLD.Bcast(current[0]->d,size_of_mem*A,MPI::CHAR,0);
 	}	
 
@@ -140,7 +140,7 @@ public:
 	void print_progress(uint *_t) {
 
 		if (np==0) {
-			cerr<<"\rgeneration="<<g<<"/"<<G<<", epsilon="<<epsilon<<", simulations=("<<_t[0]<<"/"<<T_per_proc;
+			cerr<<"\rgeneration="<<g<<"/"<<G<<", epsilon="<<current_epsilon<<", simulations=("<<_t[0]<<"/"<<T_per_proc;
 			for (uint r=1;r<NP;r++) {
 				cerr<<","<<_t[r]<<"/"<<T_per_proc;
 			}
@@ -161,7 +161,7 @@ public:
 	}
 
 
-	void generate(framework_t<param_t> **_proposed) {
+	void generate() {
 
 		uint sample;
 
@@ -170,8 +170,8 @@ public:
 		if(cheat && g>1) {
 			for (uint i=0;i<A_per_proc && t[np]<T_per_proc;i++) {
 				sample=np*A_per_proc+i;
-				if (*(last[sample]->d)<=epsilon) {
-					memcpy(_proposed[t[np]]->d,last[sample]->d,size_of_mem);
+				if (*(last[sample]->d)<=current_epsilon) {
+					memcpy(proposed[np*T_per_proc+t[np]]->d,last[sample]->d,size_of_mem);
 					t[np]++;
 				}
 			}
@@ -188,18 +188,18 @@ public:
 
 			retry:
 
-			memcpy(_proposed[t[np]]->d,last[sample]->d,size_of_mem);
+			memcpy(proposed[np*T_per_proc+t[np]]->d,last[sample]->d,size_of_mem);
 
-			_proposed[t[np]]->perturb();
+			proposed[np*T_per_proc+t[np]]->perturb();
 
 
-			if (_proposed[t[np]]->prior_density()==0 || _proposed[t[np]]->perturb_density(last[sample]->param)==0)
+			if (proposed[np*T_per_proc+t[np]]->prior_density()==0 || proposed[np*T_per_proc+t[np]]->perturb_density(last[sample]->param)==0)
 				goto retry;
 
-			_proposed[t[np]]->simulate();
+			proposed[np*T_per_proc+t[np]]->simulate();
 
 
-			if ( (*(_proposed[t[np]]->d)=_proposed[t[np]]->distance() ) > epsilon) 
+			if ( (*(proposed[np*T_per_proc+t[np]]->d)=proposed[np*T_per_proc+t[np]]->distance() ) > current_epsilon) 
 				goto repeat;
 
 		}
@@ -247,12 +247,12 @@ public:
 			}
 		
 	
-			generate(proposed+T_per_proc*np);
+			generate();
 	
 			for (uint r=0;r<NP;r++)  //can't point to ->d because that won't necessarily be at the start (since we sorted the pointers)
 				MPI::COMM_WORLD.Bcast(proposed_data+T_per_proc*r*size_of_mem,T_per_proc*size_of_mem,MPI::CHAR,r);
 
-			last_epsilon=epsilon;
+			last_epsilon=current_epsilon;
 
 
 			sort_proposed();
@@ -296,7 +296,7 @@ public:
 
 	
 		d=0, D=0, n=0, cheat=0,cheat=0;
-		last_epsilon=FLT_MAX, epsilon=FLT_MAX,x=0,sum_weight=0;
+		last_epsilon=FLT_MAX, current_epsilon=FLT_MAX,x=0,sum_weight=0;
 
 		output_prefix=strdup(cfg->first_node("output")->first_node("prefix")->value());
 
