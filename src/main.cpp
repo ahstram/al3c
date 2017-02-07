@@ -18,6 +18,7 @@
 #include <float.h>
 #include <dlfcn.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include "rapidxml/rapidxml.hpp"
 
