@@ -703,7 +703,7 @@ If we would like to change the quantile used for each generation, we can specify
 <!-- Or, if we'd like to vary the rank over generations, do it like this: -->
 
 <ABC>
-        <E>750 500 400 300 250 250 250 250 250 250 250 250 250 300 400</E>
+        <R>750 500 400 300 250 250 250 250 250 250 250 250 250 300 400</R>
 </ABC>
 ```
 
