@@ -1,20 +1,10 @@
-
-#include <iostream>                                                                                                       
-#include <algorithm> //for sort                                                                                           
-#include <sstream>                                                                                                        
-#include <vector>                                                                                                         
-//#include <time.h>                                                                                                       
-#include <math.h>                                                                                                         
-#include <string.h>                                                                                                       
-#include <assert.h>                                                                                                       
-//#include <mpi.h>                                                                                                        
-#include <float.h>                                                                                                        
-#include <dlfcn.h>                                                                                                        
-#include <sys/stat.h>                                                                                                     
-#include <unistd.h>                                                                                                       
-
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <string.h>
 #include <mpi.h>
-#include "weight.hpp"
+
+#include "../include/weight.hpp"
 
 float calc_max_weight(framework_t<param_t> **accepted, uint A_per_proc, uint np ) {
 
@@ -36,7 +26,7 @@ float calc_sum_weight(framework_t<param_t> **current, uint A_per_proc, uint np) 
 
 	return sum_weight;
 
-} 
+}
 
 bool sortMethod(framework_t<param_t> *p1,framework_t<param_t> *p2) { //how to sort our frameworks
 

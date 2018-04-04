@@ -1,2 +1,2 @@
 bin/al3c
-bin/*.o
+.build/

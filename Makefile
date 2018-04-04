@@ -11,34 +11,44 @@ static_darwin: bin/al3c_darwin_x86-64
 
 static_linux: bin/al3c_linux_x86-64
 
-bin/al3c: bin/SMC.o bin/u01.o bin/SFMT.o bin/signal.o bin/main.o
-	$(MPI) -o bin/al3c bin/SMC.o bin/u01.o bin/SFMT.o bin/signal.o bin/main.o
+bin/al3c: .build/SMC.o .build/u01.o .build/SFMT.o .build/signal.o \
+	.build/main.o .build/weight.o .build/mpi_check.o make.inc
+	$(MPI) -o $@ .build/*.o
 
-bin/main.o:  src/main.cpp #include/al3c.hpp make.inc
-	$(MPI) -c -o bin/main.o $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $< -ldl
+.build/main.o:  src/main.cpp include/al3c.hpp include/externs_typedefs.hpp \
+	include/mpi_check.hpp include/signal.hpp include/SMC.hpp include/u01.hpp\
+	include/externs_typedefs.hpp make.inc
+	$(MPI) -c -o $@ $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $< -ldl
 
-bin/SMC.o: src/SMC.cpp
-	$(MPI) -c -o bin/SMC.o $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $<
+.build/mpi_check.o: src/mpi_check.cpp include/al3c.hpp \
+   	include/externs_typedefs.hpp make.inc
+	$(MPI) -c -o $@ $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $<
 
-bin/u01.o: src/u01.cpp
-	g++ -c -o bin/u01.o $<
+.build/signal.o: src/signal.cpp include/externs_typedefs.hpp
+	g++ -c -o $@ $<
 
-bin/SFMT.o: src/SFMT/SFMT.c
-	g++ -c -o bin/SFMT.o $<
+.build/SFMT.o: src/SFMT/SFMT.c
+	g++ -c -o $@ $<
 
-bin/signal.o: src/signal.cpp
-	g++ -c -o bin/signal.o $<
+.build/SMC.o: src/SMC.cpp include/weight.hpp include/u01.hpp \
+	include/externs_typedefs.hpp make.inc
+	$(MPI) -c -o $@ $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $<
 
-bin/weight.o: src/weight.cpp
-	$(MPI) -c -o bin/weight.o $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $<
+.build/u01.o: src/u01.cpp include/u01.hpp include/externs_typedefs.hpp
+	g++ -c -o $@ $<
+
+.build/weight.o: src/weight.cpp include/weight.hpp include/al3c.hpp make.inc
+	$(MPI) -c -o $@ $(MPIFLAGS) $(MPIINCLUDEFLAGS) $(MPILIBFLAGS) $<
 
 ##make sure MPI .dylibs are removed for this to compile statically...
-bin/al3c_darwin_x86-64:  src/main.cpp src/SMC.cpp src/signal.cpp  src/u01.cpp  src/weight.cpp  include/al3c.hpp make.inc
-	$(MPI) $(MPIFLAGS) $(MPIINCLUDEFLAGS)  -o bin/al3c_darwin_x86-64  $(MPILIBFLAGS) $<
+bin/al3c_darwin_x86-64: .build/SMC.o .build/u01.o .build/SFMT.o \
+	.build/signal.o .build/main.o .build/weight.o .build/mpi_check.o make.inc
+	$(MPI) $(MPIFLAGS) $(MPIINCLUDEFLAGS)  -o bin/al3c_darwin_x86-64  \
+		$(MPILIBFLAGS) $<
 
-bin/al3c_linux_x86-64: src/main.cpp src/SMC.cpp src/signal.cpp  src/u01.cpp  src/weight.cpp  include/al3c.hpp make.inc
+bin/al3c_linux_x86-64: .build/SMC.o .build/u01.o .build/SFMT.o .build/signal.o \
+	.build/main.o .build/weight.o .build/mpi_check.o make.inc
 	mpiicpc -Wall -O2 -static_mpi -o bin/al3c_linux_x86-64 -ldl  $<
 
 clean: 
-	-rm bin/al3c bin/al3c_linux_x86-64 bin/SFMT.o bin/al3c_pre.o bin/u01.o \
-		bin/weight.o bin/signal.o bin/SMC.o bin/main.o
+	-rm bin/al3c bin/al3c_linux_x86-64 bin/al3c_darwin_x86-64 .build/*

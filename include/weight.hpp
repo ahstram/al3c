@@ -3,7 +3,7 @@
 #define MIN(a,b)	((a)<(b) ? (a):(b)) 
 
 #define AL3C 1
-#include "../include/al3c.hpp"
+#include "al3c.hpp"
 
 float calc_max_weight(framework_t<param_t> **accepted, uint A_per_proc, uint np );
 

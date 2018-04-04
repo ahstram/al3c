@@ -1,10 +1,8 @@
 #include <iostream>
 
 #include "SFMT/SFMT.h"
-#include "time.h"
-#include "u01.hpp"
 
-using namespace std;
+#include "../include/u01.hpp"
 
 uint64_t u01n;
 uint32_t *rnd_array=NULL;
@@ -19,7 +17,7 @@ for (uint i=0;i<SKEW_SEEDS;i++) {
         tick=clock();
         for(j=0;(uint)clock()==tick;j++)
                 ;
-	} 
+	}
 
         seed[i]= j%256;// only use lower 8 bits..
 }
@@ -30,19 +28,19 @@ float u01(char c) {
 
 float f;
 
-repeat: 
+repeat:
 	u01n++;
 
 	if (u01n%RND_BUFFER==1) {
 		if (rnd_array==NULL) {
 
 			if (np==0) {
-cerr<<"+------------------------------------------------------------------------------+\n"; 
-cerr<<"|             Invoking SIMD-oriented Fast Mersenne Twister (SFMT)              |\n";
-cerr<<"| Copyright 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University  |\n";
-cerr<<"| Copyright 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and      |\n";
-cerr<<"|                The University of Tokyo. All rights reserved.                 |\n";
-cerr<<"+------------------------------------------------------------------------------+"<<endl;
+                std::cerr<<"+------------------------------------------------------------------------------+\n";
+                std::cerr<<"|             Invoking SIMD-oriented Fast Mersenne Twister (SFMT)              |\n";
+                std::cerr<<"| Copyright 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University  |\n";
+                std::cerr<<"| Copyright 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and      |\n";
+                std::cerr<<"|                The University of Tokyo. All rights reserved.                 |\n";
+                std::cerr<<"+------------------------------------------------------------------------------+"<<std::endl;
 			}
 
 			rnd_array=new uint32_t[RND_BUFFER];

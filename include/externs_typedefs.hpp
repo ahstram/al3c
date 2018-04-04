@@ -1,4 +1,6 @@
 #include <stdint.h>
-#include "typedefs.hpp"
+
+typedef unsigned int uint;
+
 extern uint np, NP, SIGNUM;
 extern uint32_t *rnd_array;

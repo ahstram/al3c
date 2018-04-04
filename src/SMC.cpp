@@ -1,34 +1,17 @@
-#include <iostream>                                                                                                           
-#include <algorithm> //for sort                                                                                               
-#include <sstream>                                                                                                            
-#include <vector>                                                                                                             
-//#include <time.h>                                                                                                           
-#include <math.h>                                                                                                             
-#include <string.h>                                                                                                           
-#include <assert.h>                                                                                                           
-//#include <mpi.h>                                                                                                            
-#include <float.h>                                                                                                            
-#include <dlfcn.h>                                                                                                            
-#include <sys/stat.h>                                                                                                         
-#include <unistd.h>                                                                                                           
-
-
+#include <algorithm> 
+#include <sstream>
+#include <math.h>
+#include <string.h>
+#include <float.h>
+#include <dlfcn.h>
 #include <iostream>
-//using namespace std;
 #include <mpi.h>
-#include "rapidxml/rapidxml.hpp"
-#include "typedefs.hpp"
-#include "externs.hpp"
+
 #include "rapidxml/rapidxml_print.hpp"
 
-#define AL3C 1
-
-//#include "../include/al3c.hpp"
-
-#include "weight.hpp"
-#include "u01.hpp"
-
-//using namespace std;
+#include "../include/externs_typedefs.hpp"
+#include "../include/weight.hpp"
+#include "../include/u01.hpp"
 
 class SMC_t {
 
@@ -73,14 +56,14 @@ public:
 	}
 	void sort_proposed() {
 			if (np==0) {
-				sort(proposed,proposed+T,sortMethod); 
+				sort(proposed,proposed+T,sortMethod);
 				current_epsilon=*(proposed[A-1]->d);
 
 				for (uint a=0,t=0;t<T && a<A;t++)
 					if (*(proposed[t]->d) <= current_epsilon) {
 						memcpy(current[a]->d,proposed[t]->d,size_of_mem);
 						a++;
-					} 
+					}
 
 				current_epsilon=last_epsilon;
 				if (G==0) {
@@ -88,7 +71,7 @@ public:
 						current_epsilon=*(current[R[0]-1]->d);
 				} else {
 					if (R[g-1])
-						current_epsilon=*(current[R[g-1]-1]->d); 
+						current_epsilon=*(current[R[g-1]-1]->d);
 					else
 						current_epsilon=E[g-1];
 				}
@@ -96,7 +79,7 @@ public:
 			current_epsilon=MAX(current_epsilon,terminal_epsilon);
 			} MPI::COMM_WORLD.Bcast(&current_epsilon,1,MPI::FLOAT,0);
 			MPI::COMM_WORLD.Bcast(current[0]->d,size_of_mem*A,MPI::CHAR,0);
-	}	
+	}
 
 	void calculate_weights() {
 
@@ -105,20 +88,20 @@ public:
 			for (uint a=0;a<A_per_proc;a++) {
 				sample=np*A_per_proc+a;
 				prior_scales=MAX(prior_density_vector[sample]=log(current[sample]->prior_density()),prior_scales);
-				for (uint i=0;i<A;i++) 
+				for (uint i=0;i<A;i++)
 					perturb_scales=MAX(perturb_density_matrix[sample*A+i]=log(current[sample]->perturb_density(last[i]->param)),perturb_scales);
-			} 
+			}
 			for (uint r=0;r<NP;r++) { //need to broadcast the above matrices..
 				MPI::COMM_WORLD.Bcast(prior_density_vector+A_per_proc*r,A_per_proc,MPI::FLOAT,r);
-				MPI::COMM_WORLD.Bcast(perturb_density_matrix+A_per_proc*A*r,A_per_proc*A,MPI::FLOAT,r);	
+				MPI::COMM_WORLD.Bcast(perturb_density_matrix+A_per_proc*A*r,A_per_proc*A,MPI::FLOAT,r);
 			} MPI::COMM_WORLD.Allreduce(&prior_scales,&prior_scale,1,MPI::FLOAT,MPI_MAX);
 			MPI::COMM_WORLD.Allreduce(&perturb_scales,&perturb_scale,1,MPI::FLOAT,MPI_MAX);
-	
+
 			if (perturb_scale==0)
 				perturb_scale=1;
 			if (prior_scale==0)
 				prior_scale=1;
-	
+
 		// assign our accepted weights..
 			for (uint a=0;a<A_per_proc;a++) {
 				sample=np*A_per_proc+a;
@@ -126,7 +109,7 @@ public:
 				for (uint i=0;i<A;i++) {
 					x+=*(last[i]->w)*exp(perturb_density_matrix[sample*A+i]/perturb_scale);
 				}
-				
+
 				*(current[sample]->w)=exp(prior_density_vector[sample]/prior_scale)/x;
 			}
 			sum_weight=calc_sum_weight(current,A_per_proc,np);
@@ -161,7 +144,7 @@ public:
 			s_output_summary<<output_prefix<<"summary";
 			f_output.open(s_output_summary.str().data(),ios::out | std::ofstream::app);
 			assert(f_output.is_open());
-	
+
 			if (g==1)
 				f_output<<"generation\tepsilon\ttime"<<endl;
 			f_output<<g<<"\t"<<last_epsilon<<"\t"<<timers.end-timers.begin<<endl;
@@ -185,9 +168,9 @@ public:
 		framework_t<param_t> *tmp_t=user_type(NULL,NULL,0,0,NULL);
 				// d		w		param						S
 		size_of_mem=sizeof(float)+sizeof(float)+tmp_t->size_of_param_t+(N)*(D)*sizeof(float);
-	
+
 		destroy_user_type(tmp_t);
-	
+
 		return size_of_mem;
 
 	}
@@ -210,10 +193,10 @@ public:
 		}
 
 		print_progress(t);
-	
+
 		for (;t[np]<T_per_proc;t[np]++) {
 
-			repeat: 
+			repeat:
 
 			while (u01()*max_weight > *(last[sample=(uint)(u01()*(A-1))]->w))
 				;
@@ -231,7 +214,7 @@ public:
 			proposed[np*T_per_proc+t[np]]->simulate();
 
 
-			if ( (*(proposed[np*T_per_proc+t[np]]->d)=proposed[np*T_per_proc+t[np]]->distance() ) > current_epsilon) 
+			if ( (*(proposed[np*T_per_proc+t[np]]->d)=proposed[np*T_per_proc+t[np]]->distance() ) > current_epsilon)
 				goto repeat;
 
 		}
@@ -246,41 +229,41 @@ public:
 
 //enter our loop of SMC...
 	void loop() {
-	
+
 		for (uint a=0;a<A_per_proc;a++) {
 			last[np*A_per_proc+a]->prior();
 			*(last[np*A_per_proc+a]->w)=1/(float)A;
 			*(last[np*A_per_proc+a]->d)=-1.f; // let -1 mean "not simulated"
 		}
-		for (uint r=0;r<NP;r++) 
+		for (uint r=0;r<NP;r++)
 			MPI::COMM_WORLD.Bcast(last[A_per_proc*r]->d,size_of_mem*A_per_proc,MPI::CHAR,r);
-	
-	
-		
+
+
+
 		uint *t0=new uint[NP]();
-		
+
 		for (g=1;g<=G || G==0 ;g++) {
-	
+
 			timers.begin=MPI_Wtime();
-	
+
 			print_progress(t0);
 
-			update_last_params(); 
-		
+			update_last_params();
+
 			last_summary->summarize();
-	
+
 			max_weight=calc_max_weight(last,A_per_proc,np);
-	
+
 		//simplest fix for sorting problem is to just reorganize the pointers here... how much time am i wasting?
-		
+
 			for (uint t=0;t<T;t++) {
 				destroy_user_type(proposed[t]);
 				proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
 			}
-		
-	
+
+
 			generate();
-	
+
 			for (uint r=0;r<NP;r++)  //can't point to ->d because that won't necessarily be at the start (since we sorted the pointers)
 				MPI::COMM_WORLD.Bcast(proposed_data+T_per_proc*r*size_of_mem,T_per_proc*size_of_mem,MPI::CHAR,r);
 
@@ -292,41 +275,41 @@ public:
 			calculate_weights();
 
 			timers.end=MPI_Wtime();
-	
+
 		//printing status...
-	
-			if (np==0)	
+
+			if (np==0)
 				cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<endl;
-	
-			print_summary();	
-			
+
+			print_summary();
+
 		//switch our "last" with "current" acceptances
 			swap_frameworks(); //switch current & last
-	
+
 		//quit if the terminal_epsilon has been reached, otherwise continue
 			if (last_epsilon<=terminal_epsilon) {
 				if (np==0)
 					cerr<<"quitting because our final epsilon threshold '"<<terminal_epsilon<<"' has been reached"<<endl;
 				break;
 			}
-	
+
 			//if we've reached a CTRL+C, quit...
 			if (SIGNUM) {
 				if (np==0)
 					cerr<<"quitting because signal '"<<SIGNUM<<"' has been received"<<endl;
 				break;
 			}
-	
+
 		}
-	
+
 		delete [] t0;
-	
-			
+
+
 	}
-	
+
 	SMC_t(rapidxml::xml_document<> *cfg) {
 
-	
+
 		d=0, D=0, n=0, cheat=0,cheat=0;
 		last_epsilon=FLT_MAX, current_epsilon=FLT_MAX,x=0,sum_weight=0;
 
@@ -338,35 +321,35 @@ public:
 			exit(EXIT_FAILURE);
 		}
 		T=atoi(cfg->first_node("ABC")->first_node("T")->value());
-	
+
 		if(!cfg->first_node("ABC")->first_node("A")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><A></A></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
 		A=atoi(cfg->first_node("ABC")->first_node("A")->value());
-			
+
 	// reset T/A so that NP divides them...
 		if (np==0)
 			cerr<<"Requested "<<T<<" trials and "<<A<<" acceptances,";
-	
+
 		T_per_proc=(T+NP-1)/NP;
 		A_per_proc=(A+NP-1)/NP;
-	
+
 		T=T_per_proc*NP;
 		A=A_per_proc*NP;
 
 		if (np==0)
 			cerr<<" giving you "<<T<<" and "<<A<<endl;
-		
-	
+
+
 		if(!cfg->first_node("ABC")->first_node("G")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><G></G></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
 		G=atoi(cfg->first_node("ABC")->first_node("G")->value());
-	
+
 		if(!cfg->first_node("ABC")->first_node("R")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <ABC><R></R></ABC> in XML file"<<endl;
@@ -399,8 +382,8 @@ public:
 				cerr<<"Error! Could not find required <ABC><E></E></ABC> in XML file"<<endl;
 			exit(EXIT_FAILURE);
 		}
-	
-		if (G!=0) 
+
+		if (G!=0)
 			E=new float[G];
 		else
 			E=new float[1];
@@ -419,8 +402,8 @@ public:
 		if (G!=0)
 			terminal_epsilon=E[G-1];
 		else
-			terminal_epsilon=E[0];	
-		
+			terminal_epsilon=E[0];
+
 		if(!cfg->first_node("O")) {
 			if (np==0)
 				cerr<<"Error! Could not find required <O></O> in XML file"<<endl;
@@ -435,7 +418,7 @@ public:
 			N=1;
 			strtok_r(line,DELIM,&ptr_c);
 			D=1;
-	
+
 			while(strtok_r(NULL,DELIM,&ptr_c))
 				D++;
 		}
@@ -449,11 +432,11 @@ public:
 				}
 				N++;
 			}
-	
+
 		O=new float*[N];
 		free(O_string);
 		O_string=cfg->first_node("O")->value();
-		line=strtok_r(O_string,"\n",&ptr_b);	
+		line=strtok_r(O_string,"\n",&ptr_b);
 		n=0;
 		while(1) {
 			if (line[0]!='#') {
@@ -466,25 +449,25 @@ public:
 			if (!(line=strtok_r(NULL,"\n",&ptr_b)))
 				break;
 		}
-	
+
 		assert(n==N && d==D);
-		
+
 		if(cfg->first_node("ABC")->first_node("cheat"))
 			cheat=atoi(cfg->first_node("ABC")->first_node("cheat")->value());
-	
-	
+
+
 		//use dlopen to open the user provided library & check we have what we need
-	
-	
-	
+
+
+
 		if (np==0) {
 			cerr<<"Observed data is a(n) "<<N<<"x"<<D<<" matrix, as follows:"<<endl<<endl;
 			for (n=0;n<N;n++) {
 				cerr<<O[n][0];
 				for (d=1;d<D;d++)
 					cerr<<"\t"<<O[n][d];
-				cerr<<endl;	
-			} cerr<<endl; 
+				cerr<<endl;
+			} cerr<<endl;
 		}
 
 		if(!cfg->first_node("lib")) {
@@ -494,69 +477,69 @@ public:
 
 		char *lib_string=cfg->first_node("lib")->value();
 
-		if (np==0) 
+		if (np==0)
 			cerr<<"Loading '"<<lib_string<<"' shared library...";
-	
+
 		handle= dlopen(lib_string,RTLD_LAZY);
-	
+
 		if (!handle) {
 			cerr << "Cannot open library: " << dlerror() << '\n';
 			exit(EXIT_FAILURE);
 		}
-	
+
 		user_type=(create_t*)dlsym(handle,"create");
 		dlsym_error = dlerror();
 		if (dlsym_error) {
 			cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
 			exit(EXIT_FAILURE);
 		}
-	
+
 		destroy_user_type=(destroy_t*)dlsym(handle,"destroy");
 		dlsym_error = dlerror();
 		if (dlsym_error) {
 			cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
 			exit(EXIT_FAILURE);
 		}
-	
-	
+
+
 		user_summary_type=(create_summary_t*)dlsym(handle,"create_summary");
 		dlsym_error = dlerror();
 		if (dlsym_error) {
 			cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
 			exit(EXIT_FAILURE);
 	    	}
-	
+
 		destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
 		dlsym_error = dlerror();
 		if (dlsym_error) {
 			cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
 			exit(EXIT_FAILURE);
     		}
-	
+
 		if (np==0)
 			cerr<<" done"<<endl;
-	
+
 		last=new framework_t<param_t>*[A], current=new framework_t<param_t>*[A], proposed=new framework_t<param_t>*[T];
-	
+
 		last_params=new param_t*[A];
-	
+
 		last_summary=user_summary_type(last_params,A);
-	
+
 		set_size_of_mem();
-	
+
 		last_data=new char[size_of_mem*A](), current_data=new char[size_of_mem*A](), proposed_data=new char[size_of_mem*T]() ;
-	
+
 		for (uint t=0;t<T;t++) {
 			proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
 			if (t<A) {
 				current[t]=user_type(current_data+size_of_mem*t,last_summary->summary,N,D,O);
-				last[t]=user_type(last_data+size_of_mem*t,last_summary->summary,N,D,O);	
+				last[t]=user_type(last_data+size_of_mem*t,last_summary->summary,N,D,O);
 			}
-		} 
+		}
 	}
-	
+
 	~SMC_t() {
-	
+
 		dlclose(handle);
 
 		free(output_prefix);
@@ -564,27 +547,27 @@ public:
 		delete [] E;
 		delete [] R;
 		destroy_user_summary_type(last_summary);
-	
+
 		for (uint t=0;t<T;t++) {
 			destroy_user_type(proposed[t]);
 			if (t<A) {
 				destroy_user_type(current[t]);
 				destroy_user_type(last[t]);
 			}
-		} 
+		}
 		for (uint i=0;i<N;i++)
 			delete [] O[i];
 		delete [] O;
-	
+
 		delete [] proposed;
 		delete [] current;
 		delete [] last;
 		delete [] last_params;
-	
+
 		delete [] last_data;
 		delete [] current_data;
 		delete []  proposed_data;
-	
+
 	}
 
 

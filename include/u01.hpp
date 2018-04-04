@@ -6,7 +6,7 @@
 #define RIGHT_OPEN 2 // U[0,1)
 #define BOTH_OPEN 3 // U(0,1)
 
-#include "typedefs.hpp"
+#include "externs_typedefs.hpp"
 
 uint32_t *skew_seed(bool random); 
 
