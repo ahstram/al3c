@@ -1,3 +1,35 @@
+#include <iostream>                                                                                                           
+#include <algorithm> //for sort                                                                                               
+#include <sstream>                                                                                                            
+#include <vector>                                                                                                             
+//#include <time.h>                                                                                                           
+#include <math.h>                                                                                                             
+#include <string.h>                                                                                                           
+#include <assert.h>                                                                                                           
+//#include <mpi.h>                                                                                                            
+#include <float.h>                                                                                                            
+#include <dlfcn.h>                                                                                                            
+#include <sys/stat.h>                                                                                                         
+#include <unistd.h>                                                                                                           
+
+
+#include <iostream>
+//using namespace std;
+#include <mpi.h>
+#include "rapidxml/rapidxml.hpp"
+#include "typedefs.hpp"
+#include "externs.hpp"
+#include "rapidxml/rapidxml_print.hpp"
+
+#define AL3C 1
+
+//#include "../include/al3c.hpp"
+
+#include "weight.hpp"
+#include "u01.hpp"
+
+//using namespace std;
+
 class SMC_t {
 
 public:
@@ -401,7 +433,7 @@ public:
 			N=0;
 		else {
 			N=1;
-			atof(strtok_r(line,DELIM,&ptr_c));
+			strtok_r(line,DELIM,&ptr_c);
 			D=1;
 	
 			while(strtok_r(NULL,DELIM,&ptr_c))
@@ -410,7 +442,7 @@ public:
 		while ((line=strtok_r(NULL,"\n",&ptr_b)))
 			if (line[0]!='#') {
 				if (N==1) {
-					atof(strtok_r(line,DELIM,&ptr_c));
+					strtok_r(line,DELIM,&ptr_c);
 					D=1;
 					while(strtok_r(NULL,DELIM,&ptr_c))
 						D++;

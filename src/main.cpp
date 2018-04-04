@@ -1,8 +1,5 @@
 #define VERSION	15.7
 #define AL3C 1
-#define MAX(a,b)	((a)>(b) ? (a):(b)) 
-#define MIN(a,b)	((a)<(b) ? (a):(b)) 
-#define DELIM   "\t ," 
 #define LINE_LEN	1024 
 #define __STDC_LIMIT_MACROS
 
@@ -10,11 +7,11 @@
 #include <algorithm> //for sort
 #include <sstream>
 #include <vector>
-#include <time.h>
+//#include <time.h>
 #include <math.h>
 #include <string.h>
 #include <assert.h>
-#include <mpi.h>
+//#include <mpi.h>
 #include <float.h>
 #include <dlfcn.h>
 #include <sys/stat.h>
@@ -24,13 +21,17 @@
 
 #include "../include/al3c.hpp"
 
+#include "externs.hpp"
+
 uint np=0, NP=0, SIGNUM=0;
 
-#include "u01.cpp"
-#include "weight.cpp"
-#include "SMC.cpp"
+#include "u01.hpp"
 #include "mpi_check.cpp"
-#include "signal.cpp"
+#include "signal.hpp"
+
+#include "SMC.hpp"
+
+//using namespace std;
 
 int main (int argc, char *argv[] ) {
 

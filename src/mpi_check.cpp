@@ -1,3 +1,5 @@
+#include <mpi.h>
+
 int check_mpirun() {
 
  struct stat sb;

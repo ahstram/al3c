@@ -1,4 +1,6 @@
-#include <signal.h>
+#include <iostream>
+using namespace std;
+#include "externs.hpp"
 
 void signal_callback_handler(int signum) {
 
