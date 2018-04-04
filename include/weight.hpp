@@ -1,6 +1,6 @@
-#define DELIM   "\t ," 
-#define MAX(a,b)	((a)>(b) ? (a):(b)) 
-#define MIN(a,b)	((a)<(b) ? (a):(b)) 
+#define DELIM     "\t ," 
+#define MAX(a,b)  ((a)>(b) ? (a):(b)) 
+#define MIN(a,b)  ((a)<(b) ? (a):(b)) 
 
 #define AL3C 1
 #include "al3c.hpp"
