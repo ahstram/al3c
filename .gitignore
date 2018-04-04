@@ -1,2 +1,6 @@
 bin/al3c
 .build/
+macs-binary/
+macs/allele_spectrum
+macs/macs
+macs/macs.so
