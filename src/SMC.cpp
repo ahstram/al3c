@@ -43,7 +43,8 @@ public:
 
     uint d,D, n,N,g,G,T, T_per_proc,A, A_per_proc, *R, cheat, sample;
 
-    float **O,*E, last_epsilon, current_epsilon, terminal_epsilon,x,sum_weight, max_weight;
+    float **O,*E, last_epsilon, current_epsilon, terminal_epsilon,x,sum_weight,\
+        max_weight;
     char *output_prefix, *ptr_a,*ptr_b,*ptr_c,*line, *O_string;
 
     char *last_data, *current_data, *proposed_data;
@@ -86,19 +87,30 @@ public:
 
     void calculate_weights() {
 
-        float perturb_scale,perturb_scales=-FLT_MAX,prior_scale,prior_scales=-FLT_MAX,  *perturb_density_matrix=new float[A*A], *prior_density_vector=new float[A*A];
+        float perturb_scale,perturb_scales=-FLT_MAX,prior_scale,\
+                                           prior_scales=-FLT_MAX,  \
+                                           *perturb_density_matrix=\
+                                           new float[A*A], \
+                                           *prior_density_vector=new float[A*A];
 
         for (uint a=0;a<A_per_proc;a++) {
             sample=np*A_per_proc+a;
-            prior_scales=MAX(prior_density_vector[sample]=log(current[sample]->prior_density()),prior_scales);
+            prior_scales=MAX(prior_density_vector[sample]=log(\
+                        current[sample]->prior_density()), prior_scales);
             for (uint i=0;i<A;i++)
-                perturb_scales=MAX(perturb_density_matrix[sample*A+i]=log(current[sample]->perturb_density(last[i]->param)),perturb_scales);
+                perturb_scales=MAX(perturb_density_matrix[sample*A+i]=\
+                        log(current[sample]->perturb_density(last[i]->param)), \
+                        perturb_scales);
         }
         for (uint r=0;r<NP;r++) { //need to broadcast the above matrices..
-            MPI::COMM_WORLD.Bcast(prior_density_vector+A_per_proc*r,A_per_proc,MPI::FLOAT,r);
-            MPI::COMM_WORLD.Bcast(perturb_density_matrix+A_per_proc*A*r,A_per_proc*A,MPI::FLOAT,r);
-        } MPI::COMM_WORLD.Allreduce(&prior_scales,&prior_scale,1,MPI::FLOAT,MPI_MAX);
-        MPI::COMM_WORLD.Allreduce(&perturb_scales,&perturb_scale,1,MPI::FLOAT,MPI_MAX);
+            MPI::COMM_WORLD.Bcast(prior_density_vector+A_per_proc*r,A_per_proc,\
+                    MPI::FLOAT, r);
+            MPI::COMM_WORLD.Bcast(perturb_density_matrix+A_per_proc*A*r, \
+                    A_per_proc*A,MPI::FLOAT, r);
+        } MPI::COMM_WORLD.Allreduce(&prior_scales,&prior_scale,1,\
+                MPI::FLOAT,MPI_MAX);
+        MPI::COMM_WORLD.Allreduce(&perturb_scales,&perturb_scale,1,MPI::FLOAT,\
+                MPI_MAX);
 
         if (perturb_scale==0)
             perturb_scale=1;
@@ -110,10 +122,12 @@ public:
             sample=np*A_per_proc+a;
             x=0;
             for (uint i=0;i<A;i++) {
-                x+=*(last[i]->w)*exp(perturb_density_matrix[sample*A+i]/perturb_scale);
+                x+=*(last[i]->w)*exp(\
+                        perturb_density_matrix[sample*A+i]/perturb_scale);
             }
 
-            *(current[sample]->w)=exp(prior_density_vector[sample]/prior_scale)/x;
+            *(current[sample]->w)=exp(\
+                    prior_density_vector[sample]/prior_scale)/x;
         }
 
         sum_weight=calc_sum_weight(current,A_per_proc,np);
@@ -122,7 +136,9 @@ public:
             *(current[np*A_per_proc+a]->w)/=sum_weight;
         }
         for (uint r=0;r<NP;r++)
-            MPI::COMM_WORLD.Bcast(current[A_per_proc*r]->d,size_of_mem*A_per_proc,MPI::CHAR,r);
+            MPI::COMM_WORLD.Bcast(\
+                    current[A_per_proc*r]->d,size_of_mem*A_per_proc, \
+                    MPI::CHAR,r);
 
         delete [] perturb_density_matrix;
         delete [] prior_density_vector;
@@ -148,12 +164,14 @@ public:
 
             std::ostringstream s_output_summary;
             s_output_summary<<output_prefix<<"summary";
-            f_output.open(s_output_summary.str().data(),std::ios::out | std::ofstream::app);
+            f_output.open(s_output_summary.str().data(),std::ios::out | \
+                    std::ofstream::app);
             assert(f_output.is_open());
 
             if (g==1)
                 f_output<<"generation\tepsilon\ttime"<<std::endl;
-            f_output<<g<<"\t"<<last_epsilon<<"\t"<<timers.end-timers.begin<<std::endl;
+            f_output<<g<<"\t"<<last_epsilon<<"\t"<<timers.end-timers.begin<<\
+                std::endl;
         }
     }
 
@@ -161,7 +179,8 @@ public:
 
         if (np==0) {
 
-            std::cerr<<"\rgeneration="<<g<<"/"<<G<<", epsilon="<<current_epsilon<<", simulations=("<<_t[0]<<"/"<<T_per_proc;
+            std::cerr<<"\rgeneration="<<g<<"/"<<G<<", epsilon="<<\
+                current_epsilon<<", simulations=("<<_t[0]<<"/"<<T_per_proc;
 
             for (uint r=1;r<NP;r++) {
                 std::cerr<<","<<_t[r]<<"/"<<T_per_proc;
@@ -174,7 +193,8 @@ public:
 
         framework_t<param_t> *tmp_t=user_type(NULL,NULL,0,0,NULL);
                 // d        w        param                        S
-        size_of_mem=sizeof(float)+sizeof(float)+tmp_t->size_of_param_t+(N)*(D)*sizeof(float);
+        size_of_mem=sizeof(float)+sizeof(float)+tmp_t->size_of_param_t+\
+                    (N)*(D)*sizeof(float);
         destroy_user_type(tmp_t);
 
         return size_of_mem;
@@ -191,7 +211,8 @@ public:
             for (uint i=0;i<A_per_proc && t[np]<T_per_proc;i++) {
                 sample=np*A_per_proc+i;
                 if (*(last[sample]->d)<=current_epsilon) {
-                    memcpy(proposed[np*T_per_proc+t[np]]->d,last[sample]->d,size_of_mem);
+                    memcpy(proposed[np*T_per_proc+t[np]]->d,last[sample]->d,\
+                            size_of_mem);
                     t[np]++;
                 }
             }
@@ -208,18 +229,23 @@ public:
 
             retry:
 
-            memcpy(proposed[np*T_per_proc+t[np]]->d,last[sample]->d,size_of_mem);
+            memcpy(proposed[np*T_per_proc+t[np]]->d,last[sample]->d, \
+                    size_of_mem);
 
             proposed[np*T_per_proc+t[np]]->perturb();
 
 
-            if (proposed[np*T_per_proc+t[np]]->prior_density()==0 || proposed[np*T_per_proc+t[np]]->perturb_density(last[sample]->param)==0)
+            if (proposed[np*T_per_proc+t[np]]->prior_density()==0 || \
+                    proposed[np*T_per_proc+t[np]]->perturb_density(\
+                        last[sample]->param)==0)
                 goto retry;
 
             proposed[np*T_per_proc+t[np]]->simulate();
 
 
-            if ( (*(proposed[np*T_per_proc+t[np]]->d)=proposed[np*T_per_proc+t[np]]->distance() ) > current_epsilon)
+            if ( (*(proposed[np*T_per_proc+t[np]]->d)=\
+                        proposed[np*T_per_proc+t[np]]->distance() ) > \
+                        current_epsilon)
                 goto repeat;
 
         }
@@ -242,7 +268,8 @@ public:
         }
 
         for (uint r=0;r<NP;r++)
-            MPI::COMM_WORLD.Bcast(last[A_per_proc*r]->d,size_of_mem*A_per_proc,MPI::CHAR,r);
+            MPI::COMM_WORLD.Bcast(last[A_per_proc*r]->d,\
+                    size_of_mem*A_per_proc, MPI::CHAR,r);
 
         uint *t0=new uint[NP]();
 
@@ -258,19 +285,25 @@ public:
 
             max_weight=calc_max_weight(last,A_per_proc,np);
 
-        //simplest fix for sorting problem is to just reorganize the pointers here... how much time am i wasting?
+        //simplest fix for sorting problem is to just reorganize the pointers
+        //here... how much time am i wasting?
 
             for (uint t=0;t<T;t++) {
                 destroy_user_type(proposed[t]);
-                proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
+                proposed[t]=user_type(proposed_data+size_of_mem*t, \
+                        last_summary->summary,N,D,O);
             }
 
 
             generate();
 
-            for (uint r=0;r<NP;r++)  //can't point to ->d because that won't necessarily be at the start (since we sorted the pointers)
-                MPI::COMM_WORLD.Bcast(proposed_data+T_per_proc*r*size_of_mem,T_per_proc*size_of_mem,MPI::CHAR,r);
-
+            for (uint r=0;r<NP;r++) {//can't point to ->d because that won't
+                                     // necessarily be at the start 
+                                     // (since we sorted the pointers)
+                MPI::COMM_WORLD.Bcast(proposed_data+\
+                        T_per_proc*r*size_of_mem,T_per_proc*size_of_mem,\
+                        MPI::CHAR,r);
+            }
             last_epsilon=current_epsilon;
 
 
@@ -283,7 +316,8 @@ public:
         //printing status...
 
             if (np==0)
-                std::cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<std::endl;
+                std::cerr<<" in "<<(timers.end-timers.begin)<<" seconds"<<\
+                    std::endl;
 
             print_summary();
 
@@ -293,14 +327,16 @@ public:
         //quit if the terminal_epsilon has been reached, otherwise continue
             if (last_epsilon<=terminal_epsilon) {
                 if (np==0)
-                    std::cerr<<"quitting because our final epsilon threshold '"<<terminal_epsilon<<"' has been reached"<<std::endl;
+                    std::cerr<<"quitting because our final epsilon threshold '"\
+                        <<terminal_epsilon<<"' has been reached"<<std::endl;
                 break;
             }
 
             //if we've reached a CTRL+C, quit...
             if (SIGNUM) {
                 if (np==0)
-                    std::cerr<<"quitting because signal '"<<SIGNUM<<"' has been received"<<std::endl;
+                    std::cerr<<"quitting because signal '"<<SIGNUM<<\
+                        "' has been received"<<std::endl;
                 break;
             }
 
@@ -309,28 +345,31 @@ public:
         delete [] t0;
     }
 
-    SMC_t(rapidxml::xml_document<> *cfg) {
+    SMC_t(rapidxml::xml_document<> *config) {
 
         d=0, D=0, n=0, cheat=0,cheat=0;
         last_epsilon=FLT_MAX, current_epsilon=FLT_MAX,x=0,sum_weight=0;
 
-        output_prefix=strdup(cfg->first_node("output")->first_node("prefix")->value());
+        output_prefix=strdup(config->first_node("output")->\
+                first_node("prefix")->value());
 
-        if(!cfg->first_node("ABC")->first_node("T")) {
+        if(!config->first_node("ABC")->first_node("T")) {
             if (np==0)
-                std::cerr<<"Error! Could not find required <ABC><T></T></ABC> in XML file"<<std::endl;
+                std::cerr<<"Error! Could not find required <ABC><T></T></ABC>"\
+                    " in XML file"<<std::endl;
             exit(EXIT_FAILURE);
         }
 
-        T=atoi(cfg->first_node("ABC")->first_node("T")->value());
+        T=atoi(config->first_node("ABC")->first_node("T")->value());
 
-        if(!cfg->first_node("ABC")->first_node("A")) {
+        if(!config->first_node("ABC")->first_node("A")) {
             if (np==0)
-                std::cerr<<"Error! Could not find required <ABC><A></A></ABC> in XML file"<<std::endl;
+                std::cerr<<"Error! Could not find required <ABC><A></A></ABC> "\
+                    "in XML file"<<std::endl;
             exit(EXIT_FAILURE);
         }
 
-        A=atoi(cfg->first_node("ABC")->first_node("A")->value());
+        A=atoi(config->first_node("ABC")->first_node("A")->value());
 
         // reset T/A so that NP divides them...
         if (np==0)
@@ -346,17 +385,19 @@ public:
             std::cerr<<" giving you "<<T<<" and "<<A<<std::endl;
 
 
-        if(!cfg->first_node("ABC")->first_node("G")) {
+        if(!config->first_node("ABC")->first_node("G")) {
             if (np==0)
-                std::cerr<<"Error! Could not find required <ABC><G></G></ABC> in XML file"<<std::endl;
+                std::cerr<<"Error! Could not find required <ABC><G></G></ABC>"\
+                    " in XML file"<<std::endl;
             exit(EXIT_FAILURE);
         }
 
-        G=atoi(cfg->first_node("ABC")->first_node("G")->value());
+        G=atoi(config->first_node("ABC")->first_node("G")->value());
 
-        if(!cfg->first_node("ABC")->first_node("R")) {
+        if(!config->first_node("ABC")->first_node("R")) {
             if (np==0)
-                std::cerr<<"Error! Could not find required <ABC><R></R></ABC> in XML file"<<std::endl;
+                std::cerr<<"Error! Could not find required <ABC><R></R></ABC>"\
+                    " in XML file"<<std::endl;
             exit(EXIT_FAILURE);
         }
 
@@ -365,13 +406,15 @@ public:
         else
             R=new uint[1];
 
-        std::stringstream ABC_R(cfg->first_node("ABC")->first_node("R")->value());
+        std::stringstream ABC_R(config->first_node("ABC")->\
+                first_node("R")->value());
 
         for (g=0;ABC_R.good();g++)  {
             ABC_R>>R[g];
             if (A<R[g]) {
                 if(np==0)
-                    std::cerr<<"Error! <ABC><R>"<<R[g]<<"</R></ABC> must between 0 and A="<<A<<std::endl;
+                    std::cerr<<"Error! <ABC><R>"<<R[g]<<"</R></ABC> must "\
+                        "between 0 and A="<<A<<std::endl;
                 exit(EXIT_FAILURE);
             }
         }
@@ -382,14 +425,15 @@ public:
         else if (g!=G) {
             if (np==0)
                 std::cerr<<"Error! <ABC><R>"<<\
-                    cfg->first_node("ABC")->first_node("R")->value()<<\
+                    config->first_node("ABC")->first_node("R")->value()<<\
                     "</R></ABC> must have length 1 or G="<<G<<std::endl;
             exit(EXIT_FAILURE);
         }
 
-        if(!cfg->first_node("ABC")->first_node("E")) {
+        if(!config->first_node("ABC")->first_node("E")) {
             if (np==0)
-                std::cerr<<"Error! Could not find required <ABC><E></E></ABC> in XML file"<<std::endl;
+                std::cerr<<"Error! Could not find required <ABC><E></E></ABC>"\
+                    " in XML file"<<std::endl;
             exit(EXIT_FAILURE);
         }
 
@@ -398,7 +442,8 @@ public:
         else
             E=new float[1];
 
-        std::stringstream ABC_E(cfg->first_node("ABC")->first_node("E")->value());
+        std::stringstream ABC_E(config->first_node("ABC")->\
+                first_node("E")->value());
 
         for (g=0;ABC_E.good();g++)  {
             ABC_E>>E[g];
@@ -413,7 +458,7 @@ public:
 
             if (np==0)
                 std::cerr<<"Error! <ABC><E>"<<\
-                    cfg->first_node("ABC")->first_node("E")->value()<<\
+                    config->first_node("ABC")->first_node("E")->value()<<\
                     "</E></ABC> must have length 1 or G="<<G<<std::endl;
             exit(EXIT_FAILURE);
 
@@ -424,13 +469,14 @@ public:
         else
             terminal_epsilon=E[0];
 
-        if(!cfg->first_node("O")) {
+        if(!config->first_node("O")) {
             if (np==0)
-                std::cerr<<"Error! Could not find required <O></O> in XML file"<<std::endl;
+                std::cerr<<"Error! Could not find required <O></O> in "\
+                    "XML file"<<std::endl;
             exit(EXIT_FAILURE);
         }
 
-        O_string=strdup(cfg->first_node("O")->value());
+        O_string=strdup(config->first_node("O")->value());
         line=strtok_r(O_string,"\n",&ptr_b);
 
         if (line[0]=='#')
@@ -456,7 +502,7 @@ public:
 
         O=new float*[N];
         free(O_string);
-        O_string=cfg->first_node("O")->value();
+        O_string=config->first_node("O")->value();
         line=strtok_r(O_string,"\n",&ptr_b);
         n=0;
 
@@ -474,14 +520,16 @@ public:
 
         assert(n==N && d==D);
 
-        if(cfg->first_node("ABC")->first_node("cheat"))
-            cheat=atoi(cfg->first_node("ABC")->first_node("cheat")->value());
+        if(config->first_node("ABC")->first_node("cheat"))
+            cheat=atoi(config->first_node("ABC")->first_node("cheat")->value());
 
 
-        //use dlopen to open the user provided library & check we have what we need
+        //use dlopen to open the user provided library & check we have what we 
+        //need
 
         if (np==0) {
-            std::cerr<<"Observed data is a(n) "<<N<<"x"<<D<<" matrix, as follows:"<<std::endl<<std::endl;
+            std::cerr<<"Observed data is a(n) "<<N<<"x"<<D<<\
+                " matrix, as follows:"<<std::endl<<std::endl;
             for (n=0;n<N;n++) {
                 std::cerr<<O[n][0];
                 for (d=1;d<D;d++)
@@ -490,12 +538,13 @@ public:
             } std::cerr<<std::endl;
         }
 
-        if(!cfg->first_node("lib")) {
-            std::cerr<<"Error! Could not find required <lib></lib> in XML file"<<std::endl;
+        if(!config->first_node("lib")) {
+            std::cerr<<"Error! Could not find required <lib></lib> in XML file"\
+                <<std::endl;
             exit(EXIT_FAILURE);
         }
 
-        char *lib_string=cfg->first_node("lib")->value();
+        char *lib_string=config->first_node("lib")->value();
 
         if (np==0)
             std::cerr<<"Loading '"<<lib_string<<"' shared library...";
@@ -538,7 +587,8 @@ public:
 
         }
 
-        destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,"destroy_summary");
+        destroy_user_summary_type=(destroy_summary_t*)dlsym(handle,\
+                "destroy_summary");
         dlsym_error = dlerror();
         if (dlsym_error) {
             std::cerr << "Cannot load symbol: '" << dlsym_error << "'\n";
@@ -548,7 +598,9 @@ public:
         if (np==0)
             std::cerr<<" done"<<std::endl;
 
-        last=new framework_t<param_t>*[A], current=new framework_t<param_t>*[A], proposed=new framework_t<param_t>*[T];
+        last=new framework_t<param_t>*[A], \
+             current=new framework_t<param_t>*[A], \
+             proposed=new framework_t<param_t>*[T];
 
         last_params=new param_t*[A];
 
@@ -556,13 +608,18 @@ public:
 
         set_size_of_mem();
 
-        last_data=new char[size_of_mem*A](), current_data=new char[size_of_mem*A](), proposed_data=new char[size_of_mem*T]() ;
+        last_data=new char[size_of_mem*A](), \
+                  current_data=new char[size_of_mem*A](), \
+                  proposed_data=new char[size_of_mem*T]() ;
 
         for (uint t=0;t<T;t++) {
-            proposed[t]=user_type(proposed_data+size_of_mem*t,last_summary->summary,N,D,O);
+            proposed[t]=user_type(proposed_data+size_of_mem*t, \
+                    last_summary->summary,N,D,O);
             if (t<A) {
-                current[t]=user_type(current_data+size_of_mem*t,last_summary->summary,N,D,O);
-                last[t]=user_type(last_data+size_of_mem*t,last_summary->summary,N,D,O);
+                current[t]=user_type(current_data+size_of_mem*t,\
+                        last_summary->summary,N,D,O);
+                last[t]=user_type(last_data+size_of_mem*t,\
+                        last_summary->summary,N,D,O);
             }
         }
     }

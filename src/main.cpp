@@ -25,7 +25,8 @@ int main (int argc, char *argv[] ) {
 
     //configuration file...
     if (argc!=2) {
-        std::cerr<<"Error! Run with "<<argv[0]<<" <XML configuration>"<<std::endl;
+        std::cerr<<"Error! Run with "<<argv[0]<<" <XML configuration>"\
+            <<std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -47,24 +48,26 @@ int main (int argc, char *argv[] ) {
     std::vector<char> buffer((std::istreambuf_iterator<char>(xmlfile)), \
             std::istreambuf_iterator<char>());
     buffer.push_back('\0');
-    rapidxml::xml_document<> cfg;    // character type defaults to char
-    cfg.parse<0>(&buffer[0]);    // 0 means default parse flags
+    rapidxml::xml_document<> config;    // character type defaults to char
+    config.parse<0>(&buffer[0]);    // 0 means default parse flags
 
 
-    if (!cfg.first_node("MPI")->first_node("NP")) {
-        std::cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<std::endl;
+    if (!config.first_node("MPI")->first_node("NP")) {
+        std::cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in"\
+            " XML file"<<std::endl;
         exit(EXIT_FAILURE);
     }
 
     //if not already running in MPI, this will invoke it for us...
-    if (atoi(cfg.first_node("MPI")->first_node("NP")->value())!=(int)NP && NP==1) {
+    if (atoi(config.first_node("MPI")->first_node("NP")->value())!=(int)NP && \
+            NP==1) {
 
         int returncode;
 
         char **args=new char*[4+argc];
         args[0]=strdup("mpirun");
         args[1]=strdup("-np");
-        args[2]=strdup(cfg.first_node("MPI")->first_node("NP")->value());
+        args[2]=strdup(config.first_node("MPI")->first_node("NP")->value());
 
         for (int i=0;i<argc;i++) {
             args[3+i]=argv[i];
@@ -76,7 +79,8 @@ int main (int argc, char *argv[] ) {
             returncode=execvp("bin/mpirun",args);
 
         if (returncode!=0)
-            std::cerr<<"Warning: mpirun exited with code '"<<returncode<<"'"<<std::endl;
+            std::cerr<<"Warning: mpirun exited with code '"<<returncode<<\
+                "'"<<std::endl;
 
         for (int i=0;i<3;i++)
             free(args[i]);
@@ -88,7 +92,7 @@ int main (int argc, char *argv[] ) {
     print_cpu_info();
 
     //initialize our ABC routine
-    SMC_t SMC(&cfg);
+    SMC_t SMC(&config);
 
     //begin the loop
     SMC.loop();

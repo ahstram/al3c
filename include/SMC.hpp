@@ -46,7 +46,7 @@ public:
     //enter our loop of SMC...
     void loop() {}
     
-    SMC_t(rapidxml::xml_document<> *cfg) {}
+    SMC_t(rapidxml::xml_document<> *config) {}
     
     ~SMC_t() {}
 

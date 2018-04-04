@@ -37,7 +37,7 @@ Here are some quick examples that can get you running al3c without much thought:
 ```bash
 git clone https://github.com/ahstram/al3c.git  
 cd al3c/  
-bin/al3c_linux_x86-64 cfg/macs_linux-x86-64.xml  
+bin/al3c_linux_x86-64 config/macs_linux-x86-64.xml  
 ```
 
 #### Mac OS-X 
@@ -46,7 +46,7 @@ bin/al3c_linux_x86-64 cfg/macs_linux-x86-64.xml
 ```bash
 git clone https://github.com/ahstram/al3c.git  
 cd al3c/  
-bin/al3c_darwin_x86-64 cfg/macs_darwin-x86-64.xml  
+bin/al3c_darwin_x86-64 config/macs_darwin-x86-64.xml  
 ```
 
 #### From source
@@ -62,8 +62,8 @@ make
 git clone https://github.com/gchen98/macs.git macs-binary && cd macs-binary && make && ln -s ../macs-binary/macs ../macs/macs && cd .. 
 ## This makes the MaCS plugin, which uses the above MaCS binary
 cd macs/ && make && cd ../  
-## This initiates al3c, using the "cfg/macs.xml" configuration, which loads the MaCS plugin, which in turn calls the MaCS binary
-bin/al3c cfg/macs.xml  
+## This initiates al3c, using the "config/macs.xml" configuration, which loads the MaCS plugin, which in turn calls the MaCS binary
+bin/al3c config/macs.xml  
 ```
 
 Modifications to the make.inc files in the al3c/ and al3c/macs/ directory may be necessary for your environment.
@@ -178,12 +178,12 @@ We may compile our source file as a shared library using the "-shared" and "-fPI
 
 The XML configuration must define all nodes listed in <a href="#xmlreq">XML Requirements</a>. 
 
-A sample XML file is available <a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">here</a>.
+A sample XML file is available <a href="https://github.com/ahstram/al3c/blob/master/config/macs.xml">here</a>.
 
 ###Running al3c
 al3c is run with the XML files to load as its sole argument, for example:
 
-bin/al3c cfg/macs.xml
+bin/al3c config/macs.xml
 
 ##Reference Manual</h2>
 <pre>
@@ -216,7 +216,7 @@ bin/al3c cfg/macs.xml
         2.5 Simulating Data & Measuring Goodness of Fit
                 2.5.1 <a href="#simulate">user_t::simulate</a>
                 2.5.2 <a href="#distance">user_t::distance</a>
-3 <span id="xmlreq">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/cfg/macs.xml">sample</a>)
+3 <span id="xmlreq">XML Requirements</span> (<a href="https://github.com/ahstram/al3c/blob/master/config/macs.xml">sample</a>)
         3.1 <a href="#lib">lib</a> - Shared library
         3.2 MPI
                 3.2.1 <a href="#NP">NP</a> - Number of Processors
