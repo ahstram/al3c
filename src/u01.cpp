@@ -1,20 +1,12 @@
-#define SFMT_MEXP 19937
+#include <iostream>
+
 #include "SFMT/SFMT.h"
-#include "SFMT/SFMT.c"
 
-#define SFMT_MEXP 19937
-#define RANDOM_SEED 1 //be careful: without this, you may run on repeat after a while!
-#define RND_BUFFER	16777216
-#define SKEW_SEEDS	256
-
-#define LEFT_OPEN 1 // U(0,1]
-#define RIGHT_OPEN 2 // U[0,1)
-#define BOTH_OPEN 3 // U(0,1)
+#include "../include/u01.hpp"
 
 uint64_t u01n;
 uint32_t *rnd_array=NULL;
 sfmt_t sfmt;
-
 
 uint32_t *skew_seed(bool random) {
 uint32_t *seed=new uint32_t[SKEW_SEEDS];
@@ -25,7 +17,7 @@ for (uint i=0;i<SKEW_SEEDS;i++) {
         tick=clock();
         for(j=0;(uint)clock()==tick;j++)
                 ;
-	} 
+	}
 
         seed[i]= j%256;// only use lower 8 bits..
 }
@@ -36,19 +28,19 @@ float u01(char c) {
 
 float f;
 
-repeat: 
+repeat:
 	u01n++;
 
 	if (u01n%RND_BUFFER==1) {
 		if (rnd_array==NULL) {
 
 			if (np==0) {
-cerr<<"+------------------------------------------------------------------------------+\n"; 
-cerr<<"|             Invoking SIMD-oriented Fast Mersenne Twister (SFMT)              |\n";
-cerr<<"| Copyright 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University  |\n";
-cerr<<"| Copyright 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and      |\n";
-cerr<<"|                The University of Tokyo. All rights reserved.                 |\n";
-cerr<<"+------------------------------------------------------------------------------+"<<endl;
+                std::cerr<<"+------------------------------------------------------------------------------+\n";
+                std::cerr<<"|             Invoking SIMD-oriented Fast Mersenne Twister (SFMT)              |\n";
+                std::cerr<<"| Copyright 2006,2007 Mutsuo Saito, Makoto Matsumoto and Hiroshima University  |\n";
+                std::cerr<<"| Copyright 2012 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and      |\n";
+                std::cerr<<"|                The University of Tokyo. All rights reserved.                 |\n";
+                std::cerr<<"+------------------------------------------------------------------------------+"<<std::endl;
 			}
 
 			rnd_array=new uint32_t[RND_BUFFER];

@@ -31,7 +31,7 @@
  * PRIu64 and PRIx64 are used for printf function to print 64-bit
  * unsigned int and 64-bit unsigned int in hexadecimal format.
  */
-
+#define SFMT_MEXP   19937  // Stram added this 4/2/2018
 #ifndef SFMTST_H
 #define SFMTST_H
 #if defined(__cplusplus)
