@@ -1,112 +1,106 @@
-#define VERSION	15.7
-#define AL3C 1
-#define MAX(a,b)	((a)>(b) ? (a):(b)) 
-#define MIN(a,b)	((a)<(b) ? (a):(b)) 
-#define DELIM   "\t ," 
-#define LINE_LEN	1024 
+#define LINE_LEN    1024
 #define __STDC_LIMIT_MACROS
 
 #include <iostream>
-#include <algorithm> //for sort
 #include <sstream>
 #include <vector>
-#include <time.h>
-#include <math.h>
 #include <string.h>
-#include <assert.h>
-#include <mpi.h>
-#include <float.h>
-#include <dlfcn.h>
-#include <sys/stat.h>
 #include <unistd.h>
+#include <mpi.h>
+#include <signal.h>
 
 #include "rapidxml/rapidxml.hpp"
 
+#define AL3C 1
 #include "../include/al3c.hpp"
+#include "../include/externs_typedefs.hpp"
+#include "../include/mpi_check.hpp"
+#include "../include/signal.hpp"
+#include "../include/SMC.hpp"
+#include "../include/u01.hpp"
 
 uint np=0, NP=0, SIGNUM=0;
 
-#include "u01.cpp"
-#include "weight.cpp"
-#include "SMC.cpp"
-#include "mpi_check.cpp"
-#include "signal.cpp"
-
 int main (int argc, char *argv[] ) {
 
-//configuration file...
-	if (argc!=2) {
-		cerr<<"Error! Run with "<<argv[0]<<" <XML configuration>"<<endl;
-		exit(EXIT_FAILURE);
-	}
+    //configuration file...
+    if (argc!=2) {
+        std::cerr<<"Error! Run with "<<argv[0]<<" <XML configuration>"\
+            <<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-	ifstream xmlfile (argv[1]);
-	
-	if (!xmlfile) {
-		cerr<<"Error! Could not open XML file '"<<argv[1]<<"'"<<endl;
-		exit(EXIT_FAILURE);
-	}
-	
-//register signal handler
-	signal(SIGINT, signal_callback_handler);
+    std::ifstream xmlfile (argv[1]);
 
-//get MPI running...
-	MPI::Init();
+    if (!xmlfile) {
+        std::cerr<<"Error! Could not open XML file '"<<argv[1]<<"'"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-	np=MPI::COMM_WORLD.Get_rank(),  NP=MPI::COMM_WORLD.Get_size();
+    //register signal handler
+    signal(SIGINT, signal_callback_handler);
 
-	vector<char> buffer((istreambuf_iterator<char>(xmlfile)), istreambuf_iterator<char>());
-	buffer.push_back('\0');
-	rapidxml::xml_document<> cfg;    // character type defaults to char
-	cfg.parse<0>(&buffer[0]);    // 0 means default parse flags
+    //get MPI running...
+    MPI::Init();
+
+    np=MPI::COMM_WORLD.Get_rank(),  NP=MPI::COMM_WORLD.Get_size();
+
+    std::vector<char> buffer((std::istreambuf_iterator<char>(xmlfile)), \
+            std::istreambuf_iterator<char>());
+    buffer.push_back('\0');
+    rapidxml::xml_document<> config;    // character type defaults to char
+    config.parse<0>(&buffer[0]);    // 0 means default parse flags
 
 
-	if (!cfg.first_node("MPI")->first_node("NP")) {
-		cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in XML file"<<endl;
-		exit(EXIT_FAILURE);
-	}
-	
-//if not already running in MPI, this will invoke it for us...
-	if (atoi(cfg.first_node("MPI")->first_node("NP")->value())!=(int)NP && NP==1) {
+    if (!config.first_node("MPI")->first_node("NP")) {
+        std::cerr<<"Error! Could not find required <MPI><NP></NP></MPI> in"\
+            " XML file"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-		int returncode;
+    //if not already running in MPI, this will invoke it for us...
+    if (atoi(config.first_node("MPI")->first_node("NP")->value())!=(int)NP && \
+            NP==1) {
 
-		char **args=new char*[4+argc];
-		args[0]=strdup("mpirun");
-		args[1]=strdup("-np");
-		args[2]=strdup(cfg.first_node("MPI")->first_node("NP")->value());
+        int returncode;
 
-		for (int i=0;i<argc;i++) {
-			args[3+i]=argv[i];
-		} args[3+argc]=NULL; 
+        char **args=new char*[4+argc];
+        args[0]=strdup("mpirun");
+        args[1]=strdup("-np");
+        args[2]=strdup(config.first_node("MPI")->first_node("NP")->value());
 
-		if (check_mpirun())
-			returncode=execvp("mpirun",args);
-		else
-			returncode=execvp("bin/mpirun",args); 
+        for (int i=0;i<argc;i++) {
+            args[3+i]=argv[i];
+        } args[3+argc]=NULL;
 
-		if (returncode!=0) 
-			cerr<<"Warning: mpirun exited with code '"<<returncode<<"'"<<endl;
+        if (check_mpirun())
+            returncode=execvp("mpirun",args);
+        else
+            returncode=execvp("bin/mpirun",args);
 
-		for (int i=0;i<3;i++)
-			free(args[i]);
-		delete [] args;
+        if (returncode!=0)
+            std::cerr<<"Warning: mpirun exited with code '"<<returncode<<\
+                "'"<<std::endl;
 
-		exit(returncode);
-	} 
+        for (int i=0;i<3;i++)
+            free(args[i]);
+        delete [] args;
 
-	print_cpu_info();
+        exit(returncode);
+    }
 
-//initialize our ABC routine
-	SMC_t SMC(&cfg);
+    print_cpu_info();
+u01();
+    //initialize our ABC routine
+    SMC_t SMC(&config);
 
-//begin the loop 
-	SMC.loop();
-		
-	delete [] rnd_array;
-	// gracefully quit
-	MPI::Finalize();
+    //begin the loop
+    SMC.loop();
 
-	exit(EXIT_SUCCESS);
+    delete [] rnd_array;
+    // gracefully quit
+    MPI::Finalize();
+
+    exit(EXIT_SUCCESS);
 
 }
