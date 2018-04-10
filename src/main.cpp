@@ -90,7 +90,7 @@ int main (int argc, char *argv[] ) {
     }
 
     print_cpu_info();
-
+u01();
     //initialize our ABC routine
     SMC_t SMC(&config);
 

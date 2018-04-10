@@ -1,3 +1,4 @@
+#pragma once 
 #include <fstream>
 
 typedef unsigned int uint;
@@ -175,6 +176,7 @@ typedef void destroy_summary_t(framework_summary_t<param_summary_t>* user_summar
         delete user_summary;
     }
 
+    float u01(char c);
     float u01();
     float n01(float u1, float u2, bool use_sin);
 #endif
